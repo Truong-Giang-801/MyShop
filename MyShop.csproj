@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DevExpress.Data" Version="23.2.5" />
+    <PackageReference Include="DevExpress.Xpo" Version="23.2.5" />
     <PackageReference Include="Fluent.Ribbon" Version="10.1.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
