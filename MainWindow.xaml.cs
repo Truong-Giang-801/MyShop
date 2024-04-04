@@ -1,4 +1,5 @@
-﻿using MyShop.UserControls;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MyShop.UserControls;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,7 +52,23 @@ namespace MyShop
                 }
             }
         }
-
+        private void setButtonDashBoard()
+        {
+            DashBoard.Background = Brushes.Transparent;
+            DashBoard.Foreground = Brushes.White;
+            Log_Out.Background = Brushes.Transparent;
+            Log_Out.Foreground = Brushes.White;
+            Payment.Background = Brushes.Transparent;
+            Payment.Foreground = Brushes.White;
+            Support.Background = Brushes.Transparent;
+            Support.Foreground = Brushes.White;
+            Sale.Background = Brushes.Transparent;
+            Sale.Foreground = Brushes.White;
+            Setting.Background = Brushes.Transparent;
+            Setting.Foreground = Brushes.White;
+            Products.Background = Brushes.Transparent;
+            Products.Foreground = Brushes.White;
+        }
         private void Exit_button_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
@@ -59,21 +76,32 @@ namespace MyShop
 
         private void Log_Out_Click(object sender, RoutedEventArgs e)
         {
+            setButtonDashBoard();
+            Log_Out.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Log_Out.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
 
         }
 
         private void Products_Click(object sender, RoutedEventArgs e)
         {
-
+            setButtonDashBoard();
+            Products.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Products.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
         }
 
         private void Payment_Click(object sender, RoutedEventArgs e)
         {
+            setButtonDashBoard();
+            Payment.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Payment.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
 
         }
 
         private void Support_Click(object sender, RoutedEventArgs e)
         {
+            setButtonDashBoard();
+            Support.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Support.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
 
         }
 
@@ -89,11 +117,36 @@ namespace MyShop
 
         private void Sale_Click(object sender, RoutedEventArgs e)
         {
+            setButtonDashBoard();
+            Sale.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Sale.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
 
         }
 
         private void Setting_Click(object sender, RoutedEventArgs e)
         {
+            setButtonDashBoard();
+            Setting.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Setting.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+
+        }
+
+        private void DashBoard_Click(object sender, RoutedEventArgs e)
+        {
+            setButtonDashBoard();
+            DashBoard.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            DashBoard.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+
+        }
+
+        public Products _product;
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            _product = new Products()
+            {
+                NumberSale = 123
+            };
+            this.DataContext = _product;
 
         }
     }

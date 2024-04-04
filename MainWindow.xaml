@@ -3,16 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:uc="clr-namespace:MyShop.UserControls"
-        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks" xmlns:local="clr-namespace:MyShop"
         WindowStartupLocation="CenterScreen" Background="Transparent"
+        Title="MainWindow"  Loaded="Window_Loaded"
         WindowStyle="None" AllowsTransparency="True" Height="780" Width="1280">
-
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        <local:NumberSaleConverter x:Key="NumberSaleConverter"/>
+
     </Window.Resources>
 
     <Border CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
-        <Grid>
+        <Grid x:Name="Dashboard" Visibility="Visible">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="220"/>
@@ -66,14 +68,14 @@
 
                     <!--Menu Items-->
 
-                    <Button Style="{StaticResource menuButton}" Background="#F7F6F4" Foreground="#FB7657">
+                    <Button x:Name="DashBoard" Click="DashBoard_Click" Style="{StaticResource menuButton}" Background="#F7F6F4" Foreground="#FB7657">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="Home" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Dashboard" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="Products" Click="Products_Click" Style="{StaticResource menuButton}">
+                    <Button x:Name="Products" Click="Products_Click" Style="{StaticResource menuButton}" >
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="ShoppingOutline" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Products" Style="{StaticResource menuButtonText}"/>
@@ -87,12 +89,12 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource menuButton}">
+                    <!--<Button Style="{StaticResource menuButton}">
                         <StackPanel Orientation="Horizontal">
                             <Icon:PackIconMaterial Kind="AccountCheckOutline" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Administration" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
-                    </Button>
+                    </Button>-->
 
                     <Button x:Name="Sale" Click="Sale_Click" Style="{StaticResource menuButton}">
                         <StackPanel Orientation="Horizontal">
@@ -179,7 +181,13 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <uc:InfoCard Grid.Column="0" Title="Sales" SubTitle="1234 products on sale"  Image="/Images/sale.png" Loaded="InfoCard_Loaded_1"/>
+                <uc:InfoCard x:Name="Sales" Grid.Column="0" Title="Sales">
+                    <uc:InfoCard.SubTitle>
+                        <MultiBinding Converter="{StaticResource NumberSaleConverter}">
+                            <Binding Path="NumberSale"/>
+                        </MultiBinding>
+                    </uc:InfoCard.SubTitle>
+                </uc:InfoCard>
                 <uc:InfoCard Grid.Column="1" Title="Purchase" SubTitle="Compared To ($1405 Last Month)" Amount="8" Image="/Images/purchase.png" />
                 <uc:InfoCard Grid.Column="2" Title="Refund" SubTitle="Compared To ($0 Last Month)" Amount="5" Image="/Images/return.png" />
             </Grid>
