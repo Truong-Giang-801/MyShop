@@ -114,7 +114,9 @@ namespace MyShop
             {
                 // Perform the action after user confirms.
                 // For example, delete a record or save changes.
-                Application.Current.Shutdown();
+                LoginWindow loginWindow = new LoginWindow();
+                Visibility = Visibility.Hidden;
+                loginWindow.Show();
             }
         }
 
