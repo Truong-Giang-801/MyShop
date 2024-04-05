@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace MyShop
 {
@@ -114,9 +115,11 @@ namespace MyShop
             {
                 // Perform the action after user confirms.
                 // For example, delete a record or save changes.
+                Properties.Settings.Default.Username = "";
+                Properties.Settings.Default.EncryptedPassword = "";
                 LoginWindow loginWindow = new LoginWindow();
-                Visibility = Visibility.Hidden;
                 loginWindow.Show();
+                this.Close();
             }
         }
 

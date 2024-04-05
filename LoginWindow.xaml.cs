@@ -89,8 +89,8 @@ namespace MyShop
                 {
                     // Sử dụng thông tin đăng nhập đã lưu để đăng nhập tự động
                     MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
                     this.Close();
+                    mainWindow.Show();
                 }
             }
         }
