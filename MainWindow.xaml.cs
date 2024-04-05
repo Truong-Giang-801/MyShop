@@ -179,6 +179,8 @@ namespace MyShop
         public Products _product;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            setVisibleOff();
+            DashboardScreen.Visibility= Visibility.Visible;
             _product = new Products()
             {
                 NumberSale = 123

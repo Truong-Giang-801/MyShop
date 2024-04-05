@@ -101,7 +101,7 @@
             </StackPanel>
         </Border>
         <!--DashBoard Screen-->
-        <Border x:Name="DashboardScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Hidden" Width="1045" HorizontalAlignment="Right">
+        <Border x:Name="DashboardScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
             <Grid x:Name="Dashboard" Visibility="Visible">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
