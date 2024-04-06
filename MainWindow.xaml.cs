@@ -16,6 +16,7 @@ using Microsoft.Win32;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics;
+using System.Collections.ObjectModel;
 namespace MyShop
 {
     /// <summary>
@@ -23,9 +24,20 @@ namespace MyShop
     /// </summary>
     public partial class MainWindow : Window
     {
+        public class ProductsViewModel
+        {
+            public ObservableCollection<Products> ProductsList { get; set; }
+
+            public ProductsViewModel()
+            {
+                ProductsList = new ObservableCollection<Products>();
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new ProductsViewModel();
+
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -194,42 +206,54 @@ namespace MyShop
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
-                var document = SpreadsheetDocument.Open(filename, false);
-                var wbPart = document.WorkbookPart!;
-                var sheets = wbPart.Workbook.Descendants<Sheet>()!;
-                var sheet = sheets.FirstOrDefault(s => s.Name == "Product");
-                var wsPart = (WorksheetPart)(wbPart!.GetPartById(sheet.Id!));
-                var cells = wsPart.Worksheet.Descendants<Cell>();
-                int row = 2;
-                Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
-                while (nameCell != null)
+                using (var document = SpreadsheetDocument.Open(filename, false))
                 {
-                    string stringId = nameCell!.InnerText;
-                    var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
-                    string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
-                    Debug.WriteLine(name);
+                    var wbPart = document.WorkbookPart!;
+                    var sheets = wbPart.Workbook.Descendants<Sheet>()!;
+                    var sheet = sheets.FirstOrDefault(s => s.Name == "Product");
+                    var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id!));
+                    var cells = wsPart.Worksheet.Descendants<Cell>();
+                    int row = 2;
 
-                    // Insert the name into the database
-                    //string sql = "INSERT INTO Category (Name) VALUES (@Name)";
-                    //using (SqlCommand command = new SqlCommand(sql, connection))
-                    //{
-                    //    command.Parameters.AddWithValue("@Name", name);
-                    //    command.ExecuteNonQuery();
-                    //}
+                    while (true)
+                    {
+                        _product = new Products();
+                        // Read from column B
+                        Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                        if (nameCell == null) break; // Exit loop if no more data in column B
+                        string stringId = nameCell.InnerText;
+                        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
+                        string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
+                        _product.ProductName = name;
+                        Debug.WriteLine($"Name: {name}");
 
-                    row++;
-                    nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                        // Read from column C
+                        Cell anotherCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
+                        if (anotherCell == null) break; // Exit loop if no more data in column C
+                        int anotherValue = int.Parse(anotherCell.CellValue.Text); // Directly parse the cell value as an integer
+                        Debug.WriteLine($"Another Value: {anotherValue}");
+                        _product.Price = anotherValue;
+                        // Read from column D
+                        Cell anotherCell1 = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
+                        if (anotherCell1 == null) break; // Exit loop if no more data in column D
+                        int anotherValue1 = int.Parse(anotherCell1.CellValue.Text); // Directly parse the cell value as an integer
+                        Debug.WriteLine($"Another Value: {anotherValue1}");
+                        _product.Category = anotherValue1;
+
+                        // Add the product to the ProductsList in the ViewModel
+                        ((ProductsViewModel)DataContext).ProductsList.Add(_product);
+
+                        row++;
+                    }
                 }
             }
-                setVisibleOff();
-            DashboardScreen.Visibility= Visibility.Visible;
-            _product = new Products()
-            {
-                NumberSale = 123
-            };
-            this.DataContext = _product;
-
+            setVisibleOff();
+            DashboardScreen.Visibility = Visibility.Visible;
         }
 
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
