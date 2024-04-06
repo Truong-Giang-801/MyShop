@@ -43,10 +43,10 @@ namespace MyShop
                 // Lưu thông tin đăng nhập ở local
                 SaveLoginInfo(username, encryptedPassword);
 
-                // Điều hướng đến màn hình chính
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.Show();
+                // Điều hướng đến màn hình cấu hình
+                ConfigWindow configWindow = new ConfigWindow();
                 this.Close();
+                configWindow.Show();
             }
             else
             {
@@ -88,9 +88,9 @@ namespace MyShop
                 if (Properties.Settings.Default.Username == "admin" && Properties.Settings.Default.EncryptedPassword == encryptedCorrectPassword)
                 {
                     // Sử dụng thông tin đăng nhập đã lưu để đăng nhập tự động
-                    ConfigWindow configWindow = new ConfigWindow();
+                    MainWindow mainWindow = new MainWindow();
                     this.Close();
-                    configWindow.Show();
+                    mainWindow.Show();
                 }
             }
         }

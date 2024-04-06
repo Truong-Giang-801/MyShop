@@ -269,6 +269,7 @@ namespace MyShop
                             Name NVARCHAR(255) NOT NULL,
                             Price MONEY NOT NULL,
                             Category INT NOT NULL,
+                            Quantity INT NOT NULL,
                             FOREIGN KEY (Category) REFERENCES Category(Id)
                         );";
                     using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
@@ -314,6 +315,7 @@ namespace MyShop
                     nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
                     Cell priceCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
                     Cell categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
+                    Cell quantityCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}")!;
 
                     // Insert data from the current sheet into the database
                     while (nameCell != null)
@@ -329,12 +331,16 @@ namespace MyShop
                         string categoryStringId = categoryCell.InnerText;
                         int category = int.Parse(categoryStringId);
 
-                        string sql = "INSERT INTO Product (Name, Price, Category) VALUES (@Name, @Price, @Category)";
+                        string quantityStringId = quantityCell.InnerText;
+                        int quantity = int.Parse(quantityStringId);
+
+                        string sql = "INSERT INTO Product (Name, Price, Category, Quantity) VALUES (@Name, @Price, @Category, @Quantity)";
                         using (SqlCommand command = new SqlCommand(sql, connection))
                         {
                             command.Parameters.AddWithValue("@Name", name);
                             command.Parameters.AddWithValue("@Price", price);
                             command.Parameters.AddWithValue("@Category", category);
+                            command.Parameters.AddWithValue("@Quantity", quantity);
                             command.ExecuteNonQuery();
                         }
 
@@ -342,6 +348,7 @@ namespace MyShop
                         nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
                         priceCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
                         categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
+                        quantityCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}")!;
                     }
                 }
             }
