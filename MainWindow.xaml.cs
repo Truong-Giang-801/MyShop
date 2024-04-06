@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MyShop.UserControls;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +12,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-
+using Microsoft.Win32;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.Diagnostics;
 namespace MyShop
 {
     /// <summary>
@@ -84,8 +88,8 @@ namespace MyShop
         private void Exit_button_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
-            Exit_button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Exit_button.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+            Exit_button.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Exit_button.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
             MessageBoxResult result = MessageBox.Show(
             "Are you sure you want to exit?",
             "Confirmation",
@@ -103,8 +107,8 @@ namespace MyShop
         private void Log_Out_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
-            Log_Out.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Log_Out.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+            Log_Out.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Log_Out.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
             MessageBoxResult result = MessageBox.Show(
             "Are you sure you want to logout?",
             "Confirmation",
@@ -128,8 +132,8 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             ProductScreen.Visibility = Visibility.Visible;
-            Products.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Products.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+            Products.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Products.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
 
         private void Payment_Click(object sender, RoutedEventArgs e)
@@ -137,8 +141,8 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             PaymentScreen.Visibility = Visibility.Visible;
-            Payment.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Payment.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+            Payment.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Payment.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
 
         }
 
@@ -147,8 +151,8 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             SupportScreen.Visibility = Visibility.Visible;
-            Support.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Support.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+            Support.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Support.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
 
         }
 
@@ -157,8 +161,8 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             ProfileScreen.Visibility = Visibility.Visible;
-            Account.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Account.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+            Account.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Account.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
 
         }
 
@@ -167,8 +171,8 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             SettingScreen.Visibility = Visibility.Visible;
-            Setting.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Setting.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+            Setting.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Setting.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
 
         }
 
@@ -177,14 +181,46 @@ namespace MyShop
             setVisibleOff();
             setButtonDashBoard();
             DashboardScreen.Visibility = Visibility.Visible;
-            DashBoard.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            DashBoard.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FB7657"));
+            DashBoard.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            DashBoard.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
 
         public Products _product;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            setVisibleOff();
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Excel Files|*.xlsx;*.xls;*.csv";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filename = openFileDialog.FileName;
+                var document = SpreadsheetDocument.Open(filename, false);
+                var wbPart = document.WorkbookPart!;
+                var sheets = wbPart.Workbook.Descendants<Sheet>()!;
+                var sheet = sheets.FirstOrDefault(s => s.Name == "Product");
+                var wsPart = (WorksheetPart)(wbPart!.GetPartById(sheet.Id!));
+                var cells = wsPart.Worksheet.Descendants<Cell>();
+                int row = 2;
+                Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                while (nameCell != null)
+                {
+                    string stringId = nameCell!.InnerText;
+                    var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
+                    string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
+                    Debug.WriteLine(name);
+
+                    // Insert the name into the database
+                    //string sql = "INSERT INTO Category (Name) VALUES (@Name)";
+                    //using (SqlCommand command = new SqlCommand(sql, connection))
+                    //{
+                    //    command.Parameters.AddWithValue("@Name", name);
+                    //    command.ExecuteNonQuery();
+                    //}
+
+                    row++;
+                    nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                }
+            }
+                setVisibleOff();
             DashboardScreen.Visibility= Visibility.Visible;
             _product = new Products()
             {
