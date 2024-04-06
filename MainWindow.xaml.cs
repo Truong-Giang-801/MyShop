@@ -18,6 +18,8 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics;
 using Microsoft.Data.SqlClient;
 using System.Collections.ObjectModel;
+using DevExpress.Xpo.DB.Helpers;
+using DocumentFormat.OpenXml.Office2010.Excel;
 namespace MyShop
 {
     /// <summary>
@@ -28,7 +30,6 @@ namespace MyShop
         public class ProductsViewModel
         {
             public ObservableCollection<Products> ProductsList { get; set; }
-
             public ProductsViewModel()
             {
                 ProductsList = new ObservableCollection<Products>();
@@ -38,9 +39,7 @@ namespace MyShop
         {
             InitializeComponent();
             DataContext = new ProductsViewModel();
-
         }
-
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -48,7 +47,6 @@ namespace MyShop
                 this.DragMove();
             }
         }
-
         private bool IsMaximize = false;
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -59,13 +57,11 @@ namespace MyShop
                     this.WindowState = WindowState.Normal;
                     this.Width = 1280;
                     this.Height = 780;
-
                     IsMaximize = false;
                 }
                 else
                 {
                     this.WindowState = WindowState.Maximized;
-
                     IsMaximize = true;
                 }
             }
@@ -108,7 +104,6 @@ namespace MyShop
             "Confirmation",
             MessageBoxButton.YesNo,
             MessageBoxImage.Question);
-
             if (result == MessageBoxResult.Yes)
             {
                 // Perform the action after user confirms.
@@ -116,7 +111,6 @@ namespace MyShop
                 Application.Current.Shutdown();
             }
         }
-
         private void Log_Out_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
@@ -127,7 +121,6 @@ namespace MyShop
             "Confirmation",
             MessageBoxButton.YesNo,
             MessageBoxImage.Question);
-
             if (result == MessageBoxResult.Yes)
             {
                 // Perform the action after user confirms.
@@ -140,7 +133,6 @@ namespace MyShop
                 this.Close();
             }
         }
-
         private void Products_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
@@ -149,7 +141,6 @@ namespace MyShop
             Products.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Products.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
-
         private void Payment_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
@@ -157,9 +148,7 @@ namespace MyShop
             PaymentScreen.Visibility = Visibility.Visible;
             Payment.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Payment.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
-
         }
-
         private void Support_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
@@ -167,9 +156,7 @@ namespace MyShop
             SupportScreen.Visibility = Visibility.Visible;
             Support.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Support.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
-
         }
-
         private void Profile_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
@@ -177,9 +164,7 @@ namespace MyShop
             ProfileScreen.Visibility = Visibility.Visible;
             Account.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Account.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
-
         }
-
         private void Setting_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
@@ -187,9 +172,7 @@ namespace MyShop
             SettingScreen.Visibility = Visibility.Visible;
             Setting.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Setting.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
-
         }
-
         private void DashBoard_Click(object sender, RoutedEventArgs e)
         {
             setVisibleOff();
@@ -198,7 +181,6 @@ namespace MyShop
             DashBoard.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             DashBoard.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
-
         public Products _product;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -207,7 +189,6 @@ namespace MyShop
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
-
                 //using (var document = SpreadsheetDocument.Open(filename, false))
                 //{
                 //    var wbPart = document.WorkbookPart!;
@@ -216,7 +197,6 @@ namespace MyShop
                 //    var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id!));
                 //    var cells = wsPart.Worksheet.Descendants<Cell>();
                 //    int row = 2;
-
                 //    while (true)
                 //    {
                 //        _product = new Products();
@@ -228,7 +208,6 @@ namespace MyShop
                 //        string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
                 //        _product.ProductName = name;
                 //        Debug.WriteLine($"Name: {name}");
-
                 //        // Read from column C
                 //        Cell anotherCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
                 //        if (anotherCell == null) break; // Exit loop if no more data in column C
@@ -241,72 +220,115 @@ namespace MyShop
                 //        int anotherValue1 = int.Parse(anotherCell1.CellValue.Text); // Directly parse the cell value as an integer
                 //        Debug.WriteLine($"Another Value: {anotherValue1}");
                 //        _product.Category = anotherValue1;
-
                 //        // Add the product to the ProductsList in the ViewModel
                 //        ((ProductsViewModel)DataContext).ProductsList.Add(_product);
-
                 //        row++;
                 //    }
                 //}
-
-                var document = SpreadsheetDocument.Open(filename, false);
-                var wbPart = document.WorkbookPart!;
-
-                // Loop through all sheets in the workbook
-                foreach (var sheet in wbPart.Workbook.Descendants<Sheet>())
+                string connectionString = Properties.Settings.Default.ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
+                    // Connect to Database
+                    connection.Open();
+                    // Create table
+                    string createTableSql = $@"
+                        DROP TABLE IF EXISTS Product;
+                        DROP TABLE IF EXISTS Category;
+                        CREATE TABLE Category (
+                            Id INT IDENTITY(1,1) PRIMARY KEY,
+                            Name NVARCHAR(255) NOT NULL
+                        );
+                        DROP TABLE IF EXISTS Product;
+                        CREATE TABLE Product (
+                            Id INT IDENTITY(1,1) PRIMARY KEY,
+                            Name NVARCHAR(255) NOT NULL,
+                            Price MONEY NOT NULL,
+                            Category INT NOT NULL,
+                            Quantity INT NOT NULL,
+                            FOREIGN KEY (Category) REFERENCES Category(Id)
+                        );";
+                    using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
+
+                    {
+                        createTableCommand.ExecuteNonQuery();
+                    }
+                    // Get sheets from Excel file
+                    var document = SpreadsheetDocument.Open(filename, false);
+                    var wbPart = document.WorkbookPart!;
+                    var sheets = wbPart.Workbook.Descendants<Sheet>()!;
+                    // Deal with Category sheet
+                    var sheet = sheets.FirstOrDefault(s => s.Name == "Category");
                     var wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id!);
                     var cells = wsPart.Worksheet.Descendants<Cell>();
                     int row = 2;
                     Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
-
-                    // Create a table for the current sheet
-                    string tableName = sheet.Name.Value; // Use the sheet name as the table name
-                    string connectionString = Properties.Settings.Default.ConnectionString;
-                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    // Insert data from the current sheet into the database
+                    while (nameCell != null)
                     {
-                        connection.Open();
-
-                        string createTableSql = $@"
-                            DROP TABLE IF EXISTS {tableName};
-                            CREATE TABLE {tableName} (
-                                Id INT IDENTITY(1,1) PRIMARY KEY,
-                                Name NVARCHAR(255) NOT NULL
-                            );";
-                        using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
+                        string stringId = nameCell.InnerText;
+                        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
+                        string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
+                        string sql = $"INSERT INTO Category (Name) VALUES (@Name)";
+                        using (SqlCommand command = new SqlCommand(sql, connection))
                         {
-                            createTableCommand.ExecuteNonQuery();
+                            command.Parameters.AddWithValue("@Name", name);
+                            command.ExecuteNonQuery();
+                        }
+                        row++;
+                        nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                    }
+                    //Deal with Product sheet
+                    sheet = sheets.FirstOrDefault(s => s.Name == "Product");
+                    wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id!);
+                    cells = wsPart.Worksheet.Descendants<Cell>();
+                    row = 2;
+                    nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                    Cell priceCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
+                    Cell categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
+                    Cell quantityCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}")!;
+
+                    // Insert data from the current sheet into the database
+                    while (nameCell != null)
+
+
+                    {
+                        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
+                        string nameStringId = nameCell.InnerText;
+                        string name = stringTable.SharedStringTable.ElementAt(int.Parse(nameStringId)).InnerText;
+                        string priceStringId = priceCell.InnerText;
+                        decimal price = decimal.Parse(priceStringId);
+                        string categoryStringId = categoryCell.InnerText;
+                        int category = int.Parse(categoryStringId);
+
+                        string quantityStringId = quantityCell.InnerText;
+                        int quantity = int.Parse(quantityStringId);
+
+                        string sql = "INSERT INTO Product (Name, Price, Category, Quantity) VALUES (@Name, @Price, @Category, @Quantity)";
+                        using (SqlCommand command = new SqlCommand(sql, connection))
+                        {
+                            command.Parameters.AddWithValue("@Name", name);
+                            command.Parameters.AddWithValue("@Price", price);
+                            command.Parameters.AddWithValue("@Category", category);
+                            command.Parameters.AddWithValue("@Quantity", quantity);
+                            command.ExecuteNonQuery();
                         }
 
-                        // Insert data from the current sheet into the database
-                        while (nameCell != null)
-                        {
-                            string stringId = nameCell.InnerText;
-                            var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
-                            string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
-
-                            string sql = $"INSERT INTO {tableName} (Name) VALUES (@Name)";
-                            using (SqlCommand command = new SqlCommand(sql, connection))
-                            {
-                                command.Parameters.AddWithValue("@Name", name);
-                                command.ExecuteNonQuery();
-                            }
-
-                            row++;
-                            nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
-                        }
+                        row++;
+                        nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                        priceCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
+                        categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
+                        quantityCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}")!;
                     }
                 }
             }
+
+
             setVisibleOff();
             DashboardScreen.Visibility = Visibility.Visible;
         }
-
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
         }
-
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (comboBox.SelectedIndex == -1)
@@ -317,12 +339,11 @@ namespace MyShop
             {
                 placeholderText.Visibility = Visibility.Collapsed;
             }
-
         }
-
         private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (comboBox1.SelectedIndex == -1)
+            {
                 placeholderText1.Visibility = Visibility.Visible;
             }
             else
