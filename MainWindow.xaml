@@ -8,7 +8,7 @@
         xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="MyShop.MainWindow"
         WindowStartupLocation="CenterScreen" Background="Transparent"
         Title="MainWindow"  Loaded="Window_Loaded"
-        WindowStyle="None" AllowsTransparency="True" Height="780" Width="1280">
+        WindowStyle="None" WindowState="Normal" ResizeMode="NoResize" AllowsTransparency="True" Height="780" Width="1280">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <local:NumberSaleConverter x:Key="NumberSaleConverter"/>
