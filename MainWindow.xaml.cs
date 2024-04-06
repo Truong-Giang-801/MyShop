@@ -319,5 +319,17 @@ namespace MyShop
             }
 
         }
+
+        private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboBox1.SelectedIndex == -1)
+            {
+                placeholderText1.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                placeholderText1.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }

@@ -335,16 +335,7 @@
                                 <TextBlock Text="Hello, A" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
                                 <TextBlock Text="Have A Nice Day" Foreground="#6C879A" Height="27"/>
                             </StackPanel>
-                            <Grid >
-                                <ComboBox x:Name="comboBox" SelectionChanged="ComboBox_SelectionChanged" Width="100" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" Margin="0,21,0,0">
-                                    <ComboBoxItem FontSize="15" Content="Category 1"/>
-                                    <ComboBoxItem FontSize="15" Content="Category 2"/>
-                                    <ComboBoxItem FontSize="15" Content="Category 3"/>
-                                    <ComboBoxItem FontSize="15" Content="Category 4"/>
-                                </ComboBox>
-                                <TextBlock x:Name="placeholderText" Text="Category" VerticalAlignment="Top" HorizontalAlignment="Left"
-                                 Foreground="Black" IsHitTestVisible="False" Margin="6,28,0,0" />
-                            </Grid>
+
                         </StackPanel>
                         <!--Search Textbox-->
                         <Grid Width="300" HorizontalAlignment="Right">
@@ -373,8 +364,28 @@
                 <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
                     <StackPanel Orientation="Horizontal" >
                         <TextBlock VerticalAlignment="Center" Text="Product Name" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="462" ></TextBlock>
-                        <TextBlock VerticalAlignment="Center" Text="Price" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" ></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Price" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="206" ></TextBlock>
+                        <Grid>
+                            <ComboBox x:Name="comboBox" SelectionChanged="ComboBox_SelectionChanged" Width="90" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" Margin="0,20,0,0">
+                                <ComboBoxItem FontSize="15" Content="Category 1"/>
+                                <ComboBoxItem FontSize="15" Content="Category 2"/>
+                                <ComboBoxItem FontSize="15" Content="Category 3"/>
+                                <ComboBoxItem FontSize="15" Content="Category 4"/>
+                            </ComboBox>
+                            <TextBlock x:Name="placeholderText" Text="Category" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                 Foreground="Black" IsHitTestVisible="False" Margin="6,28,0,0" />
+                        </Grid>
+                        <Grid Margin="50,0,0,0">
+                            <ComboBox x:Name="comboBox1" SelectionChanged="comboBox1_SelectionChanged" Width="100" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True">
+                                <ComboBoxItem FontSize="15" Content="&lt;5.000.000đ"/>
+                                <ComboBoxItem FontSize="15" Content="&lt;10.000.000đ"/>
+                                <ComboBoxItem FontSize="15" Content="&lt;15.000.000đ"/>
+                                <ComboBoxItem FontSize="15" Content="&lt;20.000.000đ"/>
 
+                            </ComboBox>
+                            <TextBlock x:Name="placeholderText1" Text="Price" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                    Foreground="Black" IsHitTestVisible="False" Margin="6,28,0,0" />
+                        </Grid>
                     </StackPanel>
                 </Border>
             </Grid>
