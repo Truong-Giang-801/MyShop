@@ -257,6 +257,7 @@ namespace MyShop
 
                     // Create table
                     string createTableSql = $@"
+                        DROP TABLE IF EXISTS Product;
                         DROP TABLE IF EXISTS Category;
                         CREATE TABLE Category (
                             Id INT IDENTITY(1,1) PRIMARY KEY,
