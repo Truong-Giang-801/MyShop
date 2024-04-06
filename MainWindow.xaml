@@ -1,10 +1,11 @@
-﻿<Window x:Class="MyShop.MainWindow"
+﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
 	xmlns:uc="clr-namespace:MyShop.UserControls"
 	xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
 	xmlns:local="clr-namespace:MyShop"
+        xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="MyShop.MainWindow"
         WindowStartupLocation="CenterScreen" Background="Transparent"
         Title="MainWindow"  Loaded="Window_Loaded"
         WindowStyle="None" WindowState="Normal" ResizeMode="NoResize" AllowsTransparency="True" Height="780" Width="1280">
@@ -13,8 +14,7 @@
         <local:NumberSaleConverter x:Key="NumberSaleConverter"/>
     </Window.Resources>
     <Grid>
-        <Border CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1280" HorizontalAlignment="Right">
-        </Border>
+        <Border CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1280" HorizontalAlignment="Right"/>
         <!--Menu-->
         <Border Grid.RowSpan="3" CornerRadius="25" Width="220" Height="740" HorizontalAlignment="Left" Margin="20,0,0,0">
             <Border.Background>
@@ -134,8 +134,8 @@
                         <Grid Width="300" HorizontalAlignment="Right">
                             <TextBlock Margin="15 0" VerticalAlignment="Center" Foreground="#868686" IsHitTestVisible="False" Panel.ZIndex="1" 
                                        Text="Search here ..." 
-                                       Visibility="{Binding ElementName=textBoxSearch, Path=Text.IsEmpty, Converter={StaticResource BoolToVisConverter}}" />
-                            <TextBox Name="textBoxSearch" Style="{StaticResource searchTextbox}" />
+                                       Visibility="{Binding Text.IsEmpty, Converter={StaticResource BoolToVisConverter}, ElementName=textBoxSearch}" />
+                            <TextBox x:Name="textBoxSearch" Style="{StaticResource searchTextbox}" />
                             <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" Foreground="#FF6D46" HorizontalAlignment="Right" Margin="0 0 15 0" VerticalAlignment="Center"/>
                         </Grid>
                     </Grid>
@@ -167,7 +167,7 @@
                         <!--Chart-->
                         <lvc:CartesianChart Grid.Row="1" Margin="5 40 0 60" LegendLocation="None">
                             <lvc:CartesianChart.DataTooltip>
-                                <lvc:DefaultTooltip Background="Red" Foreground="#ffffff" Opacity="0.7" BulletSize="10"></lvc:DefaultTooltip>
+                                <lvc:DefaultTooltip Background="Red" Foreground="#ffffff" Opacity="0.7" BulletSize="10"/>
                             </lvc:CartesianChart.DataTooltip>
                             <lvc:CartesianChart.AxisX>
                                 <lvc:Axis Foreground="#90A3B2" ShowLabels="True">
@@ -278,38 +278,68 @@
                 </Grid>
             </Grid>
         </Border>
-        <!--Product Screen-->
-        <Border x:Name="ProductScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Visible">
-                <TextBlock Text="Product"></TextBlock>
-            </Grid>
-        </Border>
+
         <!--Profile Screen-->
         <Border x:Name="ProfileScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Visible">
-                <TextBlock Text="Profile"></TextBlock>
+            <Grid  Visibility="Hidden">
+                <TextBlock Text="Profile"/>
 
             </Grid>
         </Border>
         <!--Payment Screen-->
         <Border x:Name="PaymentScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Visible">
-                <TextBlock Text="Payment"></TextBlock>
+            <Grid  Visibility="Hidden">
+                <TextBlock Text="Payment"/>
 
             </Grid>
         </Border>
         <!--Setting Screen-->
         <Border x:Name="SettingScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Visible">
-                <TextBlock Text="Setting"></TextBlock>
+            <Grid  Visibility="Hidden">
+                <TextBlock Text="Setting"/>
 
             </Grid>
         </Border>
         <!--Support Screen-->
         <Border x:Name="SupportScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Visible">
-                <TextBlock Text="Support"></TextBlock>
+            <Grid  Visibility="Hidden">
+                <TextBlock Text="Support"/>
 
+            </Grid>
+        </Border>
+        <!--Product Screen-->
+        <Border x:Name="ProductScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
+            <Grid  Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="2" Grid.ColumnSpan="2" Background="Green" CornerRadius="15" Padding="15" Margin="15,0,15,0">
+                    <ListBox  ItemsSource="{Binding ProductsList}" av:ItemsSource="{av:SampleData ItemCount=5}"  BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged">
+                        <ListBox.ItemTemplate >
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Width="650">
+                                    <TextBlock Text="{Binding ProductName}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="457"/>
+                                    <TextBlock Text="{Binding Price}" Margin="15" FontSize="20" FontWeight="DemiBold"/>
+
+                                    <!-- Add more bindings as needed -->
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+                <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="Green" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock VerticalAlignment="Center" Text="Product Name" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="462" ></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Price" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" ></TextBlock>
+
+                    </StackPanel>
+                </Border>
             </Grid>
         </Border>
     </Grid>
