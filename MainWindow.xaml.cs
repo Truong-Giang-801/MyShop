@@ -117,6 +117,7 @@ namespace MyShop
                 // For example, delete a record or save changes.
                 Properties.Settings.Default.Username = "";
                 Properties.Settings.Default.EncryptedPassword = "";
+                Properties.Settings.Default.Save();
                 LoginWindow loginWindow = new LoginWindow();
                 loginWindow.Show();
                 this.Close();
