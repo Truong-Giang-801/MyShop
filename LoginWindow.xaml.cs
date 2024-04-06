@@ -88,9 +88,9 @@ namespace MyShop
                 if (Properties.Settings.Default.Username == "admin" && Properties.Settings.Default.EncryptedPassword == encryptedCorrectPassword)
                 {
                     // Sử dụng thông tin đăng nhập đã lưu để đăng nhập tự động
-                    MainWindow mainWindow = new MainWindow();
+                    ConfigWindow configWindow = new ConfigWindow();
                     this.Close();
-                    mainWindow.Show();
+                    configWindow.Show();
                 }
             }
         }

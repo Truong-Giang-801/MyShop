@@ -16,6 +16,7 @@ using Microsoft.Win32;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics;
+using Microsoft.Data.SqlClient;
 namespace MyShop
 {
     /// <summary>
@@ -197,28 +198,45 @@ namespace MyShop
                 var document = SpreadsheetDocument.Open(filename, false);
                 var wbPart = document.WorkbookPart!;
                 var sheets = wbPart.Workbook.Descendants<Sheet>()!;
-                var sheet = sheets.FirstOrDefault(s => s.Name == "Product");
+                var sheet = sheets.FirstOrDefault(s => s.Name == "Category");
                 var wsPart = (WorksheetPart)(wbPart!.GetPartById(sheet.Id!));
                 var cells = wsPart.Worksheet.Descendants<Cell>();
                 int row = 2;
                 Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
-                while (nameCell != null)
+
+                string connectionString = Properties.Settings.Default.ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string stringId = nameCell!.InnerText;
-                    var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
-                    string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
-                    Debug.WriteLine(name);
+                    connection.Open();
 
-                    // Insert the name into the database
-                    //string sql = "INSERT INTO Category (Name) VALUES (@Name)";
-                    //using (SqlCommand command = new SqlCommand(sql, connection))
-                    //{
-                    //    command.Parameters.AddWithValue("@Name", name);
-                    //    command.ExecuteNonQuery();
-                    //}
+                    string createTableSql = @"
+                            DROP TABLE Category;
+                            CREATE TABLE Category (
+                                Id INT IDENTITY(1,1) PRIMARY KEY,
+                                Name NVARCHAR(255) NOT NULL
+                            );";
+                    using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
+                    {
+                        createTableCommand.ExecuteNonQuery();
+                    }
+                    while (nameCell != null)
+                    {
+                        string stringId = nameCell!.InnerText;
+                        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
+                        string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
+                        Debug.WriteLine(name);
 
-                    row++;
-                    nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                        // Insert the name into the database
+                        string sql = "INSERT INTO Category (Name) VALUES (@Name)";
+                        using (SqlCommand command = new SqlCommand(sql, connection))
+                        {
+                            command.Parameters.AddWithValue("@Name", name);
+                            command.ExecuteNonQuery();
+                        }
+
+                        row++;
+                        nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                    }
                 }
             }
                 setVisibleOff();

@@ -8,7 +8,13 @@
     <Setting Name="EncryptedPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="a" Type="System.String" Scope="User">
+    <Setting Name="ServerName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DatabaseName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ConnectionString" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

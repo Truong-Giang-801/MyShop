@@ -50,12 +50,36 @@ namespace MyShop.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string a {
+        public string ServerName {
             get {
-                return ((string)(this["a"]));
+                return ((string)(this["ServerName"]));
             }
             set {
-                this["a"] = value;
+                this["ServerName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DatabaseName {
+            get {
+                return ((string)(this["DatabaseName"]));
+            }
+            set {
+                this["DatabaseName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ConnectionString {
+            get {
+                return ((string)(this["ConnectionString"]));
+            }
+            set {
+                this["ConnectionString"] = value;
             }
         }
     }
