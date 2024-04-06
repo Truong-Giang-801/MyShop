@@ -344,6 +344,7 @@ namespace MyShop
                     }
                 }
             }
+        
             setVisibleOff();
             DashboardScreen.Visibility = Visibility.Visible;
         }
@@ -351,6 +352,31 @@ namespace MyShop
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboBox.SelectedIndex == -1)
+            {
+                placeholderText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                placeholderText.Visibility = Visibility.Collapsed;
+            }
+
+        }
+
+        private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboBox1.SelectedIndex == -1)
+            {
+                placeholderText1.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                placeholderText1.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }
