@@ -255,5 +255,18 @@ namespace MyShop
         {
 
         }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboBox.SelectedIndex == -1)
+            {
+                placeholderText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                placeholderText.Visibility = Visibility.Collapsed;
+            }
+
+        }
     }
 }
