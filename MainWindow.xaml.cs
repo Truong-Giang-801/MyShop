@@ -251,46 +251,50 @@ namespace MyShop
 
                 var document = SpreadsheetDocument.Open(filename, false);
                 var wbPart = document.WorkbookPart!;
-                var sheets = wbPart.Workbook.Descendants<Sheet>()!;
-                var sheet = sheets.FirstOrDefault(s => s.Name == "Category");
-                var wsPart = (WorksheetPart)(wbPart!.GetPartById(sheet.Id!));
-                var cells = wsPart.Worksheet.Descendants<Cell>();
-                int row = 2;
-                Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
 
-
-                string connectionString = Properties.Settings.Default.ConnectionString;
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                // Loop through all sheets in the workbook
+                foreach (var sheet in wbPart.Workbook.Descendants<Sheet>())
                 {
-                    connection.Open();
+                    var wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id!);
+                    var cells = wsPart.Worksheet.Descendants<Cell>();
+                    int row = 2;
+                    Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
 
-                    string createTableSql = @"
-                            DROP TABLE Category;
-                            CREATE TABLE Category (
+                    // Create a table for the current sheet
+                    string tableName = sheet.Name.Value; // Use the sheet name as the table name
+                    string connectionString = Properties.Settings.Default.ConnectionString;
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        string createTableSql = $@"
+                            DROP TABLE IF EXISTS {tableName};
+                            CREATE TABLE {tableName} (
                                 Id INT IDENTITY(1,1) PRIMARY KEY,
                                 Name NVARCHAR(255) NOT NULL
                             );";
-                    using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
-                    {
-                        createTableCommand.ExecuteNonQuery();
-                    }
-                    while (nameCell != null)
-                    {
-                        string stringId = nameCell!.InnerText;
-                        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
-                        string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
-                        Debug.WriteLine(name);
-
-                        // Insert the name into the database
-                        string sql = "INSERT INTO Category (Name) VALUES (@Name)";
-                        using (SqlCommand command = new SqlCommand(sql, connection))
+                        using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
                         {
-                            command.Parameters.AddWithValue("@Name", name);
-                            command.ExecuteNonQuery();
+                            createTableCommand.ExecuteNonQuery();
                         }
 
-                        row++;
-                        nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                        // Insert data from the current sheet into the database
+                        while (nameCell != null)
+                        {
+                            string stringId = nameCell.InnerText;
+                            var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
+                            string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
+
+                            string sql = $"INSERT INTO {tableName} (Name) VALUES (@Name)";
+                            using (SqlCommand command = new SqlCommand(sql, connection))
+                            {
+                                command.Parameters.AddWithValue("@Name", name);
+                                command.ExecuteNonQuery();
+                            }
+
+                            row++;
+                            nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+                        }
                     }
                 }
             }
