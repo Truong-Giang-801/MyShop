@@ -269,9 +269,14 @@ namespace MyShop
 
                         string createTableSql = $@"
                             DROP TABLE IF EXISTS {tableName};
-                            CREATE TABLE {tableName} (
+                            CREATE TABLE Category (
                                 Id INT IDENTITY(1,1) PRIMARY KEY,
                                 Name NVARCHAR(255) NOT NULL
+                            );
+                            CREATE TABLE Product (
+                                Id INT IDENTITY(1,1) PRIMARY KEY,
+                                Name NVARCHAR(255) NOT NULL,
+                                Money 
                             );";
                         using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
                         {
