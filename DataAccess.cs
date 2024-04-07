@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlTypes;
 using System.Diagnostics;
@@ -42,9 +43,9 @@ namespace MyShop
     {
         private string connectionString = Properties.Settings.Default.ConnectionString;
 
-        public BindingList<Products> ReadDataFromDatabase()
+        public ObservableCollection<Product> ReadDataFromDatabase()
         {
-            BindingList<Products> list = new BindingList<Products>();
+            ObservableCollection<Product> list = new ObservableCollection<Product>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -60,7 +61,7 @@ namespace MyShop
                     int price = Convert.ToInt32(reader["Price"]);
                     int category = (int)reader["Category"];
                     int quantity = (int)reader["Quantity"];
-                    Products products = new Products() { Id = id, ProductName = name, Price = price, Quantity = quantity, Category = category };
+                    Product products = new Product() { Id = id, ProductName = name, Price = price, Quantity = quantity, Category = category };
                     list.Add(products);
                 }
                 reader.Close();

@@ -38,11 +38,6 @@ namespace MyShop
                 this.DragMove();
             }
         }
-        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
-        {
-            comboBox.SelectedIndex = 0;
-        }
-
         private bool IsMaximize = false;
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -170,20 +165,20 @@ namespace MyShop
             DashBoard.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
         BindingList<Category> _categories = new BindingList<Category>();
-        BindingList<Products> _products = new BindingList<Products>();
+        ObservableCollection<Product> _products = new ObservableCollection<Product>();
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // Sử dụng CategoryService để lấy dữ liệu Category từ cơ sở dữ liệu
-            CategoryService categoryService = new CategoryService();
-            BindingList<Category> categories = categoryService.GetAllCategories();
-            comboBox.ItemsSource = categories;
+
 
             // Sử dụng ProductService để lấy dữ liệu Product từ cơ sở dữ liệu
-            // Giả sử bạn đã tạo ProductService tương tự như CategoryService
             ProductsService productService = new ProductsService();
-            BindingList<Products> products = productService.GetAllProducts();
-            Debug.WriteLine(products[0].ProductName);
-            ListBoxProducts.ItemsSource = products;
+            _products = productService.GetAllProducts();
+            ListBoxProducts.ItemsSource = _products;
+
+            // Sử dụng CategoryService để lấy dữ liệu Category từ cơ sở dữ liệu
+            CategoryService categoryService = new CategoryService();
+            _categories= categoryService.GetAllCategories();
+            comboBox.ItemsSource = _categories;
 
             setVisibleOff();
             DashboardScreen.Visibility = Visibility.Visible;
@@ -191,7 +186,7 @@ namespace MyShop
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
         }
-        List<Products> _products1 = new List<Products>();
+        List<Product> _products1 = new List<Product>();
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Assuming comboBox is for category selection
@@ -276,7 +271,7 @@ namespace MyShop
                 }
             }
 
-            BindingList<Products> productsBindingList = new BindingList<Products>(_products1);
+            ObservableCollection<Product> productsBindingList = new ObservableCollection<Product>(_products1);
             ListBoxProducts.ItemsSource = productsBindingList;
         }
 
@@ -286,7 +281,7 @@ namespace MyShop
 
             // Filter the products based on the search text
             var filteredProducts = _products1.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
-            BindingList<Products> productsBindingList = new BindingList<Products>(filteredProducts);
+            ObservableCollection<Product> productsBindingList = new ObservableCollection<Product>(filteredProducts);
 
             // Update the ListBox with the filtered products
             ListBoxProducts.ItemsSource =(productsBindingList);
