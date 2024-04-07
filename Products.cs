@@ -10,18 +10,36 @@ namespace MyShop
 {
     public class Products : INotifyPropertyChanged
     {
-        private int _numberSale;
         private string? _productName;
-        private int _category;
         private int _price;
-
-        public int NumberSale
+        private int _quantity;
+        private int _id;
+        private int _category;
+        public int Quantity
         {
-            get { return _numberSale; }
+            get { return _quantity; }
             set
             {
-                _numberSale = value;
-                OnPropertyChanged(nameof(NumberSale));
+                _quantity = value;
+                OnPropertyChanged(nameof(Quantity));
+            }
+        }
+        public int Category
+        {
+            get { return _category; }
+            set
+            {
+                _category = value;
+                OnPropertyChanged(nameof(Category));
+            }
+        }
+        public int Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
             }
         }
 
@@ -32,16 +50,6 @@ namespace MyShop
             {
                 _productName = value;
                 OnPropertyChanged(nameof(ProductName));
-            }
-        }
-
-        public int Category
-        {
-            get { return _category; }
-            set
-            {
-                _category = value;
-                OnPropertyChanged(nameof(Category));
             }
         }
 
@@ -62,4 +70,5 @@ namespace MyShop
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
 }
