@@ -180,6 +180,7 @@ namespace MyShop
             _categories= categoryService.GetAllCategories();
             comboBox.ItemsSource = _categories;
 
+            Debug.WriteLine(products.Count);
             setVisibleOff();
             DashboardScreen.Visibility = Visibility.Visible;
         }
