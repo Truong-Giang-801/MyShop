@@ -27,18 +27,18 @@ namespace MyShop
     /// </summary>
     public partial class MainWindow : Window
     {
-        public class ProductsViewModel
-        {
-            public ObservableCollection<Products> ProductsList { get; set; }
-            public ProductsViewModel()
-            {
-                ProductsList = new ObservableCollection<Products>();
-            }
-        }
+        //public class ProductsViewModel
+        //{
+        //    public ObservableCollection<Products> ProductsList { get; set; }
+        //    public ProductsViewModel()
+        //    {
+        //        //ProductsList = new ObservableCollection<Products>();
+        //    }
+        //}
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ProductsViewModel();
+            //DataContext = new ProductsViewModel();
         }
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -388,7 +388,6 @@ namespace MyShop
             }
             else
             {
-                placeholderText.Visibility = Visibility.Collapsed;
                 var selectedCategory = comboBox.SelectedItem as Category;
                 if (selectedCategory == null)
                 {

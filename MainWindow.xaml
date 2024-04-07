@@ -68,8 +68,8 @@
                 </Button>
                 <Button x:Name="Payment" Click="Payment_Click" Style="{StaticResource menuButton}">
                     <StackPanel Orientation="Horizontal">
-                        <Icon:PackIconMaterial Kind="WalletOutline" Style="{StaticResource menuButtonIcon}"/>
-                        <TextBlock Text="Payment" Style="{StaticResource menuButtonText}"/>
+                        <Icon:PackIconMaterial Kind="AccountCogOutline" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Manage Product" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
 
