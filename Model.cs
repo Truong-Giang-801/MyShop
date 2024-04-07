@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MyShop
 {
@@ -69,6 +68,21 @@ namespace MyShop
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
 
+
+    }
+    public class Category : INotifyPropertyChanged
+    {
+        public int Id { get; set; }
+        public string? CategoryName { get; set; }
+        public virtual ICollection<Products> Products { get; set; } = new List<Products>();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+    
 }
