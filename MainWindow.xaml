@@ -54,10 +54,10 @@
                         <TextBlock Text="Dashboard" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Account" Click="Profile_Click" Style="{StaticResource menuButton}">
+                <Button x:Name="Import" Click="Import_Click" Style="{StaticResource menuButton}">
                     <StackPanel Orientation="Horizontal">
-                        <Icon:PackIconMaterial Kind="AccountOutline" Style="{StaticResource menuButtonIcon}"/>
-                        <TextBlock Text="Profile" Style="{StaticResource menuButtonText}"/>
+                        <Icon:PackIconMaterial Kind="Import" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Import" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="Products" Click="Products_Click" Style="{StaticResource menuButton}" >
@@ -349,7 +349,7 @@
                     </Grid>
                 </Border>
                 <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
-                    <ListBox x:Name="ListBoxProducts" ItemsSource="{Binding ProductsList}" av:ItemsSource="{av:SampleData ItemCount=5}"  BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
+                    <ListBox x:Name="ListBoxProducts" ItemsSource="{Binding Products}" av:ItemsSource="{av:SampleData ItemCount=5}"  BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
                         <ListBox.ItemTemplate >
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Width="692">
@@ -370,14 +370,16 @@
                         <TextBlock VerticalAlignment="Center" Text="Quantity" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="116" ></TextBlock>
 
                         <Grid>
-                            <ComboBox x:Name="comboBox" Width="90" Height="30" DisplayMemberPath="CategoryName" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" Margin="0,32,0,0" SelectionChanged="ComboBox_SelectionChanged">
+                            <ComboBox x:Name="comboBox" Width="90" Height="30" DisplayMemberPath="CategoryName" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" Margin="0,32,0,0" SelectionChanged="ComboBox_SelectionChanged" Loaded="ComboBox_Loaded">
                                 <ComboBox.ItemsSource>
                                     <CompositeCollection>
-                                        <ComboBoxItem Content="All"/>
                                         <CollectionContainer Collection="{Binding Category}" />
                                     </CompositeCollection>
                                 </ComboBox.ItemsSource>
                             </ComboBox>
+
+
+
 
                             <TextBlock x:Name="placeholderText" Text="Category" VerticalAlignment="Top" HorizontalAlignment="Left"
          Foreground="Black" IsHitTestVisible="False" Margin="3,11,0,0" />
@@ -386,11 +388,11 @@
                         </Grid>
                         <Grid Margin="50,0,0,0">
                             <ComboBox x:Name="comboBox1" SelectionChanged="comboBox1_SelectionChanged" Width="100" Height="30" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" Margin="0,30,0,0">
+                                <ComboBoxItem IsSelected="True" FontSize="15" Content="All"/>
                                 <ComboBoxItem FontSize="15" Content="&lt;5.000.000đ"/>
                                 <ComboBoxItem FontSize="15" Content="&lt;10.000.000đ"/>
                                 <ComboBoxItem FontSize="15" Content="&lt;15.000.000đ"/>
                                 <ComboBoxItem FontSize="15" Content="&lt;20.000.000đ"/>
-                                <ComboBoxItem IsSelected="True" FontSize="15" Content="All"/>
                             </ComboBox>
                             <TextBlock x:Name="placeholderText1" Text="Price" VerticalAlignment="Top" HorizontalAlignment="Left"
                                     Foreground="Black" IsHitTestVisible="False" Margin="3,9,0,0" />

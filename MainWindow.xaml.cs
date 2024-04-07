@@ -27,18 +27,9 @@ namespace MyShop
     /// </summary>
     public partial class MainWindow : Window
     {
-        public class ProductsViewModel
-        {
-            public ObservableCollection<Products> ProductsList { get; set; }
-            public ProductsViewModel()
-            {
-                ProductsList = new ObservableCollection<Products>();
-            }
-        }
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ProductsViewModel();
         }
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -47,6 +38,11 @@ namespace MyShop
                 this.DragMove();
             }
         }
+        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            comboBox.SelectedIndex = 0;
+        }
+
         private bool IsMaximize = false;
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -76,8 +72,8 @@ namespace MyShop
             Payment.Foreground = Brushes.White;
             Support.Background = Brushes.Transparent;
             Support.Foreground = Brushes.White;
-            Account.Background = Brushes.Transparent;
-            Account.Foreground = Brushes.White;
+            Import.Background = Brushes.Transparent;
+            Import.Foreground = Brushes.White;
             Setting.Background = Brushes.Transparent;
             Setting.Foreground = Brushes.White;
             Products.Background = Brushes.Transparent;
@@ -157,14 +153,6 @@ namespace MyShop
             Support.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Support.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
-        private void Profile_Click(object sender, RoutedEventArgs e)
-        {
-            setButtonDashBoard();
-            setVisibleOff();
-            ProfileScreen.Visibility = Visibility.Visible;
-            Account.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Account.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
-        }
         private void Setting_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
@@ -185,52 +173,132 @@ namespace MyShop
         BindingList<Products> _products = new BindingList<Products>();
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            // Sử dụng CategoryService để lấy dữ liệu Category từ cơ sở dữ liệu
+            CategoryService categoryService = new CategoryService();
+            BindingList<Category> categories = categoryService.GetAllCategories();
+            comboBox.ItemsSource = categories;
+
+            // Sử dụng ProductService để lấy dữ liệu Product từ cơ sở dữ liệu
+            // Giả sử bạn đã tạo ProductService tương tự như CategoryService
+            ProductsService productService = new ProductsService();
+            BindingList<Products> products = productService.GetAllProducts();
+            Debug.WriteLine(products[0].ProductName);
+            ListBoxProducts.ItemsSource = products;
+
+            setVisibleOff();
+            DashboardScreen.Visibility = Visibility.Visible;
+        }
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        }
+        List<Products> _products1 = new List<Products>();
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Assuming comboBox is for category selection
+            if (comboBox.SelectedIndex == -1)
+            {
+                placeholderText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                placeholderText.Visibility = Visibility.Collapsed;
+                var selectedCategory = comboBox.SelectedItem as Category;
+                if (selectedCategory == null)
+                {
+                    Debug.WriteLine("Selected item is not a Category object.");
+                }
+                else
+                {
+                    // Update the category selection state
+                    string selectedCategoryName = selectedCategory.CategoryName;
+                    // Apply combined filter
+                    ApplyFilter(selectedCategoryName, comboBox1.SelectedIndex);
+                }
+            }
+        }
+
+        private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Assuming comboBox1 is for price selection
+            if (comboBox1.SelectedIndex == -1)
+            {
+                placeholderText1.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Update the price selection state
+                int selectedPriceIndex = comboBox1.SelectedIndex;
+                // Apply combined filter
+                var selectedCategory = comboBox.SelectedItem as Category;
+                if (selectedCategory != null)
+                {
+                    ApplyFilter(selectedCategory.CategoryName, selectedPriceIndex);
+                }
+                else
+                {
+                    // Handle the case where the selected item is not a Category object or is null
+                }
+            }
+        }
+
+        private void ApplyFilter(string selectedCategoryName, int selectedPriceIndex)
+        {
+            _products1.Clear();
+            if (selectedCategoryName == "All" && selectedPriceIndex == 0)
+            {
+                ListBoxProducts.ItemsSource = _products;
+                return;
+            }
+
+            // Determine the price threshold based on the selected price index
+            int priceThreshold = 0;
+            if (selectedPriceIndex >= 1 && selectedPriceIndex <= 4)
+            {
+                priceThreshold = 5000000 * selectedPriceIndex;
+            }
+
+
+            // Filter products based on category and price
+            if (selectedCategoryName == "All")
+            {
+                _products1 = _products.Where(p => p.Price <= priceThreshold).ToList();
+            }
+            else
+            {
+                var selectedCategory = _categories.FirstOrDefault(c => c.CategoryName == selectedCategoryName);
+                if (selectedPriceIndex == 0 && selectedCategory != null)
+                {
+                    _products1 = _products.Where(p => p.Category == selectedCategory.Id).ToList();
+                }
+                else if (selectedCategory != null && selectedPriceIndex > -1)
+                {
+                    _products1 = _products.Where(p => p.Category == selectedCategory.Id && p.Price <= priceThreshold).ToList();
+                }
+            }
+
+            BindingList<Products> productsBindingList = new BindingList<Products>(_products1);
+            ListBoxProducts.ItemsSource = productsBindingList;
+        }
+
+        private void textBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string searchText = textBoxSearch.Text.ToLower();
+
+            // Filter the products based on the search text
+            var filteredProducts = _products1.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
+            BindingList<Products> productsBindingList = new BindingList<Products>(filteredProducts);
+
+            // Update the ListBox with the filtered products
+            ListBoxProducts.ItemsSource =(productsBindingList);
+        }
+
+        private void Import_Click(object sender, RoutedEventArgs e)
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Excel Files|*.xlsx;*.xls;*.csv";
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
-
-                //using (var document = SpreadsheetDocument.Open(filename, false))
-                //{
-                //    var wbPart = document.WorkbookPart!;
-                //    var sheets = wbPart.Workbook.Descendants<Sheet>()!;
-                //    var sheet = sheets.FirstOrDefault(s => s.Name == "Product");
-                //    var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id!));
-                //    var cells = wsPart.Worksheet.Descendants<Cell>();
-                //    int row = 2;
-
-                //    while (true)
-                //    {
-                //        _product = new Products();
-                //        // Read from column B
-                //        Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
-                //        if (nameCell == null) break; // Exit loop if no more data in column B
-                //        string stringId = nameCell.InnerText;
-                //        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
-                //        string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
-                //        _product.ProductName = name;
-                //        Debug.WriteLine($"Name: {name}");
-
-                //        // Read from column C
-                //        Cell anotherCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
-                //        if (anotherCell == null) break; // Exit loop if no more data in column C
-                //        int anotherValue = int.Parse(anotherCell.CellValue.Text); // Directly parse the cell value as an integer
-                //        Debug.WriteLine($"Another Value: {anotherValue}");
-                //        _product.Price = anotherValue;
-                //        // Read from column D
-                //        Cell anotherCell1 = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
-                //        if (anotherCell1 == null) break; // Exit loop if no more data in column D
-                //        int anotherValue1 = int.Parse(anotherCell1.CellValue.Text); // Directly parse the cell value as an integer
-                //        Debug.WriteLine($"Another Value: {anotherValue1}");
-                //        _product.Category = anotherValue1;
-
-                //        // Add the product to the ProductsList in the ViewModel
-                //        ((ProductsViewModel)DataContext).ProductsList.Add(_product);
-
-                //        row++;
-                //    }
-                //}
                 string connectionString = Properties.Settings.Default.ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -239,21 +307,21 @@ namespace MyShop
 
                     // Create table
                     string createTableSql = $@"
-                        DROP TABLE IF EXISTS Product;
-                        DROP TABLE IF EXISTS Category;
-                        CREATE TABLE Category (
-                            Id INT IDENTITY(1,1) PRIMARY KEY,
-                            Name NVARCHAR(255) NOT NULL
-                        );
-                        DROP TABLE IF EXISTS Product;
-                        CREATE TABLE Product (
-                            Id INT IDENTITY(1,1) PRIMARY KEY,
-                            Name NVARCHAR(255) NOT NULL,
-                            Price MONEY NOT NULL,
-                            Category INT NOT NULL,
-                            Quantity INT NOT NULL,
-                            FOREIGN KEY (Category) REFERENCES Category(Id)
-                        );";
+            DROP TABLE IF EXISTS Product;
+            DROP TABLE IF EXISTS Category;
+            CREATE TABLE Category (
+                Id INT IDENTITY(1,1) PRIMARY KEY,
+                Name NVARCHAR(255) NOT NULL
+            );
+            DROP TABLE IF EXISTS Product;
+            CREATE TABLE Product (
+                Id INT IDENTITY(1,1) PRIMARY KEY,
+                Name NVARCHAR(255) NOT NULL,
+                Price MONEY NOT NULL,
+                Category INT NOT NULL,
+                Quantity INT NOT NULL,
+                FOREIGN KEY (Category) REFERENCES Category(Id)
+            );";
                     using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
                     {
                         createTableCommand.ExecuteNonQuery();
@@ -332,152 +400,9 @@ namespace MyShop
                         categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
                         quantityCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}")!;
                     }
-                    //read data from sql
 
-
-                    var sqlcmd = "select * from Category";
-                    var commandd = new SqlCommand(sqlcmd, connection);
-                    var reader = commandd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        int id = (int)reader["Id"];
-                        string name = (string)reader["Name"];
-
-                        Category cat = new Category() { Id = id, CategoryName = name };
-                        _categories.Add(cat);
-                    }
-                    reader.Close();
-
-                    sqlcmd = "select * from Product";
-                    commandd = new SqlCommand(sqlcmd, connection);
-                    reader = commandd.ExecuteReader();
-
-
-                    while (reader.Read())
-                    {
-                        int id = (int)reader["Id"];
-                        string name = (string)reader["Name"];
-                        int price = Convert.ToInt32(reader["Price"]);
-                        int category = (int)reader["Category"];
-                        int quantity = (int)reader["Quantity"];
-                        Products products = new Products() { Id = id, ProductName = name, Price=price,Quantity=quantity, Category=category };
-                        _products.Add(products);
-                    }
-                    reader.Close();
-                    ListBoxProducts.ItemsSource = _products;
-                    comboBox.ItemsSource = _categories;
                 }
             }
-
-
-            //ListBoxProducts.ItemsSource = _prd;
-            setVisibleOff();
-            DashboardScreen.Visibility = Visibility.Visible;
-        }
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-        }
-        List<Products> _products1 = new List<Products>();
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Assuming comboBox is for category selection
-            if (comboBox.SelectedIndex == -1)
-            {
-                placeholderText.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                placeholderText.Visibility = Visibility.Collapsed;
-                var selectedCategory = comboBox.SelectedItem as Category;
-                if (selectedCategory == null)
-                {
-                    Debug.WriteLine("Selected item is not a Category object.");
-                }
-                else
-                {
-                    // Update the category selection state
-                    string selectedCategoryName = selectedCategory.CategoryName;
-                    // Apply combined filter
-                    ApplyFilter(selectedCategoryName, comboBox1.SelectedIndex);
-                }
-            }
-        }
-
-        private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Assuming comboBox1 is for price selection
-            if (comboBox1.SelectedIndex == -1)
-            {
-                placeholderText1.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                // Update the price selection state
-                int selectedPriceIndex = comboBox1.SelectedIndex;
-                // Apply combined filter
-                var selectedCategory = comboBox.SelectedItem as Category;
-                if (selectedCategory != null)
-                {
-                    ApplyFilter(selectedCategory.CategoryName, selectedPriceIndex);
-                }
-                else
-                {
-                    // Handle the case where the selected item is not a Category object or is null
-                }
-            }
-        }
-
-        private void ApplyFilter(string selectedCategoryName, int selectedPriceIndex)
-        {
-            _products1.Clear();
-            if (selectedCategoryName == "All" && selectedPriceIndex == 4)
-            {
-                ListBoxProducts.ItemsSource = _products;
-                return;
-            }
-
-            // Determine the price threshold based on the selected price index
-            int priceThreshold = 0;
-            if (selectedPriceIndex >= 0 && selectedPriceIndex <= 3)
-            {
-                priceThreshold = 5000000 * (selectedPriceIndex + 1);
-            }
-
-
-            // Filter products based on category and price
-            if (selectedCategoryName == "All")
-            {
-                _products1 = _products.Where(p => p.Price <= priceThreshold).ToList();
-            }
-            else
-            {
-                var selectedCategory = _categories.FirstOrDefault(c => c.CategoryName == selectedCategoryName);
-                if (selectedPriceIndex == 4 && selectedCategory != null)
-                {
-                    _products1 = _products.Where(p => p.Category == selectedCategory.Id).ToList();
-                }
-                else if (selectedCategory != null && selectedPriceIndex > -1)
-                {
-                    _products1 = _products.Where(p => p.Category == selectedCategory.Id && p.Price <= priceThreshold).ToList();
-                }
-            }
-
-            Debug.WriteLine(_products1.Count);
-            BindingList<Products> productsBindingList = new BindingList<Products>(_products1);
-            ListBoxProducts.ItemsSource = productsBindingList;
-        }
-
-        private void textBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string searchText = textBoxSearch.Text.ToLower();
-
-            // Filter the products based on the search text
-            var filteredProducts = _products1.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
-            BindingList<Products> productsBindingList = new BindingList<Products>(filteredProducts);
-
-            // Update the ListBox with the filtered products
-            ListBoxProducts.ItemsSource =(productsBindingList);
         }
     }
 }
