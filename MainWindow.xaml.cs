@@ -18,8 +18,6 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics;
 using Microsoft.Data.SqlClient;
 using System.Collections.ObjectModel;
-using DevExpress.Xpo.DB.Helpers;
-using DocumentFormat.OpenXml.Office2010.Excel;
 namespace MyShop
 {
     /// <summary>
@@ -189,6 +187,7 @@ namespace MyShop
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
+
                 //using (var document = SpreadsheetDocument.Open(filename, false))
                 //{
                 //    var wbPart = document.WorkbookPart!;
@@ -197,6 +196,7 @@ namespace MyShop
                 //    var wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id!));
                 //    var cells = wsPart.Worksheet.Descendants<Cell>();
                 //    int row = 2;
+
                 //    while (true)
                 //    {
                 //        _product = new Products();
@@ -208,6 +208,7 @@ namespace MyShop
                 //        string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
                 //        _product.ProductName = name;
                 //        Debug.WriteLine($"Name: {name}");
+
                 //        // Read from column C
                 //        Cell anotherCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
                 //        if (anotherCell == null) break; // Exit loop if no more data in column C
@@ -220,8 +221,10 @@ namespace MyShop
                 //        int anotherValue1 = int.Parse(anotherCell1.CellValue.Text); // Directly parse the cell value as an integer
                 //        Debug.WriteLine($"Another Value: {anotherValue1}");
                 //        _product.Category = anotherValue1;
+
                 //        // Add the product to the ProductsList in the ViewModel
                 //        ((ProductsViewModel)DataContext).ProductsList.Add(_product);
+
                 //        row++;
                 //    }
                 //}
@@ -230,6 +233,7 @@ namespace MyShop
                 {
                     // Connect to Database
                     connection.Open();
+
                     // Create table
                     string createTableSql = $@"
                         DROP TABLE IF EXISTS Product;
@@ -248,35 +252,40 @@ namespace MyShop
                             FOREIGN KEY (Category) REFERENCES Category(Id)
                         );";
                     using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
-
                     {
                         createTableCommand.ExecuteNonQuery();
                     }
+
                     // Get sheets from Excel file
                     var document = SpreadsheetDocument.Open(filename, false);
                     var wbPart = document.WorkbookPart!;
                     var sheets = wbPart.Workbook.Descendants<Sheet>()!;
+
                     // Deal with Category sheet
                     var sheet = sheets.FirstOrDefault(s => s.Name == "Category");
                     var wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id!);
                     var cells = wsPart.Worksheet.Descendants<Cell>();
                     int row = 2;
                     Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
+
                     // Insert data from the current sheet into the database
                     while (nameCell != null)
                     {
                         string stringId = nameCell.InnerText;
                         var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
                         string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
+
                         string sql = $"INSERT INTO Category (Name) VALUES (@Name)";
                         using (SqlCommand command = new SqlCommand(sql, connection))
                         {
                             command.Parameters.AddWithValue("@Name", name);
                             command.ExecuteNonQuery();
                         }
+
                         row++;
                         nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
                     }
+
                     //Deal with Product sheet
                     sheet = sheets.FirstOrDefault(s => s.Name == "Product");
                     wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id!);
@@ -289,14 +298,15 @@ namespace MyShop
 
                     // Insert data from the current sheet into the database
                     while (nameCell != null)
-
-
                     {
                         var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
+
                         string nameStringId = nameCell.InnerText;
                         string name = stringTable.SharedStringTable.ElementAt(int.Parse(nameStringId)).InnerText;
+
                         string priceStringId = priceCell.InnerText;
                         decimal price = decimal.Parse(priceStringId);
+
                         string categoryStringId = categoryCell.InnerText;
                         int category = int.Parse(categoryStringId);
 
