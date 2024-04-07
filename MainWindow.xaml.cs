@@ -182,9 +182,9 @@ namespace MyShop
             // Giả sử bạn đã tạo ProductService tương tự như CategoryService
             ProductsService productService = new ProductsService();
             BindingList<Products> products = productService.GetAllProducts();
-            Debug.WriteLine(products[0].ProductName);
             ListBoxProducts.ItemsSource = products;
 
+            Debug.WriteLine(products.Count);
             setVisibleOff();
             DashboardScreen.Visibility = Visibility.Visible;
         }

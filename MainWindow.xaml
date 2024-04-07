@@ -349,14 +349,13 @@
                     </Grid>
                 </Border>
                 <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
-                    <ListBox x:Name="ListBoxProducts" ItemsSource="{Binding Products}" av:ItemsSource="{av:SampleData ItemCount=5}"  BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
-                        <ListBox.ItemTemplate >
+                    <ListBox x:Name="ListBoxProducts" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
+                        <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Width="692">
                                     <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="DemiBold" Width="361"/>
                                     <TextBlock Text="{Binding Price}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="182"/>
                                     <TextBlock Text="{Binding Quantity}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="99"/>
-
                                     <!-- Add more bindings as needed -->
                                 </StackPanel>
                             </DataTemplate>
