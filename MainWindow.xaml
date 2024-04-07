@@ -349,14 +349,13 @@
                     </Grid>
                 </Border>
                 <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
-                    <ListBox x:Name="ListBoxProducts" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
+                    <ListBox x:Name="ListBoxProducts" ItemsSource="{Binding Product}" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Width="692">
                                     <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="DemiBold" Width="361"/>
                                     <TextBlock Text="{Binding Price}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="182"/>
                                     <TextBlock Text="{Binding Quantity}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="99"/>
-                                    <!-- Add more bindings as needed -->
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -369,10 +368,17 @@
                         <TextBlock VerticalAlignment="Center" Text="Quantity" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="116" ></TextBlock>
 
                         <Grid>
-                            <ComboBox x:Name="comboBox" Width="90" Height="30" DisplayMemberPath="CategoryName" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" Margin="0,32,0,0" SelectionChanged="ComboBox_SelectionChanged" Loaded="ComboBox_Loaded">
+                            <ComboBox x:Name="comboBox" Width="90" Height="30" DisplayMemberPath="CategoryName" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" Margin="0,32,0,0" SelectionChanged="ComboBox_SelectionChanged">
                                 <ComboBox.ItemsSource>
                                     <CompositeCollection>
-                                        <CollectionContainer Collection="{Binding Category}" />
+                                        <CollectionContainer Collection="{Binding Categories}" />
+                                    </CompositeCollection>
+                                </ComboBox.ItemsSource>
+                            </ComboBox>
+                            <ComboBox x:Name="comboBox0" Visibility="Hidden">
+                                <ComboBox.ItemsSource>
+                                    <CompositeCollection>
+                                        <CollectionContainer Collection="{Binding Categories}" />
                                     </CompositeCollection>
                                 </ComboBox.ItemsSource>
                             </ComboBox>

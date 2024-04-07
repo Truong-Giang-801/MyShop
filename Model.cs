@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyShop
 {
-    public class Products : INotifyPropertyChanged
+    public class Product : INotifyPropertyChanged
     {
         private string? _productName;
         private int _price;
@@ -75,7 +75,7 @@ namespace MyShop
     {
         public int Id { get; set; }
         public string? CategoryName { get; set; }
-        public virtual ICollection<Products> Products { get; set; } = new List<Products>();
+        public virtual ICollection<Product> Product { get; set; } = new List<Product>();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

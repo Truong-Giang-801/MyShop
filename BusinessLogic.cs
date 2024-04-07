@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace MyShop
 {
@@ -23,11 +25,10 @@ namespace MyShop
     {
         private ProductsRepository productsRepository = new ProductsRepository();
 
-        public BindingList<Products> GetAllProducts()
+        public ObservableCollection<Product> GetAllProducts()
         {
             return productsRepository.ReadDataFromDatabase();
         }
 
-        // Các phương thức khác liên quan đến Category...
     }
 }
