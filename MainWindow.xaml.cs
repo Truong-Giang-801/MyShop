@@ -63,10 +63,10 @@ namespace MyShop
             DashBoard.Foreground = Brushes.White;
             Log_Out.Background = Brushes.Transparent;
             Log_Out.Foreground = Brushes.White;
-            Payment.Background = Brushes.Transparent;
-            Payment.Foreground = Brushes.White;
-            Support.Background = Brushes.Transparent;
-            Support.Foreground = Brushes.White;
+            Category.Background = Brushes.Transparent;
+            Category.Foreground = Brushes.White;
+            Report.Background = Brushes.Transparent;
+            Report.Foreground = Brushes.White;
             Import.Background = Brushes.Transparent;
             Import.Foreground = Brushes.White;
             Setting.Background = Brushes.Transparent;
@@ -79,8 +79,8 @@ namespace MyShop
         private void setVisibleOff()
         {
             DashboardScreen.Visibility = Visibility.Hidden;
-            PaymentScreen.Visibility = Visibility.Hidden;
-            SupportScreen.Visibility = Visibility.Hidden;
+            CategoryScreen.Visibility = Visibility.Hidden;
+            ReportScreen.Visibility = Visibility.Hidden;
             ProfileScreen.Visibility = Visibility.Hidden;
             SettingScreen.Visibility = Visibility.Hidden;
             ProductScreen.Visibility = Visibility.Hidden;
@@ -132,21 +132,21 @@ namespace MyShop
             Products.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Products.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
-        private void Payment_Click(object sender, RoutedEventArgs e)
+        private void Category_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
             setVisibleOff();
-            PaymentScreen.Visibility = Visibility.Visible;
-            Payment.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Payment.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
+            CategoryScreen.Visibility = Visibility.Visible;
+            Category.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Category.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
-        private void Support_Click(object sender, RoutedEventArgs e)
+        private void Report_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
             setVisibleOff();
-            SupportScreen.Visibility = Visibility.Visible;
-            Support.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Support.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
+            ReportScreen.Visibility = Visibility.Visible;
+            Report.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Report.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
         private void Setting_Click(object sender, RoutedEventArgs e)
         {
@@ -398,6 +398,11 @@ namespace MyShop
 
                 }
             }
+        }
+
+        private void Order_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

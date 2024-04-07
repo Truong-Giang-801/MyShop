@@ -60,43 +60,48 @@
                         <TextBlock Text="Import" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
+                <Button x:Name="Category" Click="Category_Click" Style="{StaticResource menuButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Icon:PackIconMaterial Kind="Archive" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Category" Style="{StaticResource menuButtonText}"/>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="Products" Click="Products_Click" Style="{StaticResource menuButton}" >
                     <StackPanel Orientation="Horizontal">
-                        <Icon:PackIconMaterial Kind="ShoppingOutline" Style="{StaticResource menuButtonIcon}"/>
+                        <Icon:PackIconMaterial Kind="Cellphone" Style="{StaticResource menuButtonIcon}"/>
                         <TextBlock Text="Products" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Payment" Click="Payment_Click" Style="{StaticResource menuButton}">
+                <Button x:Name="Order" Click="Order_Click" Style="{StaticResource menuButton}" >
                     <StackPanel Orientation="Horizontal">
-                        <Icon:PackIconMaterial Kind="WalletOutline" Style="{StaticResource menuButtonIcon}"/>
-                        <TextBlock Text="Payment" Style="{StaticResource menuButtonText}"/>
+                        <Icon:PackIconMaterial Kind="ShoppingOutline" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Order" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
 
+                <Button x:Name="Report" Click="Report_Click" Style="{StaticResource menuButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Icon:PackIconMaterial Kind="ChartBar" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Report" Style="{StaticResource menuButtonText}"/>
+                    </StackPanel>
+                </Button>
 
-                <TextBlock Text="Help" Margin="25,25,0,20" Style="{StaticResource menuTitle}" RenderTransformOrigin="0.5,0.5"/>
-                <Button x:Name="Setting" Click="Setting_Click" Style="{StaticResource menuButton}">
+                <Button x:Name="Setting" Margin="15,60,15,5" Click="Setting_Click" Style="{StaticResource menuButton}">
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="CogOutline" Style="{StaticResource menuButtonIcon}"/>
                         <TextBlock Text="Settings" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="Support" Click="Support_Click" Style="{StaticResource menuButton}">
+                <Button x:Name="Exit_button" Style="{StaticResource menuButton}" Click="Exit_button_Click" Width="190" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal">
-                        <Icon:PackIconMaterial Kind="PhonePausedOutline" Style="{StaticResource menuButtonIcon}"/>
-                        <TextBlock Text="Support" Style="{StaticResource menuButtonText}"/>
+                        <Icon:PackIconMaterial Kind="Power" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Exit" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="Log_Out" Style="{StaticResource menuButton}" Click="Log_Out_Click">
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
                         <TextBlock Text="Log Out" Style="{StaticResource menuButtonText}"/>
-                    </StackPanel>
-                </Button>
-                <Button x:Name="Exit_button" Margin="15,60,15,5" Style="{StaticResource menuButton}" Click="Exit_button_Click" Width="190" HorizontalAlignment="Left">
-                    <StackPanel Orientation="Horizontal">
-                        <Icon:PackIconMaterial Kind="Power" Style="{StaticResource menuButtonIcon}"/>
-                        <TextBlock Text="Exit" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -287,10 +292,10 @@
 
             </Grid>
         </Border>
-        <!--Payment Screen-->
-        <Border x:Name="PaymentScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
+        <!--Category Screen-->
+        <Border x:Name="CategoryScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Hidden">
-                <TextBlock Text="Payment"/>
+                <TextBlock Text="Category"/>
 
             </Grid>
         </Border>
@@ -301,10 +306,10 @@
 
             </Grid>
         </Border>
-        <!--Support Screen-->
-        <Border x:Name="SupportScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
+        <!--Report Screen-->
+        <Border x:Name="ReportScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Hidden">
-                <TextBlock Text="Support"/>
+                <TextBlock Text="Report"/>
 
             </Grid>
         </Border>
