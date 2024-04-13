@@ -33,6 +33,23 @@ namespace MyShop
         {
             InitializeComponent();
         }
+        public void LoadProductsAndCategories()
+        {
+            // Using ProductService to fetch all products from the database
+            ProductsService productService = new ProductsService();
+            _products = productService.GetAllProducts();
+            ListBoxProducts.ItemsSource = _products;
+
+            // Using CategoryService to fetch all categories from the database
+            CategoryService categoryService = new CategoryService();
+            _categories = categoryService.GetAllCategories();
+            ListBoxCategories.ItemsSource = _categories;
+
+            // Clone the BindingList and add an "All" category
+            BindingList<Category> clonedCategories = categoryService.AddAllObjectToCategories(_categories);
+            comboBox.ItemsSource = clonedCategories;
+            comboBox.SelectedIndex = 0;
+        }
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -168,24 +185,7 @@ namespace MyShop
         ObservableCollection<Product> _products = new ObservableCollection<Product>();
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
-
-            // Sử dụng ProductService để lấy dữ liệu Product từ cơ sở dữ liệu
-            ProductsService productService = new ProductsService();
-            _products = productService.GetAllProducts();
-            ListBoxProducts.ItemsSource = _products;
-
-            // Sử dụng CategoryService để lấy dữ liệu Category từ cơ sở dữ liệu
-            CategoryService categoryService = new CategoryService();
-            _categories= categoryService.GetAllCategories();
-            var categoryWithIdZero = _categories.FirstOrDefault(c => c.Id == 0);
-            if (categoryWithIdZero != null)
-            {
-                comboBox.SelectedItem = categoryWithIdZero;
-            }
-            comboBox.ItemsSource = _categories;
-            ListBoxCategories.ItemsSource = _categories;
-
+            LoadProductsAndCategories();
             setVisibleOff();
             DashboardScreen.Visibility = Visibility.Visible;
         }
@@ -212,8 +212,9 @@ namespace MyShop
                 {
                     // Update the category selection state
                     string selectedCategoryName = selectedCategory.CategoryName;
+                    int selectedCategoryIndex = comboBox.SelectedIndex;
                     // Apply combined filter
-                    ApplyFilter(selectedCategoryName, comboBox1.SelectedIndex);
+                    ApplyFilter(selectedCategoryIndex, selectedCategoryName, comboBox1.SelectedIndex);
                 }
             }
         }
@@ -231,9 +232,10 @@ namespace MyShop
                 int selectedPriceIndex = comboBox1.SelectedIndex;
                 // Apply combined filter
                 var selectedCategory = comboBox.SelectedItem as Category;
+                int selectedCategoryIndex = comboBox.SelectedIndex;
                 if (selectedCategory != null)
                 {
-                    ApplyFilter(selectedCategory.CategoryName, selectedPriceIndex);
+                    ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
                 }
                 else
                 {
@@ -242,10 +244,10 @@ namespace MyShop
             }
         }
 
-        private void ApplyFilter(string selectedCategoryName, int selectedPriceIndex)
+        private void ApplyFilter(int selectedCategoryIndex, string selectedCategoryName, int selectedPriceIndex)
         {
             _products1.Clear();
-            if (selectedCategoryName == "All" && selectedPriceIndex == 0)
+            if (selectedCategoryIndex == 0 && selectedPriceIndex == 0)
             {
                 ListBoxProducts.ItemsSource = _products;
                 return;
@@ -260,7 +262,7 @@ namespace MyShop
 
 
             // Filter products based on category and price
-            if (selectedCategoryName == "All")
+            if (selectedCategoryIndex == 0)
             {
                 _products1 = _products.Where(p => p.Price <= priceThreshold).ToList();
             }
@@ -304,125 +306,49 @@ namespace MyShop
             if (openFileDialog.ShowDialog() == true)
             {
                 string filename = openFileDialog.FileName;
-                string connectionString = Properties.Settings.Default.ConnectionString;
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    // Connect to Database
-                    connection.Open();
-
-                    // Create table
-                    string createTableSql = $@"
-                        DROP TABLE IF EXISTS Product;
-                        DROP TABLE IF EXISTS Category;
-                        CREATE TABLE Category (
-                            Id INT IDENTITY(1,1) PRIMARY KEY,
-                            Name NVARCHAR(255) NOT NULL
-                        );
-                        DROP TABLE IF EXISTS Product;
-                        CREATE TABLE Product (
-                            Id INT IDENTITY(1,1) PRIMARY KEY,
-                            Name NVARCHAR(255) NOT NULL,
-                            Price MONEY NOT NULL,
-                            Category INT NOT NULL,
-                            Quantity INT NOT NULL,
-                            FOREIGN KEY (Category) REFERENCES Category(Id)
-                        );";
-                    using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
-                    {
-                        createTableCommand.ExecuteNonQuery();
-                    }
-
-                    // Get sheets from Excel file
-                    var document = SpreadsheetDocument.Open(filename, false);
-                    var wbPart = document.WorkbookPart!;
-                    var sheets = wbPart.Workbook.Descendants<Sheet>()!;
-
-                    // Deal with Category sheet
-                    var sheet = sheets.FirstOrDefault(s => s.Name == "Category");
-                    var wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id!);
-                    var cells = wsPart.Worksheet.Descendants<Cell>();
-                    int row = 2;
-                    Cell nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
-
-                    // Insert data from the current sheet into the database
-                    while (nameCell != null)
-                    {
-                        string stringId = nameCell.InnerText;
-                        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
-                        string name = stringTable.SharedStringTable.ElementAt(int.Parse(stringId)).InnerText;
-
-                        string sql = $"INSERT INTO Category (Name) VALUES (@Name)";
-                        using (SqlCommand command = new SqlCommand(sql, connection))
-                        {
-                            command.Parameters.AddWithValue("@Name", name);
-                            command.ExecuteNonQuery();
-                        }
-
-                        row++;
-                        nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
-                    }
-
-                    //Deal with Product sheet
-                    sheet = sheets.FirstOrDefault(s => s.Name == "Product");
-                    wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id!);
-                    cells = wsPart.Worksheet.Descendants<Cell>();
-                    row = 2;
-                    nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
-                    Cell priceCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
-                    Cell categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
-                    Cell quantityCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}")!;
-
-                    // Insert data from the current sheet into the database
-                    while (nameCell != null)
-                    {
-                        var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
-
-                        string nameStringId = nameCell.InnerText;
-                        string name = stringTable.SharedStringTable.ElementAt(int.Parse(nameStringId)).InnerText;
-
-                        string priceStringId = priceCell.InnerText;
-                        decimal price = decimal.Parse(priceStringId);
-
-                        string categoryStringId = categoryCell.InnerText;
-                        int category = int.Parse(categoryStringId);
-
-                        string quantityStringId = quantityCell.InnerText;
-                        int quantity = int.Parse(quantityStringId);
-
-                        string sql = "INSERT INTO Product (Name, Price, Category, Quantity) VALUES (@Name, @Price, @Category, @Quantity)";
-                        using (SqlCommand command = new SqlCommand(sql, connection))
-                        {
-                            command.Parameters.AddWithValue("@Name", name);
-                            command.Parameters.AddWithValue("@Price", price);
-                            command.Parameters.AddWithValue("@Category", category);
-                            command.Parameters.AddWithValue("@Quantity", quantity);
-                            command.ExecuteNonQuery();
-                        }
-
-                        row++;
-                        nameCell = cells.FirstOrDefault(c => c?.CellReference == $"B{row}")!;
-                        priceCell = cells.FirstOrDefault(c => c?.CellReference == $"C{row}")!;
-                        categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
-                        quantityCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}")!;
-                    }
-                    ProductsService productService = new ProductsService();
-                    _products = productService.GetAllProducts();
-                    ListBoxProducts.ItemsSource = _products;
-                }
+                DataImportService dataImportService = new DataImportService();
+                dataImportService.ImportDataFromExcel(filename);
             }
+            LoadProductsAndCategories();
         }
 
         private void Order_Click(object sender, RoutedEventArgs e)
         {
             
+        }  
+
+        private void Coupon_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
-
-        private void Delete_Click(object sender, RoutedEventArgs e)
+        private void Add_Product_Click(object sender, RoutedEventArgs e)
         {
-            setButtonDashBoard();
-            Exit_button.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Exit_button.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
+            var screen = new AddProductWindow(_categories);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
+
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
+            {
+
+                // Assuming screen._addProduct contains the new product
+                var newProduct = screen._addProduct;
+
+                // Use the InsertProduct method from the business logic layer
+                ProductsService productsService = new ProductsService();
+                productsService.InsertProduct(newProduct);
+
+                // Show a message to the user
+                MessageBox.Show("Product added successfully!");
+
+                LoadProductsAndCategories();
+            }
+
+        }
+
+        private void Delete_Product_Click(object sender, RoutedEventArgs e)
+        {
             MessageBoxResult result = MessageBox.Show(
             "Are you sure you want delete this product?",
             "Confirmation",
@@ -430,134 +356,158 @@ namespace MyShop
             MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                if (ListBoxProducts.SelectedIndex >= 0)
+                // Get the button that raised the event
+                Button button = (Button)sender;
+                // Use VisualTreeHelper to find the ListBoxItem
+                ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+                var product = listBoxItem.DataContext as Product;
+
+                if (product != null)
                 {
-                    var product = (Product)ListBoxProducts.SelectedItem;
+                    var id = product.Id;
 
-                    if (product != null)
-                    {
-                        var id = product.Id;
-                        string connectionString = Properties.Settings.Default.ConnectionString;
-                        using (SqlConnection connection = new SqlConnection(connectionString))
-                        {
-                            // Connect to Database
-                            connection.Open();
+                    // Use the DeleteProduct method from the business logic layer
+                    ProductsService productsService = new ProductsService();
+                    productsService.DeleteProduct(id);
 
-                            // Create table
-                            var DeleteCommand = "delete from Product where Id=@Id";
-
-                            using (SqlCommand DeleteSqlCommand = new SqlCommand(DeleteCommand, connection))
-                            {
-                                DeleteSqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = id;
-
-                                DeleteSqlCommand.ExecuteNonQuery();
-                                MessageBox.Show($"Delete product successfully!");
-                                _products.Remove(product);
-                            }
-                        }
-                    }
+                    // Show a message to the user
+                    MessageBox.Show($"Delete product successfully!");
+                    LoadProductsAndCategories();
                 }
             }
         }
 
         private void Update_Product_Click(object sender, RoutedEventArgs e)
         {
-            var product = (Product)ListBoxProducts.SelectedItem;
-            if(ListBoxProducts.SelectedIndex >= 0)
+            // Get the button that raised the event
+            Button button = (Button)sender;
+            // Use VisualTreeHelper to find the ListBoxItem
+            ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+            var product = listBoxItem.DataContext as Product;
+
+            var screen = new UpdateProductWindow(product, _categories);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
+
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
             {
-                var screen = new UpdateWindow(_products[ListBoxProducts.SelectedIndex]);
-                if(screen.ShowDialog() == true)
+                product = screen._updateProduct;
+                // Use the UpdateProduct method from the business logic layer
+                ProductsService productsService = new ProductsService();
+                productsService.UpdateProduct(product);
+
+                // Show a message to the user
+                MessageBox.Show("Product updated successfully!");
+
+                LoadProductsAndCategories();
+            }
+        }
+
+        private void Delete_Category_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show(
+            "Are you sure you want delete this category?",
+            "Confirmation",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                result = MessageBox.Show(
+            "WARNING: Delete a category will also delete all products in that category. Are you sure you want to proceed?",
+            "Warning",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
                 {
-                    _products[ListBoxProducts.SelectedIndex] = screen._updateProduct;
+                    // Get the button that raised the event
+                    Button button = (Button)sender;
+                    // Use VisualTreeHelper to find the ListBoxItem
+                    ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+                    var category = listBoxItem.DataContext as Category;
 
-                    if (product != null)
+                    if (category != null)
                     {
-                        var id = product.Id;
-                        string connectionString = Properties.Settings.Default.ConnectionString;
-                        using (SqlConnection connection = new SqlConnection(connectionString))
-                        {
-                            // Connect to Database
-                            connection.Open();
+                        var id = category.Id;
 
-                            // Create table
-                            var updateCommand = "UPDATE Product SET Name = @ProductName, Price = @Price, Quantity = @Quantity WHERE Id = @Id";
+                        // Use the DeleteProduct method from the business logic layer
+                        CategoryService categoryService = new CategoryService();
+                        categoryService.DeleteCategory(id);
 
-                            using (SqlCommand updateSqlCommand = new SqlCommand(updateCommand, connection))
-                            {
-                                // Assuming screen._updateProduct contains the updated product
-                                var updatedProduct = screen._updateProduct;
-
-                                updateSqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = id;
-                                updateSqlCommand.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = updatedProduct.ProductName;
-                                updateSqlCommand.Parameters.Add("@Price", SqlDbType.Money).Value = updatedProduct.Price;
-                                updateSqlCommand.Parameters.Add("@Quantity", SqlDbType.Int).Value = updatedProduct.Quantity;
-
-                                updateSqlCommand.ExecuteNonQuery();
-                                MessageBox.Show($"Update product successfully!");
-                                // Refresh the ListBoxProducts to reflect the changes
-                                ListBoxProducts.ItemsSource = null;
-                                ListBoxProducts.ItemsSource = _products;
-                            }
-                        }
+                        // Show a message to the user
+                        MessageBox.Show($"Delete category successfully!");
+                        LoadProductsAndCategories();
                     }
                 }
             }
         }
 
-        private void Add_Product_Click(object sender, RoutedEventArgs e)
+        private void Add_Category_Click(object sender, RoutedEventArgs e)
         {
-            var screen = new AddProductWindow(_categories);
-            if (screen.ShowDialog() == true)
+            var screen = new AddCategoryWindow(_categories);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
+
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
             {
-                _products.Add(screen._addProduct);
 
-                string connectionString = Properties.Settings.Default.ConnectionString;
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    // Connect to Database
-                    connection.Open();
+                // Assuming screen._addProduct contains the new product
+                var newCategory = screen._addCategory;
 
-                    // Create table
-                    var insertCommand = "INSERT INTO Product (Name, Price, Quantity,Category ) VALUES (@ProductName, @Price, @Quantity,@Category)";
+                // Use the InsertProduct method from the business logic layer
+                CategoryService categoryService = new CategoryService();
+                categoryService.InsertCategory(newCategory);
+                MessageBox.Show("Category added successfully!");
 
-                    using (SqlCommand insertSqlCommand = new SqlCommand(insertCommand, connection))
-                    {
-                        // Assuming screen._addProduct contains the new product
-                        var newProduct = screen._addProduct;
-
-                        insertSqlCommand.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = newProduct.ProductName;
-                        insertSqlCommand.Parameters.Add("@Price", SqlDbType.Money).Value = newProduct.Price;
-                        insertSqlCommand.Parameters.Add("@Quantity", SqlDbType.Int).Value = newProduct.Quantity;
-                        insertSqlCommand.Parameters.Add("@Category", SqlDbType.Int).Value = newProduct.Category.Id;
-
-                        insertSqlCommand.ExecuteNonQuery();
-                        MessageBox.Show($"Product added successfully!");
-                        // Refresh the ListBoxProducts to reflect the changes
-                        ListBoxProducts.ItemsSource = null;
-                        ListBoxProducts.ItemsSource = _products;
-                    }
-                }
+                LoadProductsAndCategories();
             }
         }
 
-        private void Coupon_Click(object sender, RoutedEventArgs e)
+        private void Update_Category_Click(object sender, RoutedEventArgs e)
         {
+            // Get the button that raised the event
+            Button button = (Button)sender;
+            // Use VisualTreeHelper to find the ListBoxItem
+            ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+            var category = listBoxItem.DataContext as Category;
+            var screen = new UpdateCategoryWindow(category, _categories);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
 
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
+            {
+                category = screen._updateCategory;
+                // Use the UpdateProduct method from the business logic layer
+                CategoryService categoryService = new CategoryService();
+                categoryService.UpdateCategory(category);
+
+                // Show a message to the user
+                MessageBox.Show("Category updated successfully!");
+
+                LoadProductsAndCategories();
+            }
         }
-
-        private void CategoryRemoveButton_Click(object sender, RoutedEventArgs e)
+        private static T FindParent<T>(DependencyObject child) where T : DependencyObject
         {
+            // Get parent item
+            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
 
-        }
+            // We've reached the end of the tree
+            if (parentObject == null) return null;
 
-        private void CategoryRenameButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void CategoryAddButton_Click(object sender, RoutedEventArgs e)
-        {
-
+            // Check if the parent matches the type we're looking for
+            T parent = parentObject as T;
+            if (parent != null)
+            {
+                return parent;
+            }
+            else
+            {
+                // Use recursion to proceed with next level
+                return FindParent<T>(parentObject);
+            }
         }
     }
 }

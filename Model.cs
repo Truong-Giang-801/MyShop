@@ -80,7 +80,7 @@ namespace MyShop
 
 
     }
-    public class Category : INotifyPropertyChanged
+    public class Category : INotifyPropertyChanged , ICloneable
     {
         public int Id { get; set; }
         private string? _categoryName = "";
@@ -90,9 +90,14 @@ namespace MyShop
             set
             {
                 _categoryName = value;
-                OnPropertyChanged(nameof(_categoryName));
+                OnPropertyChanged(nameof(CategoryName));
             }
         }
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
         public virtual ICollection<Product> Product { get; set; } = new List<Product>();
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -101,6 +106,7 @@ namespace MyShop
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
     
 }

@@ -27,7 +27,6 @@ namespace MyShop
         {
             InitializeComponent();
             _categories = new BindingList<Category>(categories.ToList());
-            _categories.RemoveAt(0);
         }
 
         private void Submit_Add_Click(object sender, RoutedEventArgs e)
