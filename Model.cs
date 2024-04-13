@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -79,7 +80,16 @@ namespace MyShop
     public class Category : INotifyPropertyChanged
     {
         public int Id { get; set; }
-        public string? CategoryName { get; set; }
+        private string? _categoryName;
+        public string? CategoryName
+        {
+            get { return _categoryName; }
+            set
+            {
+                _categoryName = value;
+                OnPropertyChanged(nameof(_categoryName));
+            }
+        }
         public virtual ICollection<Product> Product { get; set; } = new List<Product>();
 
         public event PropertyChangedEventHandler? PropertyChanged;

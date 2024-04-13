@@ -62,7 +62,7 @@
                 </Button>
                 <Button x:Name="Category" Click="Category_Click" Style="{StaticResource menuButton}">
                     <StackPanel Orientation="Horizontal">
-                        <Icon:PackIconMaterial Kind="Archive" Style="{StaticResource menuButtonIcon}"/>
+                        <Icon:PackIconMaterial Kind="FormatListBulleted" Style="{StaticResource menuButtonIcon}"/>
                         <TextBlock Text="Category" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
@@ -79,10 +79,16 @@
                     </StackPanel>
                 </Button>
 
-                <Button x:Name="Report" Click="Report_Click" Style="{StaticResource menuButton}">
+                <Button x:Name="Customer" Click="Customer_Click" Style="{StaticResource menuButton}">
                     <StackPanel Orientation="Horizontal">
-                        <Icon:PackIconMaterial Kind="ChartBar" Style="{StaticResource menuButtonIcon}"/>
-                        <TextBlock Text="Report" Style="{StaticResource menuButtonText}"/>
+                        <Icon:PackIconMaterial Kind="Account" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Customer" Style="{StaticResource menuButtonText}"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="Coupon" Style="{StaticResource menuButton}" Click="Coupon_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Icon:PackIconMaterial Kind="TicketPercentOutline" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Coupon" Style="{StaticResource menuButtonText}"/>
                     </StackPanel>
                 </Button>
 
@@ -234,11 +240,11 @@
                             <uc:UserCard Title="John Doe" UpPrice="$1105" DownPrice="$459" Image="/Images/u1.png"/>
                         </StackPanel>
                     </Border>
-                    <!--Sales Report-->
+                    <!--Sales Customer-->
                     <Border Grid.Row="1" Style="{StaticResource whiteBorder}" Margin="0 20 0 0">
                         <Grid>
                             <!--Title-->
-                            <TextBlock Text="Sales Report" Style="{StaticResource titleText}"/>
+                            <TextBlock Text="Sales Customer" Style="{StaticResource titleText}"/>
                             <!--Chart-->
                             <lvc:CartesianChart Grid.Row="1" Margin="0 40 0 30" LegendLocation="None">
                                 <lvc:CartesianChart.DataTooltip>
@@ -294,11 +300,74 @@
         </Border>
         <!--Category Screen-->
         <Border x:Name="CategoryScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Hidden">
-                <TextBlock Text="Category"/>
+            <Grid  Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource whiteBorder}" Margin="20 0 0 10">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                            <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 20 0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Color="#FB7456" Offset="0"/>
+                                        <GradientStop Color="#FA5654" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Image Source="/Images/u4.png" Width="40" Height="40"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,100,0">
+                                <TextBlock Text="Hello, A" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
+                                <TextBlock Text="Have A Nice Day" Foreground="#6C879A" Height="27"/>
+                            </StackPanel>
 
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="60"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <ListBox x:Name="ListBoxCategories" Grid.Row="0" ItemsSource="{Binding Category}" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="700" />
+                                                <ColumnDefinition Width="100" />
+                                                <ColumnDefinition Width="100" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding CategoryName}" Grid.Column="0" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Height="40"/>
+                                            <!-- Add Remove Button -->
+                                            <Button Content="Remove" Grid.Column="1" Margin="10,0,0,0" Click="CategoryRemoveButton_Click" Height="40"/>
+                                            <!-- Add Rename Button -->
+                                            <Button Content="Rename" Grid.Column="2" Margin="10,0,0,0" Click="CategoryRenameButton_Click" Height="40"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                            <Button Content="Add New" HorizontalAlignment="Right" Margin="0,0,10,0" Width="100" Click="CategoryAddButton_Click" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
+                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
+                        <TextBlock VerticalAlignment="Center" Text="Category List" FontSize="20" Margin="0,0,0,0" FontWeight="DemiBold" ></TextBlock>
+                    </StackPanel>
+                </Border>
             </Grid>
-        </Border>
+    </Border>
         <!--Setting Screen-->
         <Border x:Name="SettingScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Hidden">
@@ -306,10 +375,10 @@
 
             </Grid>
         </Border>
-        <!--Report Screen-->
-        <Border x:Name="ReportScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
+        <!--Customer Screen-->
+        <Border x:Name="CustomerScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Hidden">
-                <TextBlock Text="Report"/>
+                <TextBlock Text="Customer"/>
 
             </Grid>
         </Border>
