@@ -27,10 +27,24 @@ namespace MyShop
         {
             InitializeComponent();
             _categories = new BindingList<Category>(categories.ToList());
+            _categories.RemoveAt(0);
         }
 
         private void Submit_Add_Click(object sender, RoutedEventArgs e)
         {
+            string productName = ProductName_Add.Text;
+            int price = int.Parse(Price_Add.Text);
+            int quantity = int.Parse(Quantity_Add.Text);
+            Category selectedCategory = (Category)comboBox.SelectedItem;
+
+            // Create a new Product object using the input values
+            _addProduct = new Product
+            {
+                ProductName = productName,
+                Price = price,
+                Quantity = quantity,
+                Category = selectedCategory
+            };
             this.DialogResult = true;
 
         }

@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using DocumentFormat.OpenXml.Office2010.Excel;
 namespace MyShop
 {
     /// <summary>
@@ -473,7 +474,6 @@ namespace MyShop
 
                     if (product != null)
                     {
-                        Debug.WriteLine(123);
                         var id = product.Id;
                         string connectionString = Properties.Settings.Default.ConnectionString;
                         using (SqlConnection connection = new SqlConnection(connectionString))
@@ -502,7 +502,6 @@ namespace MyShop
                             }
                         }
                     }
-                    ListBoxProducts.ItemsSource = _products;
                 }
             }
         }
@@ -510,12 +509,36 @@ namespace MyShop
         private void Add_Product_Click(object sender, RoutedEventArgs e)
         {
             var screen = new AddProductWindow(_categories);
-            if(screen.ShowDialog() == true)
+            if (screen.ShowDialog() == true)
             {
                 _products.Add(screen._addProduct);
-                Debug.WriteLine(screen._addProduct.ProductName);
-                ListBoxProducts.ItemsSource = null;
-                ListBoxProducts.ItemsSource = _products;
+
+                string connectionString = Properties.Settings.Default.ConnectionString;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    // Connect to Database
+                    connection.Open();
+
+                    // Create table
+                    var insertCommand = "INSERT INTO Product (Name, Price, Quantity,Category ) VALUES (@ProductName, @Price, @Quantity,@Category)";
+
+                    using (SqlCommand insertSqlCommand = new SqlCommand(insertCommand, connection))
+                    {
+                        // Assuming screen._addProduct contains the new product
+                        var newProduct = screen._addProduct;
+
+                        insertSqlCommand.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = newProduct.ProductName;
+                        insertSqlCommand.Parameters.Add("@Price", SqlDbType.Money).Value = newProduct.Price;
+                        insertSqlCommand.Parameters.Add("@Quantity", SqlDbType.Int).Value = newProduct.Quantity;
+                        insertSqlCommand.Parameters.Add("@Category", SqlDbType.Int).Value = newProduct.Category.Id;
+
+                        insertSqlCommand.ExecuteNonQuery();
+                        MessageBox.Show($"Product added successfully!");
+                        // Refresh the ListBoxProducts to reflect the changes
+                        ListBoxProducts.ItemsSource = null;
+                        ListBoxProducts.ItemsSource = _products;
+                    }
+                }
             }
         }
 
