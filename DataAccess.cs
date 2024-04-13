@@ -24,15 +24,19 @@ namespace MyShop
                 var sqlcmd = "SELECT * FROM Category";
                 var command = new SqlCommand(sqlcmd, connection);
                 var reader = command.ExecuteReader();
+                int id = 0;
+                string name = "All";
+                Category catAll = new Category() { Id = id, CategoryName = name };
+                list.Add(catAll);
 
                 while (reader.Read())
                 {
-                    int id = (int)reader["Id"];
-                    string name = (string)reader["Name"];
+                    id = (int)reader["Id"];
+                    name = (string)reader["Name"];
 
                     Category cat = new Category() { Id = id, CategoryName = name };
                     list.Add(cat);
-                }
+                } 
                 reader.Close();
                 connection.Close();
             }

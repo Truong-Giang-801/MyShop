@@ -20,6 +20,7 @@ using Microsoft.Data.SqlClient;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 namespace MyShop
 {
     /// <summary>
@@ -178,6 +179,11 @@ namespace MyShop
             // Sử dụng CategoryService để lấy dữ liệu Category từ cơ sở dữ liệu
             CategoryService categoryService = new CategoryService();
             _categories= categoryService.GetAllCategories();
+            var categoryWithIdZero = _categories.FirstOrDefault(c => c.Id == 0);
+            if (categoryWithIdZero != null)
+            {
+                comboBox.SelectedItem = categoryWithIdZero;
+            }
             comboBox.ItemsSource = _categories;
             ListBoxCategories.ItemsSource = _categories;
 
@@ -197,8 +203,8 @@ namespace MyShop
             }
             else
             {
-                placeholderText.Visibility = Visibility.Collapsed;
                 var selectedCategory = comboBox.SelectedItem as Category;
+
                 if (selectedCategory == null)
                 {
                     Debug.WriteLine("Selected item is not a Category object.");
@@ -280,12 +286,16 @@ namespace MyShop
         {
             string searchText = textBoxSearch.Text.ToLower();
 
+            if(comboBox.SelectedIndex==0 && comboBox1.SelectedIndex == 0)
+            {
+                _products1 = new List<MyShop.Product>(_products); 
+            }
             // Filter the products based on the search text
             var filteredProducts = _products1.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
             ObservableCollection<Product> productsBindingList = new ObservableCollection<Product>(filteredProducts);
 
             // Update the ListBox with the filtered products
-            ListBoxProducts.ItemsSource =(productsBindingList);
+            ListBoxProducts.ItemsSource =productsBindingList;
         }
 
         private void Import_Click(object sender, RoutedEventArgs e)
@@ -303,21 +313,21 @@ namespace MyShop
 
                     // Create table
                     string createTableSql = $@"
-            DROP TABLE IF EXISTS Product;
-            DROP TABLE IF EXISTS Category;
-            CREATE TABLE Category (
-                Id INT IDENTITY(1,1) PRIMARY KEY,
-                Name NVARCHAR(255) NOT NULL
-            );
-            DROP TABLE IF EXISTS Product;
-            CREATE TABLE Product (
-                Id INT IDENTITY(1,1) PRIMARY KEY,
-                Name NVARCHAR(255) NOT NULL,
-                Price MONEY NOT NULL,
-                Category INT NOT NULL,
-                Quantity INT NOT NULL,
-                FOREIGN KEY (Category) REFERENCES Category(Id)
-            );";
+                        DROP TABLE IF EXISTS Product;
+                        DROP TABLE IF EXISTS Category;
+                        CREATE TABLE Category (
+                            Id INT IDENTITY(1,1) PRIMARY KEY,
+                            Name NVARCHAR(255) NOT NULL
+                        );
+                        DROP TABLE IF EXISTS Product;
+                        CREATE TABLE Product (
+                            Id INT IDENTITY(1,1) PRIMARY KEY,
+                            Name NVARCHAR(255) NOT NULL,
+                            Price MONEY NOT NULL,
+                            Category INT NOT NULL,
+                            Quantity INT NOT NULL,
+                            FOREIGN KEY (Category) REFERENCES Category(Id)
+                        );";
                     using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
                     {
                         createTableCommand.ExecuteNonQuery();
@@ -396,12 +406,57 @@ namespace MyShop
                         categoryCell = cells.FirstOrDefault(c => c?.CellReference == $"D{row}")!;
                         quantityCell = cells.FirstOrDefault(c => c?.CellReference == $"E{row}")!;
                     }
-
+                    ProductsService productService = new ProductsService();
+                    _products = productService.GetAllProducts();
+                    ListBoxProducts.ItemsSource = _products;
                 }
             }
         }
 
         private void Order_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+
+        private void Update_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (ListBoxProducts.SelectedIndex >= 0)
+            {
+                var product = (Product)ListBoxProducts.SelectedItem;
+
+                if (product != null)
+                {
+                    var id = product.Id;
+                    string connectionString = Properties.Settings.Default.ConnectionString;
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        // Connect to Database
+                        connection.Open();
+
+                        // Create table
+                        var DeleteCommand = "delete from Product where Id=@Id";
+
+                        using (SqlCommand DeleteSqlCommand = new SqlCommand(DeleteCommand, connection))
+                        {
+                            DeleteSqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+
+                            DeleteSqlCommand.ExecuteNonQuery();
+                            MessageBox.Show($"Delete product with id {id} successfully!");
+                            _products.Remove(product);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        private void Add_Click(object sender, RoutedEventArgs e)
         {
 
         }

@@ -396,7 +396,7 @@
                 </Grid.ColumnDefinitions>
                 <Border Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource whiteBorder}" Margin="20 0 0 10">
                     <Grid>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="260" >
                             <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 20 0">
                                 <Border.Background>
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
@@ -406,30 +406,78 @@
                                 </Border.Background>
                                 <Image Source="/Images/u4.png" Width="40" Height="40"/>
                             </Border>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,100,0">
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,100,0" Width="107">
                                 <TextBlock Text="Hello, A" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
                                 <TextBlock Text="Have A Nice Day" Foreground="#6C879A" Height="27"/>
                             </StackPanel>
 
                         </StackPanel>
                         <!--Search Textbox-->
-                        <Grid Width="300" HorizontalAlignment="Right">
+                        <Grid Width="300" HorizontalAlignment="Left" Margin="325,0,0,0">
                             <TextBlock Margin="15 0" VerticalAlignment="Center" Foreground="#868686" IsHitTestVisible="False" Panel.ZIndex="1" 
                                 Text="Search here ..." 
                                 Visibility="{Binding Text.IsEmpty, Converter={StaticResource BoolToVisConverter}, ElementName=textBoxSearch}" />
                             <TextBox x:Name="textBoxSearch" Style="{StaticResource searchTextbox}" TextChanged="textBoxSearch_TextChanged" />
                             <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" Foreground="#FF6D46" HorizontalAlignment="Right" Margin="0 0 15 0" VerticalAlignment="Center"/>
                         </Grid>
+                        <Grid Width="202" HorizontalAlignment="Left" Margin="711,0,0,0">
+                            <Button x:Name="Add" Click="Add_Click" Style="{StaticResource menuButton}" Margin="0,5,5,0">
+                                <StackPanel Orientation="Horizontal" Height="22">
+                                    <Icon:PackIconMaterial Kind="PlusBox" Style="{StaticResource menuButtonIcon}" Foreground="green" Width="39" Height="22"/>
+                                    <TextBlock Text="Add Product" Foreground="black" Width="107" FontSize="18" FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+
+                        </Grid>
                     </Grid>
                 </Border>
                 <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
-                    <ListBox x:Name="ListBoxProducts" ItemsSource="{Binding Product}" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
+                    <ListBox x:Name="ListBoxProducts" ItemsSource="{Binding Product}" BorderThickness="0"  Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2" av:ItemsSource="{av:SampleData ItemCount=5}" >
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Width="692">
+                                <StackPanel Orientation="Horizontal" Width="916">
                                     <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="DemiBold" Width="361"/>
                                     <TextBlock Text="{Binding Price}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="182"/>
-                                    <TextBlock Text="{Binding Quantity}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="99"/>
+                                    <TextBlock Text="{Binding Quantity}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="136" RenderTransformOrigin="0.5,0.5">
+                                        <TextBlock.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform/>
+                                                <SkewTransform/>
+                                                <RotateTransform Angle="1.132"/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                    <Button x:Name="Update"  Click="Update_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Green" Width="30" Height="30">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+                                            <Icon:PackIconMaterial Kind="Pencil" Width="20" Height="20" RenderTransformOrigin="1.307,0.459" >
+                                                <Icon:PackIconMaterial.RenderTransform>
+                                                    <TransformGroup>
+                                                        <ScaleTransform ScaleX="1"/>
+
+                                                        <RotateTransform/>
+                                                        <TranslateTransform X="-0.184" Y="-0.022"/>
+                                                    </TransformGroup>
+                                                </Icon:PackIconMaterial.RenderTransform>
+                                            </Icon:PackIconMaterial>
+                                        </StackPanel>
+                                    </Button>
+                                    <!-- Update Button -->
+                                    <!-- Delete Button -->
+                                    <Button x:Name="Delete"  Click="Delete_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Red" Width="30" Height="30">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+                                            <Icon:PackIconMaterial Kind="TrashCanOutline" Width="20" Height="20" RenderTransformOrigin="1.307,0.459" >
+                                                <Icon:PackIconMaterial.RenderTransform>
+                                                    <TransformGroup>
+                                                        <ScaleTransform ScaleX="1"/>
+
+                                                        <RotateTransform/>
+                                                        <TranslateTransform X="-0.184" Y="-0.022"/>
+                                                    </TransformGroup>
+                                                </Icon:PackIconMaterial.RenderTransform>
+                                            </Icon:PackIconMaterial>
+                                        </StackPanel>
+                                    </Button>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -449,13 +497,13 @@
                                     </CompositeCollection>
                                 </ComboBox.ItemsSource>
                             </ComboBox>
-                            <ComboBox x:Name="comboBox0" Visibility="Hidden">
+                            <!--<ComboBox x:Name="comboBox0" Visibility="Hidden">
                                 <ComboBox.ItemsSource>
                                     <CompositeCollection>
                                         <CollectionContainer Collection="{Binding Categories}" />
                                     </CompositeCollection>
                                 </ComboBox.ItemsSource>
-                            </ComboBox>
+                            </ComboBox>-->
 
 
 
