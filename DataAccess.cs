@@ -53,20 +53,37 @@ namespace MyShop
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var sqlcmd = "select * from Product";
-                var commandd = new SqlCommand(sqlcmd, connection);
-                var reader = commandd.ExecuteReader();
+                var sqlcmd = "SELECT * FROM Product";
+                var command = new SqlCommand(sqlcmd, connection);
+                var reader = command.ExecuteReader();
 
+                // Read categories once and store them in a dictionary for quick lookup
+                var categoryRepo = new CategoryRepository();
+                var categories = categoryRepo.ReadDataFromDatabase().ToDictionary(c => c.Id, c => c);
 
                 while (reader.Read())
                 {
                     int id = (int)reader["Id"];
                     string name = (string)reader["Name"];
                     int price = Convert.ToInt32(reader["Price"]);
-                    int category = (int)reader["Category"];
                     int quantity = (int)reader["Quantity"];
-                    Product products = new Product() { Id = id, ProductName = name, Price = price, Quantity = quantity, Category = category };
-                    list.Add(products);
+                    int categoryId = (int)reader["Category"]; // Assuming "Category" column stores the category ID
+
+                    // Find the Category object that matches the category ID
+                    Category category = categories.ContainsKey(categoryId) ? categories[categoryId] : null;
+
+                    // Create a new Product object and assign the properties
+                    Product product = new Product()
+                    {
+                        Id = id,
+                        ProductName = name,
+                        Price = price,
+                        Quantity = quantity,
+                        Category = category // Assign the Category object
+                        
+                    };
+                    Debug.WriteLine(product.Category.CategoryName);
+                    list.Add(product);
                 }
                 reader.Close();
                 connection.Close();

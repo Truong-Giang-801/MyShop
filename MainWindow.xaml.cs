@@ -270,11 +270,11 @@ namespace MyShop
                 var selectedCategory = _categories.FirstOrDefault(c => c.CategoryName == selectedCategoryName);
                 if (selectedPriceIndex == 0 && selectedCategory != null)
                 {
-                    _products1 = _products.Where(p => p.Category == selectedCategory.Id).ToList();
+                    _products1 = _products.Where(p => p.Category.Id == selectedCategory.Id).ToList();
                 }
                 else if (selectedCategory != null && selectedPriceIndex > -1)
                 {
-                    _products1 = _products.Where(p => p.Category == selectedCategory.Id && p.Price <= priceThreshold).ToList();
+                    _products1 = _products.Where(p => p.Category.Id == selectedCategory.Id && p.Price <= priceThreshold).ToList();
                 }
             }
 
@@ -509,7 +509,14 @@ namespace MyShop
 
         private void Add_Product_Click(object sender, RoutedEventArgs e)
         {
-
+            var screen = new AddProductWindow(_categories);
+            if(screen.ShowDialog() == true)
+            {
+                _products.Add(screen._addProduct);
+                Debug.WriteLine(screen._addProduct.ProductName);
+                ListBoxProducts.ItemsSource = null;
+                ListBoxProducts.ItemsSource = _products;
+            }
         }
 
         private void Coupon_Click(object sender, RoutedEventArgs e)

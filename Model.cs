@@ -14,7 +14,8 @@ namespace MyShop
         private int _price;
         private int _quantity;
         private int _id;
-        private int _category;
+        private Category _category;
+
         public int Quantity
         {
             get { return _quantity; }
@@ -24,7 +25,7 @@ namespace MyShop
                 OnPropertyChanged(nameof(Quantity));
             }
         }
-        public int Category
+        public Category Category
         {
             get { return _category; }
             set
@@ -63,6 +64,8 @@ namespace MyShop
             }
         }
 
+        public Category Category1 { get => _category; set => _category = value; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public object Clone()
@@ -80,7 +83,7 @@ namespace MyShop
     public class Category : INotifyPropertyChanged
     {
         public int Id { get; set; }
-        private string? _categoryName;
+        private string? _categoryName = "";
         public string? CategoryName
         {
             get { return _categoryName; }
