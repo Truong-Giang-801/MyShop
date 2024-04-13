@@ -65,8 +65,8 @@ namespace MyShop
             Log_Out.Foreground = Brushes.White;
             Category.Background = Brushes.Transparent;
             Category.Foreground = Brushes.White;
-            Report.Background = Brushes.Transparent;
-            Report.Foreground = Brushes.White;
+            Customer.Background = Brushes.Transparent;
+            Customer.Foreground = Brushes.White;
             Import.Background = Brushes.Transparent;
             Import.Foreground = Brushes.White;
             Setting.Background = Brushes.Transparent;
@@ -80,7 +80,7 @@ namespace MyShop
         {
             DashboardScreen.Visibility = Visibility.Hidden;
             CategoryScreen.Visibility = Visibility.Hidden;
-            ReportScreen.Visibility = Visibility.Hidden;
+            CustomerScreen.Visibility = Visibility.Hidden;
             ProfileScreen.Visibility = Visibility.Hidden;
             SettingScreen.Visibility = Visibility.Hidden;
             ProductScreen.Visibility = Visibility.Hidden;
@@ -140,13 +140,13 @@ namespace MyShop
             Category.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Category.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
-        private void Report_Click(object sender, RoutedEventArgs e)
+        private void Customer_Click(object sender, RoutedEventArgs e)
         {
             setButtonDashBoard();
             setVisibleOff();
-            ReportScreen.Visibility = Visibility.Visible;
-            Report.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Report.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
+            CustomerScreen.Visibility = Visibility.Visible;
+            Customer.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Customer.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
         private void Setting_Click(object sender, RoutedEventArgs e)
         {
@@ -179,8 +179,8 @@ namespace MyShop
             CategoryService categoryService = new CategoryService();
             _categories= categoryService.GetAllCategories();
             comboBox.ItemsSource = _categories;
+            ListBoxCategories.ItemsSource = _categories;
 
-            Debug.WriteLine(products.Count);
             setVisibleOff();
             DashboardScreen.Visibility = Visibility.Visible;
         }
@@ -402,6 +402,26 @@ namespace MyShop
         }
 
         private void Order_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Coupon_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CategoryRemoveButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CategoryRenameButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CategoryAddButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
