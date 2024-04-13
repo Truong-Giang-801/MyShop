@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyShop
 {
-    public class Product : INotifyPropertyChanged
+    public class Product : INotifyPropertyChanged , ICloneable
     {
         private string? _productName;
         private int _price;
@@ -63,6 +63,11 @@ namespace MyShop
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {

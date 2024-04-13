@@ -417,44 +417,95 @@ namespace MyShop
         }
 
 
-        private void Update_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            if (ListBoxProducts.SelectedIndex >= 0)
+            setButtonDashBoard();
+            Exit_button.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Exit_button.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
+            MessageBoxResult result = MessageBox.Show(
+            "Are you sure you want delete this product?",
+            "Confirmation",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
             {
-                var product = (Product)ListBoxProducts.SelectedItem;
-
-                if (product != null)
+                if (ListBoxProducts.SelectedIndex >= 0)
                 {
-                    var id = product.Id;
-                    string connectionString = Properties.Settings.Default.ConnectionString;
-                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    var product = (Product)ListBoxProducts.SelectedItem;
+
+                    if (product != null)
                     {
-                        // Connect to Database
-                        connection.Open();
-
-                        // Create table
-                        var DeleteCommand = "delete from Product where Id=@Id";
-
-                        using (SqlCommand DeleteSqlCommand = new SqlCommand(DeleteCommand, connection))
+                        var id = product.Id;
+                        string connectionString = Properties.Settings.Default.ConnectionString;
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            DeleteSqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+                            // Connect to Database
+                            connection.Open();
 
-                            DeleteSqlCommand.ExecuteNonQuery();
-                            MessageBox.Show($"Delete product with id {id} successfully!");
-                            _products.Remove(product);
+                            // Create table
+                            var DeleteCommand = "delete from Product where Id=@Id";
+
+                            using (SqlCommand DeleteSqlCommand = new SqlCommand(DeleteCommand, connection))
+                            {
+                                DeleteSqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+
+                                DeleteSqlCommand.ExecuteNonQuery();
+                                MessageBox.Show($"Delete product successfully!");
+                                _products.Remove(product);
+                            }
                         }
                     }
                 }
             }
         }
 
+        private void Update_Product_Click(object sender, RoutedEventArgs e)
+        {
+            var product = (Product)ListBoxProducts.SelectedItem;
+            if(ListBoxProducts.SelectedIndex >= 0)
+            {
+                var screen = new UpdateWindow(_products[ListBoxProducts.SelectedIndex]);
+                if(screen.ShowDialog() == true)
+                {
+                    _products[ListBoxProducts.SelectedIndex] = screen._updateProduct;
 
-        private void Add_Click(object sender, RoutedEventArgs e)
+                    if (product != null)
+                    {
+                        Debug.WriteLine(123);
+                        var id = product.Id;
+                        string connectionString = Properties.Settings.Default.ConnectionString;
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            // Connect to Database
+                            connection.Open();
+
+                            // Create table
+                            var updateCommand = "UPDATE Product SET Name = @ProductName, Price = @Price, Quantity = @Quantity WHERE Id = @Id";
+
+                            using (SqlCommand updateSqlCommand = new SqlCommand(updateCommand, connection))
+                            {
+                                // Assuming screen._updateProduct contains the updated product
+                                var updatedProduct = screen._updateProduct;
+
+                                updateSqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+                                updateSqlCommand.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = updatedProduct.ProductName;
+                                updateSqlCommand.Parameters.Add("@Price", SqlDbType.Money).Value = updatedProduct.Price;
+                                updateSqlCommand.Parameters.Add("@Quantity", SqlDbType.Int).Value = updatedProduct.Quantity;
+
+                                updateSqlCommand.ExecuteNonQuery();
+                                MessageBox.Show($"Update product successfully!");
+                                // Refresh the ListBoxProducts to reflect the changes
+                                ListBoxProducts.ItemsSource = null;
+                                ListBoxProducts.ItemsSource = _products;
+                            }
+                        }
+                    }
+                    ListBoxProducts.ItemsSource = _products;
+                }
+            }
+        }
+
+        private void Add_Product_Click(object sender, RoutedEventArgs e)
         {
 
         }
