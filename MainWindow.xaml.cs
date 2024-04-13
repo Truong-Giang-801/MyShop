@@ -54,8 +54,6 @@ namespace MyShop
                 }
                 else
                 {
-                    this.WindowState = WindowState.Maximized;
-                    IsMaximize = true;
                 }
             }
         }
