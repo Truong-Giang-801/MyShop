@@ -394,7 +394,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource whiteBorder}" Margin="20 0 0 10">
+                <Border Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource whiteBorder}" Margin="15,0,15,10">
                     <Grid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="260" >
                             <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 20 0">
