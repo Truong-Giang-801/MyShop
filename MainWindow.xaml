@@ -293,7 +293,7 @@
 
         <!--Profile Screen-->
         <Border x:Name="ProfileScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Hidden">
+            <Grid  Visibility="Visible">
                 <TextBlock Text="Profile"/>
 
             </Grid>
@@ -310,7 +310,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource whiteBorder}" Margin="20 0 0 10">
+                <Border Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource whiteBorder}" Margin="15,0,15,10">
                     <Grid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
                             <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 20 0">
@@ -338,25 +338,36 @@
 
                         </Grid>
                     </Grid>
-                    
+
                 </Border>
 
-                <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
-                    <ListBox x:Name="ListBoxCategories" Grid.Row="0" ItemsSource="{Binding Category}" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
+                <Border Grid.Row="2"  Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0" Grid.ColumnSpan="2">
+                    <ListBox x:Name="ListBoxCategories" Grid.Row="0" ItemsSource="{Binding Category}" av:ItemsSource="{av:SampleData ItemCount=5}" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Width="916">
-                                    <TextBlock Text="{Binding CategoryName}" Margin="30,0,0,0" FontSize="30" FontWeight="DemiBold" Width="750">
-                                        <TextBlock.RenderTransform>
+                                    <TextBlock Text="{Binding CategoryName}" Margin="30,0,0,0" FontSize="20" FontWeight="DemiBold" Width="486" Height="44">
+
+                                            <TextBlock.RenderTransform>
                                             <TransformGroup>
                                                 <ScaleTransform/>
                                                 <SkewTransform/>
-                                                <RotateTransform Angle="1.132"/>
+                                                <RotateTransform Angle="-0.03"/>
                                                 <TranslateTransform/>
                                             </TransformGroup>
                                         </TextBlock.RenderTransform>
                                     </TextBlock>
-                                    <!-- Update Button -->
+                                    <TextBlock Text="{Binding Id}" Margin="30,0,0,0" FontSize="20" FontWeight="DemiBold" Width="246" Height="44">
+
+                                        <TextBlock.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform/>
+                                                <SkewTransform/>
+                                                <RotateTransform Angle="-0.03"/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
                                     <Button x:Name="Update_Category"  Click="Update_Category_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Green" Width="40" Height="40">
                                         <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
                                             <Icon:PackIconMaterial Kind="Pencil" Width="30" Height="30" RenderTransformOrigin="1.307,0.459" >
@@ -371,6 +382,7 @@
                                             </Icon:PackIconMaterial>
                                         </StackPanel>
                                     </Button>
+                                    <!-- Update Button -->
                                     <!-- Delete Button -->
                                     <Button x:Name="Delete_Category"  Click="Delete_Category_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Red" Width="40" Height="40">
                                         <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
@@ -392,28 +404,30 @@
                     </ListBox>
                 </Border>
                 <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
-                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" >
-                        <TextBlock VerticalAlignment="Center" Text="Category List" FontSize="30" Margin="0,0,0,0" FontWeight="DemiBold" ></TextBlock>
+                    <StackPanel Orientation="Horizontal"  >
+                        <TextBlock VerticalAlignment="Center" Text="Category List" FontSize="20" Margin="25,0,0,0" FontWeight="DemiBold" Width="441" ></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Category ID" FontSize="20" Margin="25,0,0,0" FontWeight="DemiBold" Width="220" ></TextBlock>
+
                     </StackPanel>
                 </Border>
             </Grid>
-    </Border>
+        </Border>
         <!--Setting Screen-->
-        <Border x:Name="SettingScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Hidden">
+        <Border Visibility="Hidden" x:Name="SettingScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
+            <Grid  Visibility="Visible">
                 <TextBlock Text="Setting"/>
 
             </Grid>
         </Border>
         <!--Customer Screen-->
-        <Border x:Name="CustomerScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Hidden">
+        <Border Visibility="Hidden" x:Name="CustomerScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
+            <Grid  Visibility="Visible">
                 <TextBlock Text="Customer"/>
 
             </Grid>
         </Border>
         <!--Product Screen-->
-        <Border x:Name="ProductScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
+        <Border Visibility="Visible" x:Name="ProductScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>
@@ -473,12 +487,12 @@
                                             <TransformGroup>
                                                 <ScaleTransform/>
                                                 <SkewTransform/>
-                                                <RotateTransform Angle="1.132"/>
+                                                <RotateTransform Angle="-0.003"/>
                                                 <TranslateTransform/>
                                             </TransformGroup>
                                         </TextBlock.RenderTransform>
                                     </TextBlock>
-                                    <!-- Update Button -->
+                                    <!--Update Button-->
                                     <Button x:Name="Update_Product"  Click="Update_Product_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Green" Width="30" Height="30">
                                         <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
                                             <Icon:PackIconMaterial Kind="Pencil" Width="20" Height="20" RenderTransformOrigin="1.307,0.459" >
@@ -493,7 +507,7 @@
                                             </Icon:PackIconMaterial>
                                         </StackPanel>
                                     </Button>
-                                    <!-- Delete Button -->
+                                    <!--Delete Button-->
                                     <Button x:Name="Delete_Product"  Click="Delete_Product_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Red" Width="30" Height="30">
                                         <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
                                             <Icon:PackIconMaterial Kind="TrashCanOutline" Width="20" Height="20" RenderTransformOrigin="1.307,0.459" >
@@ -527,21 +541,20 @@
                                     </CompositeCollection>
                                 </ComboBox.ItemsSource>
                             </ComboBox>
-                            <!--<ComboBox x:Name="comboBox0" Visibility="Hidden">
+                            <ComboBox x:Name="comboBox0" Visibility="Hidden">
                                 <ComboBox.ItemsSource>
                                     <CompositeCollection>
                                         <CollectionContainer Collection="{Binding Categories}" />
                                     </CompositeCollection>
                                 </ComboBox.ItemsSource>
-                            </ComboBox>-->
+                            </ComboBox>
 
 
 
 
                             <TextBlock x:Name="placeholderText" Text="Category" VerticalAlignment="Top" HorizontalAlignment="Left"
-         Foreground="Black" IsHitTestVisible="False" Margin="3,11,0,0" />
-                            <!--<TextBlock x:Name="placeholderText_Copy" Text="Category" VerticalAlignment="Top" HorizontalAlignment="Left"
-                                Foreground="Black" IsHitTestVisible="False" Margin="3,39,0,0" />-->
+                             Foreground="Black" IsHitTestVisible="False" Margin="3,11,0,0" />
+                            
                         </Grid>
                         <Grid Margin="50,0,0,0">
                             <ComboBox x:Name="comboBox1" SelectionChanged="comboBox1_SelectionChanged" Width="100" Height="30" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" Margin="0,30,0,0">
