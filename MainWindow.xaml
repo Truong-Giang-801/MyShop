@@ -137,19 +137,12 @@
                                 </Border.Background>
                                 <Image Source="/Images/u4.png" Width="40" Height="40"/>
                             </Border>
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Hello, A" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold"/>
-                                <TextBlock Text="Have A Nice Day" Foreground="#6C879A" Margin="0 3 0 0"/>
+                            <StackPanel x:Name="dashboardVersionStackPanel" VerticalAlignment="Center" Margin="0,0,100,0">
+                                <TextBlock x:Name="dashboardTitleTextBlock" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
+                                <TextBlock x:Name="dashboardMessageTextBlock" Foreground="#6C879A" Height="27"/>
                             </StackPanel>
                         </StackPanel>
-                        <!--Search Textbox-->
-                        <Grid Width="300" HorizontalAlignment="Right">
-                            <!--<TextBlock Margin="15 0" VerticalAlignment="Center" Foreground="#868686" IsHitTestVisible="False" Panel.ZIndex="1" 
-                                       Text="Search here ..." 
-                                       Visibility="{Binding Text.IsEmpty, Converter={StaticResource BoolToVisConverter}, ElementName=textBoxSearch}" />
-                            <TextBox x:Name="textBoxSearch" Style="{StaticResource searchTextbox}" />-->
-                            <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" Foreground="#FF6D46" HorizontalAlignment="Right" Margin="0 0 15 0" VerticalAlignment="Center"/>
-                        </Grid>
+                        
                     </Grid>
                 </Border>
                 <!--Info Cards-->
@@ -322,9 +315,10 @@
                                 </Border.Background>
                                 <Image Source="/Images/u4.png" Width="40" Height="40"/>
                             </Border>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,100,0">
-                                <TextBlock Text="Hello, A" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
-                                <TextBlock Text="Have A Nice Day" Foreground="#6C879A" Height="27"/>
+
+                            <StackPanel x:Name="categoryVersionStackPanel" VerticalAlignment="Center" Margin="0,0,100,0">
+                                <TextBlock x:Name="categoryTitleTextBlock" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
+                                <TextBlock x:Name="categoryMessageTextBlock" Foreground="#6C879A" Height="27"/>
                             </StackPanel>
 
                         </StackPanel>
@@ -465,9 +459,9 @@
                                 </Border.Background>
                                 <Image Source="/Images/u4.png" Width="40" Height="40"/>
                             </Border>
-                            <StackPanel VerticalAlignment="Center" Margin="0,0,100,0" Width="107">
-                                <TextBlock Text="Hello, A" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
-                                <TextBlock Text="Have A Nice Day" Foreground="#6C879A" Height="27"/>
+                            <StackPanel x:Name="productVersionStackPanel" VerticalAlignment="Center" Margin="0,0,100,0">
+                                <TextBlock x:Name="productTitleTextBlock" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
+                                <TextBlock x:Name="productMessageTextBlock" Foreground="#6C879A" Height="27"/>
                             </StackPanel>
 
                         </StackPanel>

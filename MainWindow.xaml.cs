@@ -32,6 +32,100 @@ namespace MyShop
         public MainWindow()
         {
             InitializeComponent();
+            if (string.IsNullOrEmpty(Properties.Settings.Default.FirstOpenDate))
+            {
+                // If not, save the current date as the first open date
+                Properties.Settings.Default.FirstOpenDate = DateTime.Now.ToString("yyyy-MM-dd");
+                Properties.Settings.Default.Save();
+            }
+            else
+            {
+                string ActivationKey = "VK7JG-NPHTM-C97JM-9MPGT-3V66T";
+                // Convert the FirstOpenDate string back to a DateTime object
+                DateTime firstOpenDate = DateTime.Parse(Properties.Settings.Default.FirstOpenDate);
+
+                // Calculate the difference between the current date and the FirstOpenDate
+                TimeSpan difference = DateTime.Now - firstOpenDate;
+                int daysLeft = 15 - (int)difference.TotalDays;
+
+                // Check if the difference is exactly 15 days
+                if (string.IsNullOrEmpty(Properties.Settings.Default.ActivationKey) || Properties.Settings.Default.ActivationKey != "VK7JG-NPHTM-C97JM-9MPGT-3V66T")
+                {
+                    if (difference.TotalDays < 15)
+                    {
+                        MessageBoxResult result = MessageBox.Show(
+                        $"Your trial version got {daysLeft} days left. Do you want to enter your activation key?",
+                        "Trial Version",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            var screen = new ActivationKeyInput();
+                            // Show the window modally and wait for the user to close it
+                            bool? state = screen.ShowDialog();
+
+                            // Check if the user clicked the submit button (usually represented by a positive result)
+                            if (state == true)
+                            {
+                                Properties.Settings.Default.ActivationKey = screen.activationKey;
+                                Properties.Settings.Default.Save();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBoxResult result = MessageBox.Show(
+                        $"Your trial version expired. Please enter your activation key",
+                        "Trial Version expired",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                        var screen = new ActivationKeyInput();
+                        // Show the window modally and wait for the user to close it
+                        bool? state = screen.ShowDialog();
+
+                        // Check if the user clicked the submit button (usually represented by a positive result)
+                        if (state == true)
+                        {
+                            Properties.Settings.Default.ActivationKey = screen.activationKey;
+                            Properties.Settings.Default.Save();
+                        }
+                        else
+                        {
+                            Application.Current.Shutdown();
+                        }
+                    }
+                }
+            }
+            UpdateUIBasedOnActivationKey();
+        }
+        private void UpdateUIBasedOnActivationKey()
+        {
+            string ActivationKey = "VK7JG-NPHTM-C97JM-9MPGT-3V66T";
+            if (string.IsNullOrEmpty(Properties.Settings.Default.ActivationKey) || Properties.Settings.Default.ActivationKey != ActivationKey)
+            {
+                // Calculate the number of days left for the trial version
+                DateTime firstOpenDate = DateTime.Parse(Properties.Settings.Default.FirstOpenDate);
+                TimeSpan difference = DateTime.Now - firstOpenDate;
+                int daysLeft = 15 - (int)difference.TotalDays; 
+
+                // Update the TextBlock to show the number of days left
+                dashboardTitleTextBlock.Text = $"Trial Version";
+                dashboardMessageTextBlock.Text = $"You got {daysLeft} day(s) left";
+                categoryTitleTextBlock.Text = $"Trial Version";
+                categoryMessageTextBlock.Text = $"You got {daysLeft} day(s) left";
+                productTitleTextBlock.Text = $"Trial Version";
+                productMessageTextBlock.Text = $"You got {daysLeft} day(s) left";
+            }
+            else
+            {
+                // Update the UI to show the full version message
+                dashboardTitleTextBlock.Text = $"Full version";
+                dashboardMessageTextBlock.Text = $"Unlimited access";
+                categoryTitleTextBlock.Text = $"Full version";
+                categoryMessageTextBlock.Text = $"Unlimited access";
+                productTitleTextBlock.Text = $"Full version";
+                productMessageTextBlock.Text = $"Unlimited access";
+            }
         }
         private int itemsPerPage = 5;
         private int currentPage = 0;

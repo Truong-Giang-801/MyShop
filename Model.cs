@@ -67,8 +67,6 @@ namespace MyShop
             }
         }
 
-        public Category Category1 { get => _category; set => _category = value; }
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public object Clone()
@@ -113,5 +111,139 @@ namespace MyShop
 
 
     }
-    
+    public class Customer : INotifyPropertyChanged
+    {
+        private int _id;
+        private string _name;
+        private string _phoneNumber;
+
+        public int Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        public string PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set
+            {
+                _phoneNumber = value;
+                OnPropertyChanged(nameof(PhoneNumber));
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class Order : INotifyPropertyChanged
+    {
+        private int _id;
+        private DateTime _orderDate;
+        private int _customerId;
+        private List<ProductOrder> _productOrders;
+
+        public Order()
+        {
+            _productOrders = new List<ProductOrder>();
+        }
+
+        public int Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
+        }
+
+        public DateTime OrderDate
+        {
+            get { return _orderDate; }
+            set
+            {
+                _orderDate = value;
+                OnPropertyChanged(nameof(OrderDate));
+            }
+        }
+
+        public int CustomerId
+        {
+            get { return _customerId; }
+            set
+            {
+                _customerId = value;
+                OnPropertyChanged(nameof(CustomerId));
+            }
+        }
+
+        public List<ProductOrder> ProductOrders
+        {
+            get { return _productOrders; }
+            set
+            {
+                _productOrders = value;
+                OnPropertyChanged(nameof(ProductOrders));
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class ProductOrder : INotifyPropertyChanged
+    {
+        private int _quantity;
+        private Product _product;
+        public int Quantity
+        {
+            get { return _quantity; }
+            set
+            {
+                _quantity = value;
+                OnPropertyChanged(nameof(Quantity));
+            }
+        }
+
+        public Product Product
+        {
+            get { return _product; }
+            set
+            {
+                _product = value;
+                OnPropertyChanged(nameof(Product));
+            }
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
 }
