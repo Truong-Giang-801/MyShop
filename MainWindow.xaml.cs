@@ -106,7 +106,7 @@ namespace MyShop
                 // Calculate the number of days left for the trial version
                 DateTime firstOpenDate = DateTime.Parse(Properties.Settings.Default.FirstOpenDate);
                 TimeSpan difference = DateTime.Now - firstOpenDate;
-                int daysLeft = 15 - (int)difference.TotalDays; 
+                int daysLeft = 15 - (int)difference.TotalDays;
 
                 // Update the TextBlock to show the number of days left
                 dashboardTitleTextBlock.Text = $"Trial Version";
@@ -127,24 +127,28 @@ namespace MyShop
                 productMessageTextBlock.Text = $"Unlimited access";
             }
         }
-        private int itemsPerPage = 5;
+        private int itemsPerPage = 7;
         private int currentPage = 0;
 
         private void UpdateListBox()
         {
             int startIndex = currentPage * itemsPerPage;
-            int endIndex = Math.Min(startIndex + itemsPerPage, _products.Count);
+            int endIndexProduct = Math.Min(startIndex + itemsPerPage, _products.Count);
+            int endIndexCategory = Math.Min(startIndex + itemsPerPage, _categories.Count);
+            int endIndexCustomer = Math.Min(startIndex + itemsPerPage, customers.Count);
 
-            var pageProducts = _products1.Skip(startIndex).Take(endIndex - startIndex);
-            var pageCategories = _categories.Skip(startIndex).Take(endIndex - startIndex);
+            var pageProducts = _products1.Skip(startIndex).Take(endIndexProduct - startIndex);
+            var pageCategories = _categories.Skip(startIndex).Take(endIndexCategory - startIndex);
+            var pageCustomers = customers.Skip(startIndex).Take(endIndexCustomer - startIndex);
             ListBoxCategories.ItemsSource = pageCategories;
             ListBoxProducts.ItemsSource = pageProducts;
+            ListBoxCustomers.ItemsSource = pageCustomers;
         }
 
         private void NextPageButtonProduct_Click(object sender, RoutedEventArgs e)
         {
 
-            if (currentPage < _products1.Count/itemsPerPage)
+            if (currentPage < _products1.Count / itemsPerPage)
             {
                 currentPage++;
 
@@ -242,15 +246,18 @@ namespace MyShop
             Setting.Foreground = Brushes.White;
             Products.Background = Brushes.Transparent;
             Products.Foreground = Brushes.White;
+            Order.Background = Brushes.Transparent;
+            Order.Foreground= Brushes.White;
             Exit_button.Background = Brushes.Transparent;
             Exit_button.Foreground = Brushes.White;
+            
         }
         private void setVisibleOff()
         {
             DashboardScreen.Visibility = Visibility.Hidden;
             CategoryScreen.Visibility = Visibility.Hidden;
             CustomerScreen.Visibility = Visibility.Hidden;
-            ProfileScreen.Visibility = Visibility.Hidden;
+            OrderScreen.Visibility = Visibility.Hidden;
             SettingScreen.Visibility = Visibility.Hidden;
             ProductScreen.Visibility = Visibility.Hidden;
         }
@@ -339,6 +346,7 @@ namespace MyShop
         {
             LoadProductsAndCategories();
             setVisibleOff();
+            loadCustomer();
             DashboardScreen.Visibility = Visibility.Visible;
             UpdateListBox();
 
@@ -461,14 +469,18 @@ namespace MyShop
             int selectedCategoryIndex = comboBox.SelectedIndex;
             LoadProductsAndCategories();
             comboBox1.SelectedIndex = selectedPriceIndex;
-            comboBox.SelectedIndex= selectedCategoryIndex;
+            comboBox.SelectedIndex = selectedCategoryIndex;
             ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
         }
 
         private void Order_Click(object sender, RoutedEventArgs e)
         {
-            
-        }  
+            setButtonDashBoard();
+            setVisibleOff();
+            OrderScreen.Visibility = Visibility.Visible;
+            Order.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Order.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
+        }
 
         private void Coupon_Click(object sender, RoutedEventArgs e)
         {
@@ -688,5 +700,64 @@ namespace MyShop
             UpdateListBox();
         }
 
+        private void Add_Customer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Delete_Customer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Update_Customer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NextPageButtonCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentPage < customers.Count / itemsPerPage)
+            {
+                currentPage++;
+                UpdateListBox();
+            }
+        }
+
+        private void PreviousPageButtonCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage = Math.Max(0, currentPage - 1);
+            UpdateListBox();
+        }
+
+        private void textBoxSearchCustomer_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void ListBoxCustomers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+        private static BindingList<Customer> customers = new BindingList<Customer>();
+
+        public static void generateCustomer()
+        {
+            for (int i = 1; i <= 20; i++)
+            {
+                Customer customer = new Customer
+                {
+                    Id = i,
+                    Name = $"Customer {i}",
+                    PhoneNumber = $"123-456-{i:D4}" // Assuming a simple phone number format
+                };
+
+                customers.Add(customer);
+            }
+        }
+        private void loadCustomer()
+        {
+            generateCustomer();
+        }
     }
 }
