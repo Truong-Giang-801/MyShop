@@ -31,13 +31,13 @@ namespace MyShop
         }
 
         private void Submit_Update_Click(object sender, RoutedEventArgs e)
-        {
+            {
             if (CustomerName_Update.Text == "" || PhoneNumber_Update.Text == "")
             {
                 MessageBox.Show("Please don't leave any field as blank");
-            }
+        }
             else
-            {
+        {
                 try
                 {
                     string customerName = CustomerName_Update.Text;
@@ -49,17 +49,17 @@ namespace MyShop
                     {
                         // Show an error message if the category name already exists
                         MessageBox.Show("A customer with this phone number already exists.");
-                    }
+        }
                     else
-                    {
+        {
                         // Create a new Customer object using the input values
                         _updateCustomer.Name = customerName;
                         _updateCustomer.PhoneNumber = phoneNumber;
                         this.DialogResult = true;
                     }
-                }
+        }
                 catch (Exception ex)
-                {
+        {
                     MessageBox.Show("Please enter valid phone number");
                 }
 

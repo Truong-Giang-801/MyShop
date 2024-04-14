@@ -32,13 +32,13 @@ namespace MyShop
         {
             this.Close();
         }
-
+           
         private void Submit_Add_Click(object sender, RoutedEventArgs e)
         {
             if (CustomerName_Add.Text == "" || PhoneNumber_Add.Text == "")
             {
                 MessageBox.Show("Please don't leave any field as blank");
-            }
+        }
             else
             {
                 try
@@ -49,20 +49,20 @@ namespace MyShop
                     int checkOnlyDigits = int.Parse(PhoneNumber_Add.Text);
 
                     if (phoneNumberExists)
-                    {
+        {
                         // Show an error message if the category name already exists
                         MessageBox.Show("A customer with this phone number already exists.");
-                    }
+        }
                     else
-                    {
+        {
                         // Create a new Customer object using the input values
                         _addCustomer = new Customer
-                        {
+            {
                             Name = customerName,
                             PhoneNumber = phoneNumber
-                        };
-                        this.DialogResult = true;
-                    }
+            };
+            this.DialogResult = true;
+        }
                 }
                 catch (Exception ex)
                 {
