@@ -715,7 +715,21 @@ namespace MyShop
 
         private void Add_Customer_Click(object sender, RoutedEventArgs e)
         {
+            var screen = new AddCustomerWindow();
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
 
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
+            {
+
+                var newCategory = screen.Customer;
+
+                // Use the InsertProduct method from the business logic layer
+                MessageBox.Show("Customer added successfully!");
+
+                ApplySelectionAndFilter();
+            }
         }
 
         private void Delete_Customer_Click(object sender, RoutedEventArgs e)
@@ -725,7 +739,27 @@ namespace MyShop
 
         private void Update_Customer_Click(object sender, RoutedEventArgs e)
         {
+            // Get the button that raised the event
+            Button button = (Button)sender;
+            // Use VisualTreeHelper to find the ListBoxItem
+            ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+            var customer = listBoxItem.DataContext as Customer;
+            var screen = new UpdateCustomerWindow(customer);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
 
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
+            {
+                customer = screen._customer;
+                // Use the UpdateProduct method from the business logic layer
+              
+
+                // Show a message to the user
+                MessageBox.Show("Customer updated successfully!");
+
+                ApplySelectionAndFilter();
+            }
         }
 
         private void NextPageButtonCustomer_Click(object sender, RoutedEventArgs e)
