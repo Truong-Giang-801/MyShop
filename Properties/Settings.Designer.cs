@@ -82,5 +82,29 @@ namespace MyShop.Properties {
                 this["ConnectionString"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FirstOpenDate {
+            get {
+                return ((string)(this["FirstOpenDate"]));
+            }
+            set {
+                this["FirstOpenDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ActivationKey {
+            get {
+                return ((string)(this["ActivationKey"]));
+            }
+            set {
+                this["ActivationKey"] = value;
+            }
+        }
     }
 }
