@@ -159,7 +159,7 @@ namespace MyShop
     {
         private int _id;
         private DateTime _orderDate;
-        private int _customerId;
+        private Customer _customer;
         private List<ProductOrder> _productOrders;
 
         public Order()
@@ -187,13 +187,13 @@ namespace MyShop
             }
         }
 
-        public int CustomerId
+        public Customer Customer
         {
-            get { return _customerId; }
+            get { return _customer; }
             set
             {
-                _customerId = value;
-                OnPropertyChanged(nameof(CustomerId));
+                _customer = value;
+                OnPropertyChanged(nameof(Customer));
             }
         }
 

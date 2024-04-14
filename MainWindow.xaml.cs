@@ -136,13 +136,17 @@ namespace MyShop
             int endIndexProduct = Math.Min(startIndex + itemsPerPage, _products.Count);
             int endIndexCategory = Math.Min(startIndex + itemsPerPage, _categories.Count);
             int endIndexCustomer = Math.Min(startIndex + itemsPerPage, customers.Count);
+            int endIndexOrder = Math.Min(startIndex + itemsPerPage, orders.Count);
 
             var pageProducts = _products1.Skip(startIndex).Take(endIndexProduct - startIndex);
             var pageCategories = _categories.Skip(startIndex).Take(endIndexCategory - startIndex);
             var pageCustomers = customers.Skip(startIndex).Take(endIndexCustomer - startIndex);
+            var pageOrders = orders.Skip(startIndex).Take(endIndexOrder - startIndex);
             ListBoxCategories.ItemsSource = pageCategories;
             ListBoxProducts.ItemsSource = pageProducts;
             ListBoxCustomers.ItemsSource = pageCustomers;
+            ListBoxOrder.ItemsSource = pageOrders;
+
         }
 
         private void NextPageButtonProduct_Click(object sender, RoutedEventArgs e)
@@ -347,6 +351,7 @@ namespace MyShop
             LoadProductsAndCategories();
             setVisibleOff();
             loadCustomer();
+            GenerateOrder();
             DashboardScreen.Visibility = Visibility.Visible;
             UpdateListBox();
 
@@ -354,7 +359,7 @@ namespace MyShop
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
         }
-        List<Product> _products1 = new List<Product>();
+        private static List<Product> _products1 = new List<Product>();
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Assuming comboBox is for category selection
@@ -758,6 +763,69 @@ namespace MyShop
         private void loadCustomer()
         {
             generateCustomer();
+        }
+
+        private void Add_Order_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Update_Order_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Delete_Order_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Detail_Order_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PreviousPageButtonOrder_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage = Math.Max(0, currentPage - 1);
+            UpdateListBox();
+        }
+
+        private void NextPageButtonOrder_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentPage < orders.Count / itemsPerPage)
+            {
+                currentPage++;
+                UpdateListBox();
+            }
+        }
+
+        private static BindingList<Order> orders = new BindingList<Order>();
+        private static void GenerateOrder()
+        {
+            // Assuming you have a list of customers and products available
+
+
+
+            for (int i = 1; i <= 15; i++)
+            {
+                Order order = new Order
+                {
+                    Id = i,
+                    OrderDate = DateTime.Now.AddDays(-i), // Example: orders placed in the past
+                    Customer = customers[i % customers.Count], // Cycle through customers
+                    ProductOrders = new List<ProductOrder>
+                    {
+                        new ProductOrder
+                        {
+                            Quantity = i, // Example: quantity based on order number
+                            Product = _products1[i % _products1.Count] // Cycle through products
+                        }
+                    }
+                };
+
+                orders.Add(order);
+            }
         }
     }
 }
