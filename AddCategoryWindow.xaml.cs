@@ -34,20 +34,26 @@ namespace MyShop
             string categoryName = CategoryName_Add.Text;
 
             bool categoryExists = _categories.Any(c => c.CategoryName == categoryName);
-
-            if (categoryExists)
+            if (categoryName != "")
             {
-                // Show an error message if the category name already exists
-                MessageBox.Show("A category with this name already exists. Please choose a different name.");
+                if (categoryExists)
+                {
+                    // Show an error message if the category name already exists
+                    MessageBox.Show("A category with this name already exists. Please choose a different name.");
+                }
+                else
+                {
+                    // If the category name does not exist, update the category
+                    _addCategory = new Category
+                    {
+                        CategoryName = categoryName
+                    };
+                    this.DialogResult = true;
+                }
             }
             else
             {
-                // If the category name does not exist, update the category
-                _addCategory = new Category
-                {
-                    CategoryName = categoryName
-                };
-                this.DialogResult = true;
+                MessageBox.Show("Category name can't be blank");
             }
         }
         private void Cancel_Add_Click(object sender, RoutedEventArgs e)

@@ -31,20 +31,35 @@ namespace MyShop
 
         private void Submit_Add_Click(object sender, RoutedEventArgs e)
         {
-            string productName = ProductName_Add.Text;
-            int price = int.Parse(Price_Add.Text);
-            int quantity = int.Parse(Quantity_Add.Text);
-            Category selectedCategory = (Category)comboBox.SelectedItem;
-
-            // Create a new Product object using the input values
-            _addProduct = new Product
+            if (ProductName_Add.Text == "" || Price_Add.Text == "" || Quantity_Add.Text == "" || comboBox.SelectedItem == null)
             {
-                ProductName = productName,
-                Price = price,
-                Quantity = quantity,
-                Category = selectedCategory
-            };
-            this.DialogResult = true;
+                MessageBox.Show("Please don't leave any field as blank");
+            }
+            else
+            {
+                try
+                {
+                    string productName = ProductName_Add.Text;
+                    int price = int.Parse(Price_Add.Text);
+                    int quantity = int.Parse(Quantity_Add.Text);
+                    Category selectedCategory = (Category)comboBox.SelectedItem;
+
+                    // Create a new Product object using the input values
+                    _addProduct = new Product
+                    {
+                        ProductName = productName,
+                        Price = price,
+                        Quantity = quantity,
+                        Category = selectedCategory
+                    };
+                    this.DialogResult = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Please enter valid information");
+                }
+                
+            }
 
         }
 

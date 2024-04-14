@@ -50,17 +50,32 @@ namespace MyShop
 
         private void Submit_Update_Click(object sender, RoutedEventArgs e)
         {
+            if (ProductName_Update.Text == "" || Price_Update.Text == "" || Quantity_Update.Text == "" || comboBox.SelectedItem == null)
+            {
+                MessageBox.Show("Please don't leave any field as blank");
+            }
+            else
+            {
+                try
+                {
+                    string productName = ProductName_Update.Text;
+                    int price = int.Parse(Price_Update.Text);
+                    int quantity = int.Parse(Quantity_Update.Text);
+                    Category selectedCategory = (Category)comboBox.SelectedItem;
+                    // Create a new Product object using the input values
+                    _updateProduct.ProductName = productName;
+                    _updateProduct.Quantity = quantity;
+                    _updateProduct.Price = price;
+                    _updateProduct.Category = selectedCategory;
+                    this.DialogResult = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Please enter valid information");
+                }
 
-            string productName = ProductName_Update.Text;
-            int price = int.Parse(Price_Update.Text);
-            int quantity = int.Parse(Quantity_Update.Text);
-            Category selectedCategory = (Category)comboBox.SelectedItem;
-            // Create a new Product object using the input values
-            _updateProduct.ProductName = productName;
-            _updateProduct.Quantity = quantity;
-            _updateProduct.Price = price;
-            _updateProduct.Category = selectedCategory;
-            this.DialogResult = true;
+            }
+            
 
         }
 

@@ -152,7 +152,6 @@ namespace MyShop
                         Category = category // Assign the Category object
                         
                     };
-                    Debug.WriteLine(product.Category.CategoryName);
                     list.Add(product);
                 }
                 reader.Close();
@@ -235,6 +234,101 @@ namespace MyShop
                 ALTER TABLE Product
                 ADD FOREIGN KEY (Category) REFERENCES Category(Id);
                 ";
+                using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
+                {
+                    createTableCommand.ExecuteNonQuery();
+                }
+            }
+        }
+    }
+    public class CustomerRepository
+    {
+        private string connectionString = Properties.Settings.Default.ConnectionString;
+
+        public BindingList<Customer> ReadDataFromDatabase()
+        {
+            BindingList<Customer> list = new BindingList<Customer>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var sqlcmd = "SELECT * FROM Customer";
+                var command = new SqlCommand(sqlcmd, connection);
+                var reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int id = (int)reader["Id"];
+                    string name = (string)reader["Name"];
+                    string phoneNumber = (string)reader["PhoneNumber"];
+
+                    Customer customer = new Customer() { Id = id, Name = name, PhoneNumber = phoneNumber };
+                    list.Add(customer);
+                }
+                reader.Close();
+                connection.Close();
+            }
+            return list;
+        }
+
+        public void InsertCustomer(string name, string phoneNumber)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "INSERT INTO Customer (Name, PhoneNumber) VALUES (@Name, @PhoneNumber)";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", name);
+                    command.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateCustomer(int customerId, string newName, string newPhoneNumber)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string updateSql = "UPDATE Customer SET Name = @NewName, PhoneNumber = @NewPhoneNumber WHERE Id = @CustomerId";
+                using (SqlCommand updateCommand = new SqlCommand(updateSql, connection))
+                {
+                    updateCommand.Parameters.AddWithValue("@NewName", newName);
+                    updateCommand.Parameters.AddWithValue("@NewPhoneNumber", newPhoneNumber);
+                    updateCommand.Parameters.AddWithValue("@CustomerId", customerId);
+                    updateCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteCustomer(int customerId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string deleteSql = "DELETE FROM Customer WHERE Id = @CustomerId";
+                using (SqlCommand deleteCommand = new SqlCommand(deleteSql, connection))
+                {
+                    deleteCommand.Parameters.AddWithValue("@CustomerId", customerId);
+                    deleteCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void CreateTables()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string createTableSql = @"
+            DROP TABLE IF EXISTS Customer;
+            CREATE TABLE Customer (
+                Id INT IDENTITY(1,1) PRIMARY KEY,
+                Name NVARCHAR(255) NOT NULL,
+                PhoneNumber NVARCHAR(20) NOT NULL
+            );";
                 using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
                 {
                     createTableCommand.ExecuteNonQuery();

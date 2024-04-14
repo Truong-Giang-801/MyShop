@@ -22,6 +22,7 @@ using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Linq;
 namespace MyShop
 {
     /// <summary>
@@ -109,61 +110,47 @@ namespace MyShop
                 int daysLeft = 15 - (int)difference.TotalDays;
 
                 // Update the TextBlock to show the number of days left
-                dashboardTitleTextBlock.Text = $"Trial Version";
-                dashboardMessageTextBlock.Text = $"You got {daysLeft} day(s) left";
-                categoryTitleTextBlock.Text = $"Trial Version";
-                categoryMessageTextBlock.Text = $"You got {daysLeft} day(s) left";
-                productTitleTextBlock.Text = $"Trial Version";
-                productMessageTextBlock.Text = $"You got {daysLeft} day(s) left";
+                this.DataContext = new MyViewModel { VersionText = "Trial Version", SubVersionText = $"You got {daysLeft} day(s) left"};
             }
             else
             {
-                // Update the UI to show the full version message
-                dashboardTitleTextBlock.Text = $"Full version";
-                dashboardMessageTextBlock.Text = $"Unlimited access";
-                categoryTitleTextBlock.Text = $"Full version";
-                categoryMessageTextBlock.Text = $"Unlimited access";
-                productTitleTextBlock.Text = $"Full version";
-                productMessageTextBlock.Text = $"Unlimited access";
+                this.DataContext = new MyViewModel { VersionText = "Full Version", SubVersionText = $"Unlimited access" };
             }
         }
         private int itemsPerPage = 7;
         private int currentPage = 0;
 
-        private void UpdateListBox()
+        private void PaginationProductListBox()
         {
+            List<Product> listBoxProduct = _products1;
+            while (listBoxProduct.Count <= currentPage * itemsPerPage)
+            {
+                currentPage--;
+            }
+            ProductPage.Text = $"{currentPage + 1}/{(listBoxProduct.Count - 1) / itemsPerPage + 1}";
             int startIndex = currentPage * itemsPerPage;
-            int endIndexProduct = Math.Min(startIndex + itemsPerPage, _products.Count);
-            int endIndexCategory = Math.Min(startIndex + itemsPerPage, _categories.Count);
-            int endIndexCustomer = Math.Min(startIndex + itemsPerPage, customers.Count);
-            int endIndexOrder = Math.Min(startIndex + itemsPerPage, orders.Count);
+            int endIndexProduct = Math.Min(startIndex + itemsPerPage, listBoxProduct.Count);
 
             var pageProducts = _products1.Skip(startIndex).Take(endIndexProduct - startIndex);
-            var pageCategories = _categories.Skip(startIndex).Take(endIndexCategory - startIndex);
-            var pageCustomers = customers.Skip(startIndex).Take(endIndexCustomer - startIndex);
-            var pageOrders = orders.Skip(startIndex).Take(endIndexOrder - startIndex);
-            ListBoxCategories.ItemsSource = pageCategories;
             ListBoxProducts.ItemsSource = pageProducts;
-            ListBoxCustomers.ItemsSource = pageCustomers;
-            ListBoxOrder.ItemsSource = pageOrders;
 
         }
 
         private void NextPageButtonProduct_Click(object sender, RoutedEventArgs e)
         {
-
-            if (currentPage < _products1.Count / itemsPerPage)
+            Debug.WriteLine(_products1.Count);
+            if (currentPage < (_products1.Count - 1) / itemsPerPage)
             {
                 currentPage++;
 
-                UpdateListBox();
+                PaginationProductListBox();
             }
         }
 
         private void PreviousPageButtonProduct_Click(object sender, RoutedEventArgs e)
         {
             currentPage = Math.Max(0, currentPage - 1);
-            UpdateListBox();
+            PaginationProductListBox();
         }
 
         private void ApplySelectionAndFilter()
@@ -171,11 +158,10 @@ namespace MyShop
             int selectedPriceIndex = comboBox1.SelectedIndex;
             var selectedCategory = comboBox.SelectedItem as Category;
             int selectedCategoryIndex = comboBox.SelectedIndex;
-            LoadProductsAndCategories();
+            LoadData();
             comboBox1.SelectedIndex = selectedPriceIndex;
             comboBox.SelectedIndex = selectedCategoryIndex;
             ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
-            UpdateListBox();
 
         }
         private void ApplySearch()
@@ -187,28 +173,31 @@ namespace MyShop
                 _products1 = new List<MyShop.Product>(_products);
             }
             // Filter the products based on the search text
-            var filteredProducts = _products1.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
-            ObservableCollection<Product> productsBindingList = new ObservableCollection<Product>(filteredProducts);
-
-            // Update the ListBox with the filtered products
-            ListBoxProducts.ItemsSource = productsBindingList;
+            _products1 = _products1.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
+            PaginationProductListBox();
         }
-        public void LoadProductsAndCategories()
+        public void LoadData()
         {
             // Using ProductService to fetch all products from the database
             ProductsService productService = new ProductsService();
             _products = productService.GetAllProducts();
-            ListBoxProducts.ItemsSource = _products;
 
             // Using CategoryService to fetch all categories from the database
             CategoryService categoryService = new CategoryService();
             _categories = categoryService.GetAllCategories();
             ListBoxCategories.ItemsSource = _categories;
 
+            CustomerService customerService = new CustomerService();
+            _customers = customerService.GetAllCustomers();
+            Debug.WriteLine(_customers.Count);
+            ListBoxCustomers.ItemsSource = _customers;
+
             // Clone the BindingList and add an "All" category
             BindingList<Category> clonedCategories = categoryService.AddAllObjectToCategories(_categories);
+            var temp = currentPage;
             comboBox.ItemsSource = clonedCategories;
             comboBox.SelectedIndex = 0;
+            currentPage = temp;
         }
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -309,7 +298,7 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             currentPage = 0;
-            UpdateListBox();
+            PaginationProductListBox();
             ProductScreen.Visibility = Visibility.Visible;
             Products.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Products.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -319,7 +308,6 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             currentPage = 0;
-            UpdateListBox();
             CategoryScreen.Visibility = Visibility.Visible;
             Category.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Category.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -329,7 +317,6 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             currentPage = 0;
-            UpdateListBox();
             CustomerScreen.Visibility = Visibility.Visible;
             Customer.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Customer.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -352,14 +339,30 @@ namespace MyShop
         }
         BindingList<Category> _categories = new BindingList<Category>();
         ObservableCollection<Product> _products = new ObservableCollection<Product>();
+        BindingList<Customer> _customers = new BindingList<Customer>();
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadProductsAndCategories();
+            try
+            {
+
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Excel Files|*.xlsx;*.xls;*.csv";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    string filename = openFileDialog.FileName;
+                    DataImportService dataImportService = new DataImportService();
+                    dataImportService.ImportDataFromExcel(filename);
+                    currentPage = 0;
+                }
+                LoadData();
+            }
             setVisibleOff();
-            loadCustomer();
-            GenerateOrder();
             DashboardScreen.Visibility = Visibility.Visible;
-            UpdateListBox();
 
         }
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -368,6 +371,7 @@ namespace MyShop
         private static List<Product> _products1 = new List<Product>();
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            currentPage = 0;
             // Assuming comboBox is for category selection
             if (comboBox.SelectedIndex == -1)
             {
@@ -394,6 +398,7 @@ namespace MyShop
 
         private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            currentPage = 0;
             // Assuming comboBox1 is for price selection
             if (comboBox1.SelectedIndex == -1)
             {
@@ -422,7 +427,7 @@ namespace MyShop
             _products1.Clear();
             if (selectedCategoryIndex == 0 && selectedPriceIndex == 0)
             {
-                ListBoxProducts.ItemsSource = _products;
+                _products1 = _products.ToList();
                 ApplySearch();
                 return;
             }
@@ -452,14 +457,12 @@ namespace MyShop
                     _products1 = _products.Where(p => p.Category.Id == selectedCategory.Id && p.Price <= priceThreshold).ToList();
                 }
             }
-
-            ObservableCollection<Product> productsBindingList = new ObservableCollection<Product>(_products1);
-            ListBoxProducts.ItemsSource = productsBindingList;
             ApplySearch();
         }
 
         private void textBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
+            currentPage = 0;
             ApplySearch();
         }
 
@@ -472,13 +475,14 @@ namespace MyShop
                 string filename = openFileDialog.FileName;
                 DataImportService dataImportService = new DataImportService();
                 dataImportService.ImportDataFromExcel(filename);
+                currentPage = 0;
             }
 
             int selectedPriceIndex = comboBox1.SelectedIndex;
             // Apply combined filter
             var selectedCategory = comboBox.SelectedItem as Category;
             int selectedCategoryIndex = comboBox.SelectedIndex;
-            LoadProductsAndCategories();
+            LoadData();
             comboBox1.SelectedIndex = selectedPriceIndex;
             comboBox.SelectedIndex = selectedCategoryIndex;
             ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
@@ -489,7 +493,6 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             currentPage = 0;
-            UpdateListBox();
             OrderScreen.Visibility = Visibility.Visible;
             Order.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Order.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -559,6 +562,7 @@ namespace MyShop
 
         private void Update_Product_Click(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine(currentPage);
             // Get the button that raised the event
             Button button = (Button)sender;
             // Use VisualTreeHelper to find the ListBoxItem
@@ -583,6 +587,7 @@ namespace MyShop
 
                 ApplySelectionAndFilter();
             }
+            Debug.WriteLine(currentPage);
         }
 
         private void Delete_Category_Click(object sender, RoutedEventArgs e)
@@ -703,44 +708,92 @@ namespace MyShop
             {
                 currentPage++;
 
-                UpdateListBox();
             }
         }
 
         private void PreviousPageButtonCategory_Click(object sender, RoutedEventArgs e)
         {
             currentPage = Math.Max(0, currentPage - 1);
-            UpdateListBox();
         }
 
         private void Add_Customer_Click(object sender, RoutedEventArgs e)
         {
+            var screen = new AddCustomerWindow(_customers);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
 
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
+            {
+
+                // Assuming screen._addProduct contains the new product
+                var newCustomer = screen._addCustomer;
+
+                // Use the InsertProduct method from the business logic layer
+                CustomerService customerService = new CustomerService();
+                customerService.InsertCustomer(newCustomer);
+
+                // Show a message to the user
+                MessageBox.Show("Customer added successfully!");
+
+                ApplySelectionAndFilter();
+            }
         }
 
         private void Delete_Customer_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show(
+            "Are you sure you want delete this customer?",
+            "Confirmation",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                // Get the button that raised the event
+                Button button = (Button)sender;
+                // Use VisualTreeHelper to find the ListBoxItem
+                ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+                var customer = listBoxItem.DataContext as Customer;
 
+                if (customer != null)
+                {
+                    var id = customer.Id;
+
+                    // Use the DeleteProduct method from the business logic layer
+                    CustomerService customerService = new CustomerService();
+                    customerService.DeleteCustomer(id);
+
+                    // Show a message to the user
+                    MessageBox.Show($"Delete customer successfully!");
+                    ApplySelectionAndFilter();
+                }
+            }
         }
 
         private void Update_Customer_Click(object sender, RoutedEventArgs e)
         {
+            // Get the button that raised the event
+            Button button = (Button)sender;
+            // Use VisualTreeHelper to find the ListBoxItem
+            ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+            var customer = listBoxItem.DataContext as Customer;
+            var screen = new UpdateCustomerWindow(customer, _customers);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
 
-        }
-
-        private void NextPageButtonCustomer_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentPage < customers.Count / itemsPerPage)
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
             {
-                currentPage++;
-                UpdateListBox();
-            }
-        }
+                customer = screen._updateCustomer;
+                // Use the UpdateProduct method from the business logic layer
+                CustomerService customerService = new CustomerService();
+                customerService.UpdateCustomer(customer);
 
-        private void PreviousPageButtonCustomer_Click(object sender, RoutedEventArgs e)
-        {
-            currentPage = Math.Max(0, currentPage - 1);
-            UpdateListBox();
+                // Show a message to the user
+                MessageBox.Show("Customer updated successfully!");
+
+                ApplySelectionAndFilter();
+            }
         }
 
         private void textBoxSearchCustomer_TextChanged(object sender, TextChangedEventArgs e)
@@ -751,26 +804,6 @@ namespace MyShop
         private void ListBoxCustomers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-        }
-        private static BindingList<Customer> customers = new BindingList<Customer>();
-
-        public static void generateCustomer()
-        {
-            for (int i = 1; i <= 20; i++)
-            {
-                Customer customer = new Customer
-                {
-                    Id = i,
-                    Name = $"Customer {i}",
-                    PhoneNumber = $"123-456-{i:D4}" // Assuming a simple phone number format
-                };
-
-                customers.Add(customer);
-            }
-        }
-        private void loadCustomer()
-        {
-            generateCustomer();
         }
 
         private void Add_Order_Click(object sender, RoutedEventArgs e)
@@ -795,45 +828,16 @@ namespace MyShop
 
         private void PreviousPageButtonOrder_Click(object sender, RoutedEventArgs e)
         {
-            currentPage = Math.Max(0, currentPage - 1);
-            UpdateListBox();
+            //currentPage = Math.Max(0, currentPage - 1);
         }
 
         private void NextPageButtonOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (currentPage < orders.Count / itemsPerPage)
-            {
-                currentPage++;
-                UpdateListBox();
-            }
+            //if (currentPage < orders.Count / itemsPerPage)
+            //{
+            //    currentPage++;
+            //}
         }
 
-        private static BindingList<Order> orders = new BindingList<Order>();
-        private static void GenerateOrder()
-        {
-            // Assuming you have a list of customers and products available
-
-
-
-            for (int i = 1; i <= 15; i++)
-            {
-                Order order = new Order
-                {
-                    Id = i,
-                    OrderDate = DateTime.Now.AddDays(-i), // Example: orders placed in the past
-                    Customer = customers[i % customers.Count], // Cycle through customers
-                    ProductOrders = new List<ProductOrder>
-                    {
-                        new ProductOrder
-                        {
-                            Quantity = i, // Example: quantity based on order number
-                            Product = _products1[i % _products1.Count] // Cycle through products
-                        }
-                    }
-                };
-
-                orders.Add(order);
-            }
-        }
     }
 }

@@ -15,11 +15,13 @@ namespace MyShop
     {
         private CategoryRepository categoryRepository;
         private ProductsRepository productsRepository;
+        private CustomerRepository customerRepository;
 
         public DataImportService()
         {
             categoryRepository = new CategoryRepository();
             productsRepository = new ProductsRepository();
+            customerRepository = new CustomerRepository();
         }
 
         public void ImportDataFromExcel(string filename)
@@ -28,6 +30,7 @@ namespace MyShop
             // Drop old tables and create new ones
             productsRepository.CreateTables();
             categoryRepository.CreateTables();
+            customerRepository.CreateTables();
             productsRepository.AddForeignKey();
 
             // Read Excel file
@@ -155,5 +158,37 @@ namespace MyShop
         {
             productsRepository.UpdateProduct(product.Id, product.ProductName, product.Price, product.Category.Id, product.Quantity);
         }
+    }
+    public class CustomerService
+    {
+        private CustomerRepository customerRepository = new CustomerRepository();
+
+        public BindingList<Customer> GetAllCustomers()
+        {
+            return customerRepository.ReadDataFromDatabase();
+        }
+
+        public void InsertCustomer(Customer customer)
+        {
+            // Perform any necessary checks or operations here
+            // For example, validate the customer data before inserting
+            customerRepository.InsertCustomer(customer.Name, customer.PhoneNumber);
+        }
+
+        public void DeleteCustomer(int customerId)
+        {
+            // Perform any necessary checks or operations here
+            // For example, check if the customer has any orders before deletion
+            customerRepository.DeleteCustomer(customerId);
+        }
+
+        public void UpdateCustomer(Customer customer)
+        {
+            // Perform any necessary checks or operations here
+            // For example, validate the customer data before updating
+            customerRepository.UpdateCustomer(customer.Id, customer.Name, customer.PhoneNumber);
+        }
+
+        // Additional methods related to Customer...
     }
 }

@@ -111,7 +111,7 @@ namespace MyShop
 
 
     }
-    public class Customer : INotifyPropertyChanged
+    public class Customer : INotifyPropertyChanged , ICloneable
     {
         private int _id;
         private string _name;
@@ -145,6 +145,10 @@ namespace MyShop
                 _phoneNumber = value;
                 OnPropertyChanged(nameof(PhoneNumber));
             }
+        }
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
