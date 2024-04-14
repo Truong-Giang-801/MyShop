@@ -5,7 +5,7 @@
 	xmlns:uc="clr-namespace:MyShop.UserControls"
 	xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
 	xmlns:local="clr-namespace:MyShop"
-        
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="MyShop.MainWindow"
         WindowStartupLocation="CenterScreen" Background="Transparent"
         Title="MainWindow"  Loaded="Window_Loaded"
@@ -342,7 +342,7 @@
                                 <StackPanel Orientation="Horizontal" Width="916">
                                     <TextBlock Text="{Binding CategoryName}" Margin="30,0,0,0" FontSize="30" FontWeight="DemiBold" Width="732" Height="44">
 
-                                            <TextBlock.RenderTransform>
+                                        <TextBlock.RenderTransform>
                                             <TransformGroup>
                                                 <ScaleTransform/>
                                                 <SkewTransform/>
@@ -458,57 +458,65 @@
                     </Grid>
                 </Border>
                 <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
-                    <ListBox x:Name="ListBoxProducts" ItemsSource="{Binding Product}" BorderThickness="0"  Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2" av:ItemsSource="{av:SampleData ItemCount=5}" >
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Width="916">
-                                    <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="DemiBold" Width="361"/>
-                                    <TextBlock Text="{Binding Price}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="182"/>
-                                    <TextBlock Text="{Binding Quantity}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="136" RenderTransformOrigin="0.5,0.5">
-                                        <TextBlock.RenderTransform>
-                                            <TransformGroup>
-                                                <ScaleTransform/>
-                                                <SkewTransform/>
-                                                <RotateTransform Angle="-0.003"/>
-                                                <TranslateTransform/>
-                                            </TransformGroup>
-                                        </TextBlock.RenderTransform>
-                                    </TextBlock>
-                                    <!--Update Button-->
-                                    <Button x:Name="Update_Product"  Click="Update_Product_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Green" Width="30" Height="30">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
-                                            <Icon:PackIconMaterial Kind="Pencil" Width="20" Height="20" RenderTransformOrigin="1.307,0.459" >
-                                                <Icon:PackIconMaterial.RenderTransform>
-                                                    <TransformGroup>
-                                                        <ScaleTransform ScaleX="1"/>
-
-                                                        <RotateTransform/>
-                                                        <TranslateTransform X="-0.184" Y="-0.022"/>
-                                                    </TransformGroup>
-                                                </Icon:PackIconMaterial.RenderTransform>
-                                            </Icon:PackIconMaterial>
-                                        </StackPanel>
-                                    </Button>
-                                    <!--Delete Button-->
-                                    <Button x:Name="Delete_Product"  Click="Delete_Product_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Red" Width="30" Height="30">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
-                                            <Icon:PackIconMaterial Kind="TrashCanOutline" Width="20" Height="20" RenderTransformOrigin="1.307,0.459" >
-                                                <Icon:PackIconMaterial.RenderTransform>
-                                                    <TransformGroup>
-                                                        <ScaleTransform ScaleX="1"/>
-
-                                                        <RotateTransform/>
-                                                        <TranslateTransform X="-0.184" Y="-0.022"/>
-                                                    </TransformGroup>
-                                                </Icon:PackIconMaterial.RenderTransform>
-                                            </Icon:PackIconMaterial>
-                                        </StackPanel>
-                                    </Button>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <StackPanel>
+                        <!-- Pagination buttons -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0 0 0 10">
+                            <Button Content="Previous" Click="PreviousPageButton_Click" Margin="5" Width="100" Height="30" Background="LightGray" BorderThickness="1" BorderBrush="Gray" >
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Content="Next" Click="NextPageButton_Click" Margin="5" Width="100" Height="30" Background="LightGray" BorderThickness="1" BorderBrush="Gray" >
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                        <!-- ListBox for displaying products -->
+                        <ListBox x:Name="ListBoxProducts" BorderThickness="0" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" Margin="-8,2,8,-2" SelectionChanged="ListBoxProducts_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Width="916">
+                                        <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="DemiBold" Width="361"/>
+                                        <TextBlock Text="{Binding Price}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="182"/>
+                                        <TextBlock Text="{Binding Quantity}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="136" RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform/>
+                                                    <SkewTransform/>
+                                                    <RotateTransform Angle="-0.003"/>
+                                                    <TranslateTransform/>
+                                                </TransformGroup>
+                                            </TextBlock.RenderTransform>
+                                        </TextBlock>
+                                        <!-- Update Button -->
+                                        <Button Click="Update_Product_Click" Background="Transparent" BorderThickness="0" Foreground="Green" Width="30" Height="30">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+                                                <Icon:PackIconMaterial Kind="Pencil" Width="20" Height="20"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Click="Delete_Product_Click" Background="Transparent" BorderThickness="0" Foreground="Red" Width="30" Height="30">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+                                                <Icon:PackIconMaterial Kind="TrashCanOutline" Width="20" Height="20"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <!-- Delete Button -->
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        
+                    </StackPanel>
                 </Border>
+
                 <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
                     <StackPanel Orientation="Horizontal" >
                         <TextBlock VerticalAlignment="Center" Text="Product Name" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="340" ></TextBlock>
@@ -536,7 +544,7 @@
 
                             <TextBlock x:Name="placeholderText" Text="Category" VerticalAlignment="Top" HorizontalAlignment="Left"
                              Foreground="Black" IsHitTestVisible="False" Margin="3,11,0,0" />
-                            
+
                         </Grid>
                         <Grid Margin="50,0,0,0">
                             <ComboBox x:Name="comboBox1" SelectionChanged="comboBox1_SelectionChanged" Width="100" Height="30" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" Margin="0,30,0,0">
@@ -551,6 +559,7 @@
                         </Grid>
                     </StackPanel>
                 </Border>
+                
             </Grid>
         </Border>
     </Grid>

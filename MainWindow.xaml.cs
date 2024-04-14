@@ -127,6 +127,34 @@ namespace MyShop
                 productMessageTextBlock.Text = $"Unlimited access";
             }
         }
+        private int itemsPerPage = 5;
+        private int currentPage = 0;
+
+        private void UpdateListBox()
+        {
+            int startIndex = currentPage * itemsPerPage;
+            int endIndex = Math.Min(startIndex + itemsPerPage, _products.Count);
+
+            var pageProducts = _products1.Skip(startIndex).Take(endIndex - startIndex);
+            ListBoxProducts.ItemsSource = pageProducts;
+        }
+
+        private void NextPageButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (currentPage < _products1.Count/itemsPerPage)
+            {
+                currentPage++;
+
+                UpdateListBox();
+            }
+        }
+
+        private void PreviousPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage = Math.Max(0, currentPage - 1);
+            UpdateListBox();
+        }
         private void ApplySelectionAndFilter()
         {
             int selectedPriceIndex = comboBox1.SelectedIndex;
@@ -136,6 +164,8 @@ namespace MyShop
             comboBox1.SelectedIndex = selectedPriceIndex;
             comboBox.SelectedIndex = selectedCategoryIndex;
             ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
+            UpdateListBox();
+
         }
         private void ApplySearch()
         {
@@ -307,6 +337,8 @@ namespace MyShop
             LoadProductsAndCategories();
             setVisibleOff();
             DashboardScreen.Visibility = Visibility.Visible;
+            UpdateListBox();
+
         }
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -629,6 +661,11 @@ namespace MyShop
                 // Use recursion to proceed with next level
                 return FindParent<T>(parentObject);
             }
+        }
+
+        private void ListBoxProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

@@ -5,6 +5,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace MyShop
 {
@@ -78,6 +81,7 @@ namespace MyShop
 
 
     }
+
     public class Category : INotifyPropertyChanged , ICloneable
     {
         public int Id { get; set; }
@@ -104,6 +108,7 @@ namespace MyShop
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
 
     }
     public class Customer : INotifyPropertyChanged
