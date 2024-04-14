@@ -164,12 +164,9 @@ namespace MyShop
         private int _id;
         private DateTime _orderDate;
         private Customer _customer;
-        private List<ProductOrder> _productOrders;
+        private Product _product;
+        private int _quantity;
 
-        public Order()
-        {
-            _productOrders = new List<ProductOrder>();
-        }
 
         public int Id
         {
@@ -201,28 +198,15 @@ namespace MyShop
             }
         }
 
-        public List<ProductOrder> ProductOrders
+        public Product Product
         {
-            get { return _productOrders; }
+            get { return _product; }
             set
             {
-                _productOrders = value;
-                OnPropertyChanged(nameof(ProductOrders));
+                _product = value;
+                OnPropertyChanged(nameof(Product));
             }
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    public class ProductOrder : INotifyPropertyChanged
-    {
-        private int _quantity;
-        private Product _product;
         public int Quantity
         {
             get { return _quantity; }
@@ -233,15 +217,6 @@ namespace MyShop
             }
         }
 
-        public Product Product
-        {
-            get { return _product; }
-            set
-            {
-                _product = value;
-                OnPropertyChanged(nameof(Product));
-            }
-        }
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)

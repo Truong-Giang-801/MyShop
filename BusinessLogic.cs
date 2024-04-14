@@ -16,12 +16,14 @@ namespace MyShop
         private CategoryRepository categoryRepository;
         private ProductsRepository productsRepository;
         private CustomerRepository customerRepository;
+        private OrdersRepository orderRepository;
 
         public DataImportService()
         {
             categoryRepository = new CategoryRepository();
             productsRepository = new ProductsRepository();
             customerRepository = new CustomerRepository();
+            orderRepository = new OrdersRepository();
         }
 
         public void ImportDataFromExcel(string filename)
@@ -29,9 +31,11 @@ namespace MyShop
 
             // Drop old tables and create new ones
             productsRepository.CreateTables();
+            orderRepository.CreateTables();
             categoryRepository.CreateTables();
             customerRepository.CreateTables();
             productsRepository.AddForeignKey();
+            orderRepository.AddForeignKey();
 
             // Read Excel file
             using (SpreadsheetDocument document = SpreadsheetDocument.Open(filename, false))
@@ -190,5 +194,36 @@ namespace MyShop
         }
 
         // Additional methods related to Customer...
+    }
+    public class OrdersService
+    {
+        private OrdersRepository ordersRepository = new OrdersRepository();
+
+        public ObservableCollection<Order> GetAllOrders()
+        {
+            return ordersRepository.ReadDataFromDatabase();
+        }
+
+        public void DeleteOrder(int orderId)
+        {
+            // Perform any necessary checks or operations here
+            ordersRepository.DeleteOrder(orderId);
+        }
+
+        public void InsertOrder(Order order)
+        {
+            // Example of adding business logic before inserting an order
+            // You might want to validate the order, check stock availability, etc.
+            // For simplicity, we're directly passing the order to the repository
+            ordersRepository.InsertOrder(order);
+        }
+
+        public void UpdateOrder(Order order)
+        {
+            // Example of adding business logic before updating an order
+            // You might want to validate the order, check stock availability, etc.
+            // For simplicity, we're directly passing the order to the repository
+            ordersRepository.UpdateOrder(order);
+        }
     }
 }

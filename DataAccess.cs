@@ -336,4 +336,140 @@ namespace MyShop
             }
         }
     }
+    public class OrdersRepository
+    {
+        private string connectionString = Properties.Settings.Default.ConnectionString;
+
+        public ObservableCollection<Order> ReadDataFromDatabase()
+        {
+            ObservableCollection<Order> list = new ObservableCollection<Order>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var sqlcmd = "SELECT * FROM Orders";
+                var command = new SqlCommand(sqlcmd, connection);
+                var reader = command.ExecuteReader();
+
+                // Assuming you have repositories for Customer and Product to fetch related entities
+                var customerRepo = new CustomerRepository();
+                var productRepo = new ProductsRepository();
+                var customers = customerRepo.ReadDataFromDatabase().ToDictionary(c => c.Id, c => c);
+                var products = productRepo.ReadDataFromDatabase().ToDictionary(p => p.Id, p => p);
+
+                while (reader.Read())
+                {
+                    int id = (int)reader["Id"];
+                    DateTime orderDate = (DateTime)reader["OrderDate"];
+                    int customerId = (int)reader["CustomerId"];
+                    int productId = (int)reader["ProductId"];
+                    int quantity = (int)reader["Quantity"];
+
+                    // Find the Customer and Product objects that match the IDs
+                    Customer customer = customers.ContainsKey(customerId) ? customers[customerId] : null;
+                    Product product = products.ContainsKey(productId) ? products[productId] : null;
+
+                    // Create a new Order object and assign the properties
+                    Order order = new Order()
+                    {
+                        Id = id,
+                        OrderDate = orderDate,
+                        Customer = customer,
+                        Product = product,
+                        Quantity = quantity
+                    };
+                    list.Add(order);
+                }
+                reader.Close();
+                connection.Close();
+            }
+            return list;
+        }
+
+        public void InsertOrder(Order order)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sql = "INSERT INTO Orders (OrderDate, CustomerId, ProductId, Quantity) VALUES (@OrderDate, @CustomerId, @ProductId, @Quantity)";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@OrderDate", order.OrderDate);
+                    command.Parameters.AddWithValue("@CustomerId", order.Customer.Id);
+                    command.Parameters.AddWithValue("@ProductId", order.Product.Id);
+                    command.Parameters.AddWithValue("@Quantity", order.Quantity);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteOrder(int orderId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string deleteSql = "DELETE FROM Orders WHERE Id = @Id";
+                using (SqlCommand deleteCommand = new SqlCommand(deleteSql, connection))
+                {
+                    deleteCommand.Parameters.AddWithValue("@Id", orderId);
+                    deleteCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateOrder(Order order)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string updateSql = "UPDATE Orders SET OrderDate = @OrderDate, CustomerId = @CustomerId, ProductId = @ProductId, Quantity = @Quantity WHERE Id = @Id";
+                using (SqlCommand updateCommand = new SqlCommand(updateSql, connection))
+                {
+                    updateCommand.Parameters.AddWithValue("@Id", order.Id);
+                    updateCommand.Parameters.AddWithValue("@OrderDate", order.OrderDate);
+                    updateCommand.Parameters.AddWithValue("@CustomerId", order.Customer.Id);
+                    updateCommand.Parameters.AddWithValue("@ProductId", order.Product.Id);
+                    updateCommand.Parameters.AddWithValue("@Quantity", order.Quantity);
+                    updateCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void CreateTables()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string createTableSql = @"
+            DROP TABLE IF EXISTS Orders;
+            CREATE TABLE Orders (
+                Id INT IDENTITY(1,1) PRIMARY KEY,
+                OrderDate DATETIME NOT NULL,
+                CustomerId INT NOT NULL,
+                ProductId INT NOT NULL,
+                Quantity INT NOT NULL
+            );";
+                using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
+                {
+                    createTableCommand.ExecuteNonQuery();
+                }
+            }
+        }
+        public void AddForeignKey()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string createTableSql = @"
+                ALTER TABLE Orders
+                ADD FOREIGN KEY (CustomerId) REFERENCES Customer(Id);
+                ALTER TABLE Orders
+                ADD FOREIGN KEY (ProductId) REFERENCES Product(Id);
+                ";
+                using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
+                {
+                    createTableCommand.ExecuteNonQuery();
+                }
+            }
+        }
+    }
 }

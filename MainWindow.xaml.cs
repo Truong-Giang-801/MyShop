@@ -192,6 +192,11 @@ namespace MyShop
             Debug.WriteLine(_customers.Count);
             ListBoxCustomers.ItemsSource = _customers;
 
+            OrdersService orderService = new OrdersService();
+            _orders = orderService.GetAllOrders();
+            Debug.WriteLine(_customers.Count);
+            ListBoxOrder.ItemsSource = _orders;
+
             // Clone the BindingList and add an "All" category
             BindingList<Category> clonedCategories = categoryService.AddAllObjectToCategories(_categories);
             var temp = currentPage;
@@ -340,6 +345,7 @@ namespace MyShop
         BindingList<Category> _categories = new BindingList<Category>();
         ObservableCollection<Product> _products = new ObservableCollection<Product>();
         BindingList<Customer> _customers = new BindingList<Customer>();
+        ObservableCollection<Order> _orders = new ObservableCollection<Order>();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -839,5 +845,19 @@ namespace MyShop
             //}
         }
 
+        private void Add_Coupon_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Delete_Coupon_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Update_Coupon_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

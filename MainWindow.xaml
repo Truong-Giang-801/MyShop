@@ -589,14 +589,6 @@
                             </StackPanel>
 
                         </StackPanel>
-                        <!--Search Textbox-->
-                        <Grid Width="300" HorizontalAlignment="Left" Margin="325,0,0,0">
-                            <TextBlock Margin="15 0" VerticalAlignment="Center" Foreground="#868686" IsHitTestVisible="False" Panel.ZIndex="1" 
-                     Text="Search here ..." 
-                     Visibility="{Binding Text, Converter={StaticResource BoolToVisConverter}, ElementName=textBoxSearch}" />
-                            <TextBox x:Name="textBoxSearchCustomer" Style="{StaticResource searchTextbox}" TextChanged="textBoxSearchCustomer_TextChanged" />
-                            <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" Foreground="#FF6D46" HorizontalAlignment="Right" Margin="0 0 15 0" VerticalAlignment="Center"/>
-                        </Grid>
                         <Grid Width="202" HorizontalAlignment="Left" Margin="711,0,0,0">
                             <Button x:Name="Add_Customer" Click="Add_Customer_Click" Style="{StaticResource menuButton}" Margin="0,5,5,0">
                                 <StackPanel Orientation="Horizontal" Height="22">
@@ -797,6 +789,88 @@
                             <TextBlock x:Name="placeholderText1" Text="Price" VerticalAlignment="Top" HorizontalAlignment="Left"
                                     Foreground="Black" IsHitTestVisible="False" Margin="3,9,0,0" />
                         </Grid>
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+        </Border>
+        
+        <!--Coupon Screen-->
+        <Border Visibility="Hidden" x:Name="CouponScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
+            <Grid  Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource whiteBorder}" Margin="15,0,15,10">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="260" >
+                            <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 20 0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Color="#FB7456" Offset="0"/>
+                                        <GradientStop Color="#FA5654" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Image Source="/Images/u4.png" Width="40" Height="40"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,100,0">
+                                <TextBlock Text="{Binding VersionText}" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
+                                <TextBlock Text="{Binding SubVersionText}" Foreground="#6C879A" Height="27"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                        <Grid Width="202" HorizontalAlignment="Left" Margin="711,0,0,0">
+                            <Button x:Name="Add_Coupon" Click="Add_Coupon_Click" Style="{StaticResource menuButton}" Margin="0,5,5,0">
+                                <StackPanel Orientation="Horizontal" Height="22">
+                                    <Icon:PackIconMaterial Kind="PlusBox" Style="{StaticResource menuButtonIcon}" Foreground="green" Width="39" Height="22"/>
+                                    <TextBlock Text="Add Coupon" Foreground="black" Width="131" FontSize="18" FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+
+                        </Grid>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
+                    <Canvas>
+                        <!-- ListBox for displaying products -->
+                        <ListBox x:Name="ListBoxCoupons" BorderThickness="0" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" Margin="-8,2,8,-2">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Width="916">
+                                        <TextBlock Text="{Binding Code}" FontSize="20" FontWeight="DemiBold" Width="361"/>
+                                        <TextBlock Text="{Binding Price}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="182"/>
+                                        <TextBlock Text="{Binding Quantity}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="136" RenderTransformOrigin="0.5,0.5"/>
+                                        <!-- Update Button -->
+                                        <Button Click="Update_Coupon_Click" Background="Transparent" BorderThickness="0" Foreground="Green" Width="30" Height="30">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+                                                <Icon:PackIconMaterial Kind="Pencil" Width="20" Height="20"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Click="Delete_Coupon_Click" Background="Transparent" BorderThickness="0" Foreground="Red" Width="47" Height="30">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+                                                <Icon:PackIconMaterial Kind="TrashCanOutline" Width="20" Height="20"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <!-- Delete Button -->
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                    </Canvas>
+                </Border>
+
+                <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock VerticalAlignment="Center" Text="Coupon Name" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="462" ></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Phone Number" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="156" ></TextBlock>
+
                     </StackPanel>
                 </Border>
 
