@@ -308,6 +308,8 @@ namespace MyShop
         {
             setButtonDashBoard();
             setVisibleOff();
+            currentPage = 0;
+            UpdateListBox();
             ProductScreen.Visibility = Visibility.Visible;
             Products.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Products.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -316,6 +318,8 @@ namespace MyShop
         {
             setButtonDashBoard();
             setVisibleOff();
+            currentPage = 0;
+            UpdateListBox();
             CategoryScreen.Visibility = Visibility.Visible;
             Category.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Category.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -324,6 +328,8 @@ namespace MyShop
         {
             setButtonDashBoard();
             setVisibleOff();
+            currentPage = 0;
+            UpdateListBox();
             CustomerScreen.Visibility = Visibility.Visible;
             Customer.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Customer.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -482,6 +488,8 @@ namespace MyShop
         {
             setButtonDashBoard();
             setVisibleOff();
+            currentPage = 0;
+            UpdateListBox();
             OrderScreen.Visibility = Visibility.Visible;
             Order.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Order.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
