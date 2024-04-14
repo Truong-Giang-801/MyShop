@@ -42,10 +42,12 @@ namespace MyShop
             int endIndex = Math.Min(startIndex + itemsPerPage, _products.Count);
 
             var pageProducts = _products1.Skip(startIndex).Take(endIndex - startIndex);
+            var pageCategories = _categories.Skip(startIndex).Take(endIndex - startIndex);
+            ListBoxCategories.ItemsSource = pageCategories;
             ListBoxProducts.ItemsSource = pageProducts;
         }
 
-        private void NextPageButton_Click(object sender, RoutedEventArgs e)
+        private void NextPageButtonProduct_Click(object sender, RoutedEventArgs e)
         {
 
             if (currentPage < _products1.Count/itemsPerPage)
@@ -56,11 +58,12 @@ namespace MyShop
             }
         }
 
-        private void PreviousPageButton_Click(object sender, RoutedEventArgs e)
+        private void PreviousPageButtonProduct_Click(object sender, RoutedEventArgs e)
         {
             currentPage = Math.Max(0, currentPage - 1);
             UpdateListBox();
         }
+
         private void ApplySelectionAndFilter()
         {
             int selectedPriceIndex = comboBox1.SelectedIndex;
@@ -573,5 +576,23 @@ namespace MyShop
         {
 
         }
+
+
+        private void NextPageButtonCategory_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentPage < _categories.Count / itemsPerPage)
+            {
+                currentPage++;
+
+                UpdateListBox();
+            }
+        }
+
+        private void PreviousPageButtonCategory_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage = Math.Max(0, currentPage - 1);
+            UpdateListBox();
+        }
+
     }
 }
