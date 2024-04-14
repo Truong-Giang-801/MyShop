@@ -33,6 +33,31 @@ namespace MyShop
         {
             InitializeComponent();
         }
+        private void ApplySelectionAndFilter()
+        {
+            int selectedPriceIndex = comboBox1.SelectedIndex;
+            var selectedCategory = comboBox.SelectedItem as Category;
+            int selectedCategoryIndex = comboBox.SelectedIndex;
+            LoadProductsAndCategories();
+            comboBox1.SelectedIndex = selectedPriceIndex;
+            comboBox.SelectedIndex = selectedCategoryIndex;
+            ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
+        }
+        private void ApplySearch()
+        {
+            string searchText = textBoxSearch.Text.ToLower();
+
+            if (comboBox.SelectedIndex == 0 && comboBox1.SelectedIndex == 0)
+            {
+                _products1 = new List<MyShop.Product>(_products);
+            }
+            // Filter the products based on the search text
+            var filteredProducts = _products1.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
+            ObservableCollection<Product> productsBindingList = new ObservableCollection<Product>(filteredProducts);
+
+            // Update the ListBox with the filtered products
+            ListBoxProducts.ItemsSource = productsBindingList;
+        }
         public void LoadProductsAndCategories()
         {
             // Using ProductService to fetch all products from the database
@@ -250,6 +275,7 @@ namespace MyShop
             if (selectedCategoryIndex == 0 && selectedPriceIndex == 0)
             {
                 ListBoxProducts.ItemsSource = _products;
+                ApplySearch();
                 return;
             }
 
@@ -281,22 +307,12 @@ namespace MyShop
 
             ObservableCollection<Product> productsBindingList = new ObservableCollection<Product>(_products1);
             ListBoxProducts.ItemsSource = productsBindingList;
+            ApplySearch();
         }
 
         private void textBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string searchText = textBoxSearch.Text.ToLower();
-
-            if(comboBox.SelectedIndex==0 && comboBox1.SelectedIndex == 0)
-            {
-                _products1 = new List<MyShop.Product>(_products); 
-            }
-            // Filter the products based on the search text
-            var filteredProducts = _products1.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
-            ObservableCollection<Product> productsBindingList = new ObservableCollection<Product>(filteredProducts);
-
-            // Update the ListBox with the filtered products
-            ListBoxProducts.ItemsSource =productsBindingList;
+            ApplySearch();
         }
 
         private void Import_Click(object sender, RoutedEventArgs e)
@@ -309,7 +325,15 @@ namespace MyShop
                 DataImportService dataImportService = new DataImportService();
                 dataImportService.ImportDataFromExcel(filename);
             }
+
+            int selectedPriceIndex = comboBox1.SelectedIndex;
+            // Apply combined filter
+            var selectedCategory = comboBox.SelectedItem as Category;
+            int selectedCategoryIndex = comboBox.SelectedIndex;
             LoadProductsAndCategories();
+            comboBox1.SelectedIndex = selectedPriceIndex;
+            comboBox.SelectedIndex= selectedCategoryIndex;
+            ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
         }
 
         private void Order_Click(object sender, RoutedEventArgs e)
@@ -342,7 +366,8 @@ namespace MyShop
                 // Show a message to the user
                 MessageBox.Show("Product added successfully!");
 
-                LoadProductsAndCategories();
+
+                ApplySelectionAndFilter();
             }
 
         }
@@ -372,7 +397,8 @@ namespace MyShop
 
                     // Show a message to the user
                     MessageBox.Show($"Delete product successfully!");
-                    LoadProductsAndCategories();
+
+                    ApplySelectionAndFilter();
                 }
             }
         }
@@ -400,7 +426,8 @@ namespace MyShop
                 // Show a message to the user
                 MessageBox.Show("Product updated successfully!");
 
-                LoadProductsAndCategories();
+
+                ApplySelectionAndFilter();
             }
         }
 
@@ -436,7 +463,7 @@ namespace MyShop
 
                         // Show a message to the user
                         MessageBox.Show($"Delete category successfully!");
-                        LoadProductsAndCategories();
+                        ApplySelectionAndFilter();
                     }
                 }
             }
@@ -460,7 +487,7 @@ namespace MyShop
                 categoryService.InsertCategory(newCategory);
                 MessageBox.Show("Category added successfully!");
 
-                LoadProductsAndCategories();
+                ApplySelectionAndFilter();
             }
         }
 
@@ -486,7 +513,7 @@ namespace MyShop
                 // Show a message to the user
                 MessageBox.Show("Category updated successfully!");
 
-                LoadProductsAndCategories();
+                ApplySelectionAndFilter();
             }
         }
         private static T FindParent<T>(DependencyObject child) where T : DependencyObject

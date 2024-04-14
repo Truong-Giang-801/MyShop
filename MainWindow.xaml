@@ -346,7 +346,7 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Width="916">
-                                    <TextBlock Text="{Binding CategoryName}" Margin="30,0,0,0" FontSize="20" FontWeight="DemiBold" Width="732" Height="44">
+                                    <TextBlock Text="{Binding CategoryName}" Margin="30,0,0,0" FontSize="30" FontWeight="DemiBold" Width="732" Height="44">
 
                                             <TextBlock.RenderTransform>
                                             <TransformGroup>
@@ -394,7 +394,7 @@
                 </Border>
                 <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                        <TextBlock VerticalAlignment="Center" Text="Category List" FontSize="20" Margin="25,0,0,0" FontWeight="DemiBold"></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Category List" FontSize="30" FontWeight="DemiBold"></TextBlock>
 
                     </StackPanel>
                 </Border>
