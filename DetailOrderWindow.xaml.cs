@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace MyShop
             this.DataContext = order;
             double price = order.Quantity * order.Product.Price;
             Price.Text = price.ToString();
+            
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
