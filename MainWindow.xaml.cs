@@ -26,6 +26,7 @@ using System.Linq;
 using System.Globalization;
 using Microsoft.Identity.Client;
 using LiveCharts;
+
 namespace MyShop
 {
     /// <summary>
@@ -1402,12 +1403,12 @@ namespace MyShop
             In_stock.SubTitle = $"{numberSale} products are being sold";
 
             // Calculate total purchase
-            purchase = _orders.Sum(order => order.Product.Price * order.Quantity);
+            purchase = _orders.Sum(order => (order.Quantity * order.Product.Price) * ((100 - order.Coupon?.DiscountPercentage) ?? 100) / 100);
             string purchaseInVietnamese = purchase.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
             Purchase.SubTitle = $"Total income {purchaseInVietnamese}";
 
             // Calculate total profit
-            profit = purchase * 0.15;
+            profit = purchase * 15 / 100;
             string profitInVietnamese = profit.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
             Profit.SubTitle = $"Total profit {profitInVietnamese} (15% income)";
         }
