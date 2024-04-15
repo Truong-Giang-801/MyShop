@@ -1364,9 +1364,11 @@ namespace MyShop
                 var xAxisLabels = ordersGroupedByDate.Select(group => group.Key.ToShortDateString()).OrderBy(date => DateTime.Parse(date)).ToList();
                 chartMain.AxisX[0].Labels = xAxisLabels; // Assuming you have only one X-axis
 
-                // Set the Y-axis range based on the maximum values in incomePerDay and profitPerDay
-                double maxYValue = Math.Max(incomePerDay.Max(), profitPerDay.Max()) * 1.5; // Add some margin
-                chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
+            // Set the Y-axis range based on the maximum values in incomePerDay and profitPerDay
+            double maxYValue = Math.Max(
+                incomePerDay.DefaultIfEmpty(0).Max(),
+                profitPerDay.DefaultIfEmpty(0).Max()
+            ) * 1.5; // Add some margin            chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
 
                 // Set the values to the chart
                 Income_Line.Values = new ChartValues<float>(incomePerDay);
