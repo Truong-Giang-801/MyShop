@@ -439,6 +439,7 @@ namespace MyShop
         {
             setVisibleOff();
             setButtonDashBoard();
+            Update_DashBoard();
             DashboardScreen.Visibility = Visibility.Visible;
             DashBoard.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             DashBoard.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -1338,37 +1339,41 @@ namespace MyShop
             int numberSale = 0;
             var ordersGroupedByDate = _orders.GroupBy(order => order.OrderDate.Date)
                                               .OrderBy(group => group.Key);
-            // Calculate income and profit for each day
-            List<float> incomePerDay = new List<float>();
-            List<float> profitPerDay = new List<float>();
-
-            foreach (var group in ordersGroupedByDate)
+            if (_orders.Count != 0)
             {
-                float dailyIncome = 0;
-                float dailyProfit = 0;
+                // Calculate income and profit for each day
+                List<float> incomePerDay = new List<float>();
+                List<float> profitPerDay = new List<float>();
 
-                foreach (var order in group)
+                foreach (var group in ordersGroupedByDate)
                 {
-                    dailyIncome += order.Product.Price * order.Quantity / 1000000;
-                    dailyProfit += order.Product.Price * order.Quantity / 1000000 * 15 / 100;
+                    float dailyIncome = 0;
+                    float dailyProfit = 0;
+
+                    foreach (var order in group)
+                    {
+                        dailyIncome += order.Product.Price * order.Quantity / 1000000;
+                        dailyProfit += order.Product.Price * order.Quantity / 1000000 * 15 / 100;
+                    }
+
+                    incomePerDay.Add(dailyIncome);
+                    profitPerDay.Add(dailyProfit);
                 }
 
-                incomePerDay.Add(dailyIncome);
-                profitPerDay.Add(dailyProfit);
+                // Set the X-axis labels
+                var xAxisLabels = ordersGroupedByDate.Select(group => group.Key.ToShortDateString()).OrderBy(date => DateTime.Parse(date)).ToList();
+                chartMain.AxisX[0].Labels = xAxisLabels; // Assuming you have only one X-axis
+
+                // Set the Y-axis range based on the maximum values in incomePerDay and profitPerDay
+                double maxYValue = Math.Max(incomePerDay.Max(), profitPerDay.Max()) * 1.5; // Add some margin
+                chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
+
+                // Set the values to the chart
+                Income_Line.Values = new ChartValues<float>(incomePerDay);
+                Profit_Line.Values = new ChartValues<float>(profitPerDay);
+
+                
             }
-
-            // Set the X-axis labels
-            var xAxisLabels = ordersGroupedByDate.Select(group => group.Key.ToShortDateString()).OrderBy(date => DateTime.Parse(date)).ToList();
-            chartMain.AxisX[0].Labels = xAxisLabels; // Assuming you have only one X-axis
-
-            // Set the Y-axis range based on the maximum values in incomePerDay and profitPerDay
-            double maxYValue = Math.Max(incomePerDay.Max(), profitPerDay.Max()) * 1.5; // Add some margin
-            chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
-
-            // Set the values to the chart
-            Income_Line.Values = new ChartValues<float>(incomePerDay);
-            Profit_Line.Values = new ChartValues<float>(profitPerDay);
-
             BindingList<Product> _5products = new BindingList<Product>();
 
             var top5ProductsWithQuantity = _orders
@@ -1411,17 +1416,7 @@ namespace MyShop
             profit = purchase * 15 / 100;
             string profitInVietnamese = profit.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
             Profit.SubTitle = $"Total profit {profitInVietnamese} (15% income)";
-        }
 
-        private void Purchase_Loaded(object sender, RoutedEventArgs e)
-        {
-
-            Update_DashBoard();
-        }
-
-        private void Profit_Loaded(object sender, RoutedEventArgs e)
-        {
-            Update_DashBoard();
         }
     }
 
