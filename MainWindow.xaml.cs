@@ -814,22 +814,96 @@ namespace MyShop
 
         private void Add_Order_Click(object sender, RoutedEventArgs e)
         {
+            var screen = new AddOrderWindow(_customers, _products);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
 
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
+            {
+                var newOrder = screen.AddOrder;
+                OrdersService ordersService = new OrdersService();
+                ordersService.InsertOrder(newOrder);
+                
+
+                // Show a message to the user
+                MessageBox.Show("Order added successfully!");
+
+                ApplySelectionAndFilter();
+            }
         }
 
         private void Update_Order_Click(object sender, RoutedEventArgs e)
         {
+            // Get the button that raised the event
+            Button button = (Button)sender;
+            // Use VisualTreeHelper to find the ListBoxItem
+            ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+            var order = listBoxItem.DataContext as Order;
+
+            var screen = new UpdateOrderWindow(order,_customers,_products);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
+
+            // Check if the user clicked the submit button (usually represented by a positive result)
+            if (result == true)
+            {
+                order = screen.UpdateOrder;
+                OrdersService orderService = new OrdersService();
+
+
+                orderService.UpdateOrder(order);
+
+                // Show a message to the user
+                MessageBox.Show("Order updated successfully!");
+
+                ApplySelectionAndFilter();
+            }
 
         }
 
         private void Delete_Order_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show(
+           "Are you sure you want delete this order?",
+           "Confirmation",
+           MessageBoxButton.YesNo,
+           MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                // Get the button that raised the event
+                Button button = (Button)sender;
+                // Use VisualTreeHelper to find the ListBoxItem
+                ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+                var order= listBoxItem.DataContext as Order;
 
+                if (order != null)
+                {
+                    var id = order.Id;
+
+                    // Use the DeleteProduct method from the business logic layer
+                    OrdersService orderService = new OrdersService();
+                    orderService.DeleteOrder(id);
+
+                    // Show a message to the user
+                    MessageBox.Show($"Delete order successfully!");
+                    ApplySelectionAndFilter();
+                }
+            }
         }
 
         private void Detail_Order_Click(object sender, RoutedEventArgs e)
         {
+            Button button = (Button)sender;
+            // Use VisualTreeHelper to find the ListBoxItem
+            ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+            var order = listBoxItem.DataContext as Order;
 
+            var screen = new DetailOrderWindow(order);
+            // Show the window modally and wait for the user to close it
+            bool? result = screen.ShowDialog();
+            if(result == true) { 
+            }
         }
 
         private void PreviousPageButtonOrder_Click(object sender, RoutedEventArgs e)

@@ -212,6 +212,7 @@ namespace MyShop
                 connection.Open();
                 string createTableSql = @"
                 DROP TABLE IF EXISTS Product;
+
                 CREATE TABLE Product (
                     Id INT IDENTITY(1,1) PRIMARY KEY,
                     Name NVARCHAR(255) NOT NULL,
@@ -368,7 +369,7 @@ namespace MyShop
                     Customer customer = customers.ContainsKey(customerId) ? customers[customerId] : null;
                     Product product = products.ContainsKey(productId) ? products[productId] : null;
 
-                    // Create a new Order object and assign the properties
+                    // Create a new UpdateOrder object and assign the properties
                     Order order = new Order()
                     {
                         Id = id,
