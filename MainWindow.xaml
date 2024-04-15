@@ -17,7 +17,7 @@
     <Grid>
         <Border CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1280" HorizontalAlignment="Right"/>
         <!--Menu-->
-        <Border Grid.RowSpan="3" CornerRadius="25" Width="220" Height="740" HorizontalAlignment="Left" Margin="20,0,0,0">
+        <Border CornerRadius="25" Width="215" Height="740" HorizontalAlignment="Left" Margin="20,20,0,20">
             <Border.Background>
                 <LinearGradientBrush>
                     <GradientStop Color="Green" Offset="0"/>
@@ -340,7 +340,7 @@
                                     </ControlTemplate>
                                 </Button.Template>
                             </Button>
-                            
+
                             <Button Content="Next" Click="NextPageButtonOrder_Click" Margin="5,5,5,5" Width="100" Height="30" Background="LightGray" BorderThickness="1" BorderBrush="Gray" >
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
@@ -794,7 +794,7 @@
 
             </Grid>
         </Border>
-        
+
         <!--Coupon Screen-->
         <Border Visibility="Hidden" x:Name="CouponScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Visible">
