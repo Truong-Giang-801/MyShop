@@ -34,17 +34,34 @@ namespace MyShop
         {
             InitializeComponent();
             UpdateOrder = (Order)order.Clone();
+            var customerIndex = -1;
+            var productIndex = -1;
             for (int i = 0; i < customers.Count; i++)
             {
                 _customer.Add((Customer)customers[i].Clone());
+                if (customers[i].Id == UpdateOrder.Customer.Id)
+                {
+                    customerIndex = i;
+                }
             }
             for (int i = 0; i < products.Count; i++)
             {
                 _product.Add((Product)products[i].Clone());
+                if (products[i].Id == UpdateOrder.Product.Id)
+                {
+                    productIndex = i;
+                }
             }
             comboBoxCustomer.ItemsSource = _customer;
             comboBoxProduct.ItemsSource = _product;
-            Debug.WriteLine(order.Customer.Id);
+            if (customerIndex != -1)
+            {
+                comboBoxCustomer.SelectedIndex = customerIndex;
+            }
+            if (productIndex != -1)
+            {
+                comboBoxProduct.SelectedIndex = productIndex;
+            }
             DataContext = UpdateOrder;
             // Id not from 1 
             //comboBoxCustomer.SelectedItem = _customer[order.Customer.Id];

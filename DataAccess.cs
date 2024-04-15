@@ -371,7 +371,7 @@ namespace MyShop
                 {
                     int id = (int)reader["Id"];
                     DateTime orderDate = (DateTime)reader["OrderDate"];
-                    int customerId = (int)reader["CustomerId"];
+                    int customerId = reader.IsDBNull(reader.GetOrdinal("CustomerId")) ? default(int) : (int)reader["CustomerId"];
                     int productId = (int)reader["ProductId"];
                     int quantity = (int)reader["Quantity"];
 
@@ -379,7 +379,7 @@ namespace MyShop
                     Customer customer = customers.ContainsKey(customerId) ? customers[customerId] : null;
                     Product product = products.ContainsKey(productId) ? products[productId] : null;
 
-                    // Create a new UpdateOrder object and assign the properties
+                    // Create a new Order object and assign the properties
                     Order order = new Order()
                     {
                         Id = id,
@@ -472,7 +472,7 @@ namespace MyShop
                 connection.Open();
                 string createTableSql = @"
                 ALTER TABLE Orders
-                ADD FOREIGN KEY (CustomerId) REFERENCES Customer(Id);
+                ADD FOREIGN KEY (CustomerId) REFERENCES Customer(Id) ON DELETE SET NULL;
                 ALTER TABLE Orders
                 ADD FOREIGN KEY (ProductId) REFERENCES Product(Id);
                 ";
