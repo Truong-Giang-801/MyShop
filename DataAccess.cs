@@ -180,11 +180,21 @@ namespace MyShop
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string deleteSql = "DELETE FROM Product WHERE Id = @Id";
-                using (SqlCommand deleteCommand = new SqlCommand(deleteSql, connection))
+
+                // Step 1: Delete all orders associated with the product
+                string deleteOrdersSql = "DELETE FROM Orders WHERE ProductId = @ProductId";
+                using (SqlCommand deleteOrdersCommand = new SqlCommand(deleteOrdersSql, connection))
                 {
-                    deleteCommand.Parameters.AddWithValue("@Id", productId);
-                    deleteCommand.ExecuteNonQuery();
+                    deleteOrdersCommand.Parameters.AddWithValue("@ProductId", productId);
+                    deleteOrdersCommand.ExecuteNonQuery();
+                }
+
+                // Step 2: Delete the product itself
+                string deleteProductSql = "DELETE FROM Product WHERE Id = @Id";
+                using (SqlCommand deleteProductCommand = new SqlCommand(deleteProductSql, connection))
+                {
+                    deleteProductCommand.Parameters.AddWithValue("@Id", productId);
+                    deleteProductCommand.ExecuteNonQuery();
                 }
             }
         }
@@ -394,7 +404,7 @@ namespace MyShop
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@OrderDate", order.OrderDate);
-                    command.Parameters.AddWithValue("@CustomerId", order.Customer.Id);
+                    command.Parameters.AddWithValue("@CustomerId", order.Customer?.Id ?? (object)DBNull.Value); // Handle nullable CustomerId
                     command.Parameters.AddWithValue("@ProductId", order.Product.Id);
                     command.Parameters.AddWithValue("@Quantity", order.Quantity);
                     command.ExecuteNonQuery();
@@ -426,7 +436,7 @@ namespace MyShop
                 {
                     updateCommand.Parameters.AddWithValue("@Id", order.Id);
                     updateCommand.Parameters.AddWithValue("@OrderDate", order.OrderDate);
-                    updateCommand.Parameters.AddWithValue("@CustomerId", order.Customer.Id);
+                    updateCommand.Parameters.AddWithValue("@CustomerId", order.Customer?.Id ?? (object)DBNull.Value); // Handle nullable CustomerId
                     updateCommand.Parameters.AddWithValue("@ProductId", order.Product.Id);
                     updateCommand.Parameters.AddWithValue("@Quantity", order.Quantity);
                     updateCommand.ExecuteNonQuery();
@@ -444,7 +454,7 @@ namespace MyShop
             CREATE TABLE Orders (
                 Id INT IDENTITY(1,1) PRIMARY KEY,
                 OrderDate DATETIME NOT NULL,
-                CustomerId INT NOT NULL,
+                CustomerId INT,
                 ProductId INT NOT NULL,
                 Quantity INT NOT NULL
             );";

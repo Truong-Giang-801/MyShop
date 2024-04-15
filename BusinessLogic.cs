@@ -30,8 +30,8 @@ namespace MyShop
         {
 
             // Drop old tables and create new ones
-            productsRepository.CreateTables();
             orderRepository.CreateTables();
+            productsRepository.CreateTables();
             categoryRepository.CreateTables();
             customerRepository.CreateTables();
             productsRepository.AddForeignKey();
