@@ -1559,6 +1559,11 @@ namespace MyShop
             // Convert the list of products to a BindingList
             LisboxTop5Product.ItemsSource = top5ProductsWithQuantity;
         }
+
+        private void Change_Chart_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
 }
