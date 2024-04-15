@@ -160,32 +160,32 @@
                 </Grid>
                 <!--Main Chart-->
                 <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource whiteBorder}" Margin="20 20 20 0">
-                    <Grid Margin="10 5">
+                    <Grid x:Name="chartDashBoard" Margin="10 5">
                         <!--Title-->
-                        <TextBlock Text="Sales Figures" Style="{StaticResource titleText}"/>
+                        <TextBlock Text="Sales Report" Style="{StaticResource titleText}"/>
                         <!--Legends-->
                         <uc:Legends HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 8 10 0" />
                         <!--Chart-->
-                        <lvc:CartesianChart Grid.Row="1" Margin="5 40 0 60" LegendLocation="None">
+                        <lvc:CartesianChart Name="chartMain" Margin="5,40,0,10" LegendLocation="None">
                             <lvc:CartesianChart.DataTooltip>
-                                <lvc:DefaultTooltip Background="Red" Foreground="#ffffff" Opacity="0.7" BulletSize="10"/>
+                                <lvc:DefaultTooltip Background="blue" Foreground="#ffffff" Opacity="0.7" BulletSize="10"/>
                             </lvc:CartesianChart.DataTooltip>
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis Foreground="#90A3B2" ShowLabels="True">
+                                <lvc:Axis Title="Date" Foreground="#90A3B2" ShowLabels="True">
                                     <lvc:Axis.Separator>
-                                        <lvc:Separator StrokeThickness="0" Step="2"/>
+                                        <lvc:Separator StrokeThickness="0" Step="1"/>
                                     </lvc:Axis.Separator>
                                 </lvc:Axis>
                             </lvc:CartesianChart.AxisX>
                             <lvc:CartesianChart.AxisY>
-                                <lvc:Axis MinValue="40" MaxValue="350" Foreground="#90A3B2" ShowLabels="True">
+                                <lvc:Axis Title="1000k" MinValue="0" MaxValue="200" Foreground="#90A3B2" ShowLabels="True">
                                     <lvc:Axis.Separator>
                                         <lvc:Separator StrokeThickness="0"/>
                                     </lvc:Axis.Separator>
                                 </lvc:Axis>
                             </lvc:CartesianChart.AxisY>
                             <lvc:CartesianChart.Series>
-                                <lvc:LineSeries Values="50,120,110,160,150,180,120,170,165,180" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
+                                <lvc:LineSeries x:Name="Income_Line" Values="50,12,11,16,15,18,12,17,16,18" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
                                     <lvc:LineSeries.Stroke>
                                         <LinearGradientBrush>
                                             <GradientStop Color="#ffffff" Offset="0.06"/>
@@ -194,7 +194,7 @@
                                         </LinearGradientBrush>
                                     </lvc:LineSeries.Stroke>
                                 </lvc:LineSeries>
-                                <lvc:LineSeries Values="170,240,200,220,220,270,200,260,200,240" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
+                                <lvc:LineSeries x:Name="Profit_Line" Values="10,20,20,22,22,20,20,20,20,24" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
                                     <lvc:LineSeries.Stroke>
                                         <LinearGradientBrush>
                                             <GradientStop Color="#ffffff" Offset="0.06"/>
@@ -206,11 +206,7 @@
                             </lvc:CartesianChart.Series>
                         </lvc:CartesianChart>
                         <!--Note Text-->
-                        <Grid VerticalAlignment="Bottom" Margin="10 0">
-                            <Icon:PackIconMaterial Kind="Information" Foreground="#F96654"/>
-                            <TextBlock TextWrapping="Wrap" Margin="30 0 0 0" LineHeight="18" Foreground="{StaticResource GreyColor}"
-                                       Text="Net Sales, Found on the income statement are used to calculate this ration Return and refunds must be backed out of total sales to measure the truly measure the firms assets ability to generate sales."/>
-                        </Grid>
+
                     </Grid>
                 </Border>
                 <!--Right Section-->
@@ -222,58 +218,36 @@
                     <!--Sales List-->
                     <Border Style="{StaticResource whiteBorder}">
                         <StackPanel>
-                            <TextBlock Text="Sales List" Style="{StaticResource titleText}"/>
-                            <TextBlock Text="This is the sales data with the most revenue for this month" TextWrapping="Wrap" Margin="0 10 0 10" Style="{StaticResource secondaryText}"/>
-                            <uc:UserCard Title="Reza Asadi" IsActive="True" UpPrice="$1256" DownPrice="$337" Image="/Images/u1.png"/>
-                            <uc:UserCard Title="Firman Jabber" UpPrice="$1049" DownPrice="$789" Image="/Images/u3.png"/>
-                            <uc:UserCard Title="John Doe" UpPrice="$1105" DownPrice="$459" Image="/Images/u1.png"/>
+                            <TextBlock Text="Top Customer Spent" Style="{StaticResource titleText}"/>
+                            <ListBox x:Name="LisboxTop5Spent" Grid.Row="0" ItemsSource="{Binding _5spent}" BorderThickness="0" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,15,8,-2" Height="273">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical" Width="184" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding Customer.Name}" Margin="7,21,0,14" FontSize="16" FontWeight="DemiBold" Width="170"/>
+                                            <TextBlock Text="{Binding TotalSpent, StringFormat={}{0:C}}" Margin="10,0,0,0" FontSize="16" Width="176"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </StackPanel>
                     </Border>
                     <!--Sales Customer-->
                     <Border Grid.Row="1" Style="{StaticResource whiteBorder}" Margin="0 20 0 0">
                         <Grid>
                             <!--Title-->
-                            <TextBlock Text="Sales Customer" Style="{StaticResource titleText}"/>
+                            <TextBlock Text="Top Products Sale" Style="{StaticResource titleText}" Margin="0,10,0,-10"/>
                             <!--Chart-->
-                            <lvc:CartesianChart Grid.Row="1" Margin="0 40 0 30" LegendLocation="None">
-                                <lvc:CartesianChart.DataTooltip>
-                                    <lvc:DefaultTooltip Background="#0074FF" Opacity="0.8" Foreground="#ffffff"/>
-                                </lvc:CartesianChart.DataTooltip>
-                                <lvc:CartesianChart.AxisX>
-                                    <lvc:Axis Foreground="#90A3B2" ShowLabels="True">
-                                        <lvc:Axis.Separator>
-                                            <lvc:Separator StrokeThickness="0" Step="1"/>
-                                        </lvc:Axis.Separator>
-                                    </lvc:Axis>
-                                </lvc:CartesianChart.AxisX>
-                                <lvc:CartesianChart.AxisY>
-                                    <lvc:Axis MinValue="0" MaxValue="8" Foreground="#90A3B2" ShowLabels="True">
-                                        <lvc:Axis.Separator>
-                                            <lvc:Separator StrokeThickness="0" Step="2"/>
-                                        </lvc:Axis.Separator>
-                                    </lvc:Axis>
-                                </lvc:CartesianChart.AxisY>
-                                <lvc:CartesianChart.Series>
-                                    <lvc:ColumnSeries Values="6.5,3,6,5" MaxColumnWidth="10">
-                                        <lvc:ColumnSeries.Fill>
-                                            <LinearGradientBrush>
-                                                <GradientStop Color="#2889FC" Offset="0"/>
-                                                <GradientStop Color="#ffffff" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </lvc:ColumnSeries.Fill>
-                                    </lvc:ColumnSeries>
-                                    <lvc:ColumnSeries Values="7.5,5,4,5.5" MaxColumnWidth="10">
-                                        <lvc:ColumnSeries.Fill>
-                                            <LinearGradientBrush>
-                                                <GradientStop Color="#FF6F4D" Offset="0"/>
-                                                <GradientStop Color="#ffffff" Offset="1"/>
-                                            </LinearGradientBrush>
-                                        </lvc:ColumnSeries.Fill>
-                                    </lvc:ColumnSeries>
-                                </lvc:CartesianChart.Series>
-                            </lvc:CartesianChart>
-                            <!--Legends-->
-                            <uc:Legends HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+                            <ListBox x:Name="LisboxTop5Product" Grid.Row="0" ItemsSource="{Binding _5products}" av:ItemsSource="{av:SampleData ItemCount=5}" BorderThickness="0" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,58,8,-2">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical" Width="184" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding Product.ProductName}" Margin="7,21,0,14" FontSize="16" FontWeight="DemiBold" Width="170"/>
+                                            <TextBlock Text="{Binding TotalQuantity}" Margin="10,0,0,0" FontSize="16" Width="176"/>
+
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </Grid>
                     </Border>
                 </Grid>
@@ -590,7 +564,7 @@
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock TextWrapping="Wrap" MaxWidth='500' FontSize='30' Margin='5, 5, 5, 5' TextAlignment="Center">
         Allows when running the program to reopen the last screen once before shutting down
-        
+
                             </TextBlock>
                             <CheckBox VerticalAlignment="Center" Name="CheckBox" Margin="5">
                                 <CheckBox.LayoutTransform>

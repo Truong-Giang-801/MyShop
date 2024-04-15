@@ -25,6 +25,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Linq;
 using System.Globalization;
 using Microsoft.Identity.Client;
+using LiveCharts;
 namespace MyShop
 {
     /// <summary>
@@ -1334,28 +1335,83 @@ namespace MyShop
             decimal purchase = 0;
             decimal profit = 0;
             int numberSale = 0;
-            foreach (var product in _products)
-            {
-                numberSale += product.Quantity;
-            }
-            In_stock.SubTitle = numberSale.ToString() + " products product is being sold";
+            var ordersGroupedByDate = _orders.GroupBy(order => order.OrderDate.Date)
+                                              .OrderBy(group => group.Key);
+            // Calculate income and profit for each day
+            List<float> incomePerDay = new List<float>();
+            List<float> profitPerDay = new List<float>();
 
-            foreach (var order in _orders)
+            foreach (var group in ordersGroupedByDate)
             {
-                purchase += (order.Quantity * order.Product.Price) * ((100 - order.Coupon?.DiscountPercentage) ?? 100) / 100;
+                float dailyIncome = 0;
+                float dailyProfit = 0;
+
+                foreach (var order in group)
+                {
+                    dailyIncome += order.Product.Price * order.Quantity / 1000000;
+                    dailyProfit += order.Product.Price * order.Quantity / 1000000 * 15 / 100;
+                }
+
+                incomePerDay.Add(dailyIncome);
+                profitPerDay.Add(dailyProfit);
             }
+
+            // Set the X-axis labels
+            var xAxisLabels = ordersGroupedByDate.Select(group => group.Key.ToShortDateString()).OrderBy(date => DateTime.Parse(date)).ToList();
+            chartMain.AxisX[0].Labels = xAxisLabels; // Assuming you have only one X-axis
+
+            // Set the Y-axis range based on the maximum values in incomePerDay and profitPerDay
+            double maxYValue = Math.Max(incomePerDay.Max(), profitPerDay.Max()) * 1.5; // Add some margin
+            chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
+
+            // Set the values to the chart
+            Income_Line.Values = new ChartValues<float>(incomePerDay);
+            Profit_Line.Values = new ChartValues<float>(profitPerDay);
+
+            BindingList<Product> _5products = new BindingList<Product>();
+
+            var top5ProductsWithQuantity = _orders
+                     .GroupBy(order => order.Product)
+                     .Select(group => new { Product = group.Key, TotalQuantity = group.Sum(order => order.Quantity) })
+                     .OrderByDescending(group => group.TotalQuantity)
+                     .Take(5)
+                     .ToList();
+            // Convert the list of products to a BindingList
+            LisboxTop5Product.ItemsSource = top5ProductsWithQuantity;
+
+            var top5CustomersWithTotalSpent = _orders
+                .GroupBy(order => order.Customer) // Group orders by customer
+                .Select(group => new
+                {
+                    Customer = group.Key,
+                    TotalSpent = group.Sum(order => order.Product.Price * order.Quantity) // Calculate total price for each customer
+                })
+                .OrderByDescending(group => group.TotalSpent) // Order by total price in descending order
+                .Take(5) // Take the top 5
+                .Select(group => new
+                {
+                    Customer = group.Customer,
+                    TotalSpent = string.Format(new CultureInfo("vi-VN"), "{0:C}", group.TotalSpent) // Format total spent as currency in Vietnamese
+                })
+                .ToList();
+
+
+            LisboxTop5Spent.ItemsSource = top5CustomersWithTotalSpent;
+            // Calculate total number of products sold
+            numberSale = _products.Sum(product => product.Quantity);
+            In_stock.SubTitle = $"{numberSale} products are being sold";
+
+            // Calculate total purchase
+            purchase = _orders.Sum(order => order.Product.Price * order.Quantity);
             string purchaseInVietnamese = purchase.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
+            Purchase.SubTitle = $"Total income {purchaseInVietnamese}";
 
-            Purchase.SubTitle = "Total income " + purchaseInVietnamese;
-            foreach (var order in _orders)
-            {
-                profit += (order.Quantity * order.Product.Price) * ((100 - order.Coupon?.DiscountPercentage) ?? 100) / 100;
-            }
-            profit = profit * 15 / 100;
+            // Calculate total profit
+            profit = purchase * 0.15;
             string profitInVietnamese = profit.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
-
-            Profit.SubTitle = "Total profit " + profitInVietnamese + " (15% income)";
+            Profit.SubTitle = $"Total profit {profitInVietnamese} (15% income)";
         }
+
         private void Purchase_Loaded(object sender, RoutedEventArgs e)
         {
 
