@@ -285,7 +285,7 @@
         </Border>
 
         <!--Order Screen-->
-        <Border x:Name="OrderScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
+        <Border x:Name="OrderScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Hidden" Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>

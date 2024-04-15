@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -25,6 +26,8 @@ namespace MyShop
     {
         public Order UpdateOrder { get; set; }
         private int id;
+        private DateTime date;
+
         private BindingList<Customer> _customer = new BindingList<Customer>();
         private BindingList<Product> _product = new BindingList<Product>();
         public UpdateOrderWindow(Order order, BindingList<Customer> customers, ObservableCollection<Product> products)
@@ -44,10 +47,10 @@ namespace MyShop
             Debug.WriteLine(order.Customer.Id);
             DataContext = UpdateOrder;
             // Id not from 1 
-
             //comboBoxCustomer.SelectedItem = _customer[order.Customer.Id];
             //comboBoxProduct.SelectedItem = _product[order.Product.Id];
             id = order.Id;
+            date = order.OrderDate;
         }
 
         private void Quantity_Update_TextChanged(object sender, TextChangedEventArgs e)
@@ -72,13 +75,13 @@ namespace MyShop
                     // Create a new Product object using the input values
                     UpdateOrder = new Order
                     {
-                        OrderDate = DateTime.Now,
                         Customer = customer,
                         Quantity = quantity,
                         Product = product
                         
                     };
                     UpdateOrder.Id = id;
+                    UpdateOrder.OrderDate = date;
                     this.DialogResult = true;
                 }
                 catch (Exception ex)
