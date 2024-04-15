@@ -23,6 +23,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Linq;
+using System.Globalization;
+using Microsoft.Identity.Client;
 namespace MyShop
 {
     /// <summary>
@@ -207,6 +209,7 @@ namespace MyShop
             var selectedCategory = comboBox.SelectedItem as Category;
             int selectedCategoryIndex = comboBox.SelectedIndex;
             LoadData();
+            Update_DashBoard();
             comboBox1.SelectedIndex = selectedPriceIndex;
             comboBox.SelectedIndex = selectedCategoryIndex;
             ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
@@ -1029,6 +1032,7 @@ namespace MyShop
                     orderService.DeleteOrder(id);
 
                     // Show a message to the user
+
                     MessageBox.Show($"Delete order successfully!");
                     ApplySelectionAndFilter();
                 }
@@ -1319,4 +1323,50 @@ namespace MyShop
             }
         }
     }
+
+        private void Sales_Loaded(object sender, RoutedEventArgs e)
+        {
+      
+        }
+
+
+        private void Update_DashBoard()
+        {
+            long purchase = 0;
+            double profit = 0;
+            int numberSale = 0;
+            foreach (var product in _products)
+            {
+                numberSale += product.Quantity;
+            }
+            In_stock.SubTitle = numberSale.ToString() + " products product is being sold";
+
+            foreach (var order in _orders)
+            {
+                purchase += order.Product.Price * order.Quantity;
+            }
+            string purchaseInVietnamese = purchase.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
+
+            Purchase.SubTitle = "Total income " + purchaseInVietnamese;
+            foreach (var order in _orders)
+            {
+                profit += order.Product.Price * order.Quantity;
+            }
+            profit = profit * 15 / 100;
+            string profitInVietnamese = profit.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
+
+            Profit.SubTitle = "Total profit " + profitInVietnamese + " (15% income)";
+        }
+        private void Purchase_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            Update_DashBoard();
+        }
+
+        private void Profit_Loaded(object sender, RoutedEventArgs e)
+        {
+            Update_DashBoard();
+        }
+    }
+
 }
