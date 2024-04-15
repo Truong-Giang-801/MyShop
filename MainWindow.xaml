@@ -418,13 +418,24 @@
                 </Border>
                 <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
                     <StackPanel Orientation="Horizontal"  >
-                        <TextBlock VerticalAlignment="Center" Text="Product Name" FontSize="20" FontWeight="DemiBold" Width="288" Margin="55,0,0,0"></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Product Name" FontSize="20" FontWeight="DemiBold" Width="177" Margin="55,0,0,0"></TextBlock>
                         <TextBlock VerticalAlignment="Center" Text="Number of items" FontSize="20" FontWeight="DemiBold" Width="157" Margin="0,0,0,0"></TextBlock>
                         <Button x:Name="Order_Quantity_Order" Click="Order_Quantity_Order_Click" Width="34" Height="67" VerticalAlignment="Bottom" Content="🔽🔼" Background="Transparent" BorderThickness="0" Margin="0,0,31,0"/>
 
                         <TextBlock VerticalAlignment="Center" Text="Day created" FontSize="20" FontWeight="DemiBold" Width="113" Margin="0,0,0,0"></TextBlock>
-                        <Button x:Name="Order_Date_Order" Click="Order_Date_Order_Click" Width="34" Height="67" VerticalAlignment="Bottom" Content="🔽🔼" Background="Transparent" BorderThickness="0" Margin="0,0,31,0"/>
+                        <Button x:Name="Order_Date_Order" Click="Order_Date_Order_Click" Width="33" Height="67" VerticalAlignment="Bottom" Content="🔽🔼" Background="Transparent" BorderThickness="0" Margin="0,0,31,0"/>
+                        <Canvas Width="119">
+                            <DatePicker x:Name="StartDatePicker" Height="24" Canvas.Top="6"/>
+                            <DatePicker x:Name="EndDatePicker" Height="26" Canvas.Top="40" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        </Canvas>
 
+                        <Button x:Name="SearchButton_Date" Content="Search" Click="SearchButton_Date_Click" Margin="0,0,10,0" Width="55" Height="25">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -530,7 +541,7 @@
             </Grid>
         </Border>
         <!--Setting Screen-->
-        <Border Visibility="Visible " x:Name="SettingScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
+        <Border Visibility="Hidden" x:Name="SettingScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>

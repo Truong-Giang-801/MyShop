@@ -388,6 +388,7 @@ namespace MyShop
         ObservableCollection<Product> _products = new ObservableCollection<Product>();
         BindingList<Customer> _customers = new BindingList<Customer>();
         BindingList<Order> _orders = new BindingList<Order>();
+        BindingList<Order> _orders1 = new BindingList<Order>();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -1049,6 +1050,35 @@ namespace MyShop
                 _orders.Add(order);
             }
             PaginationOrderListBox();
+        }
+
+        private void SearchButton_Date_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime startDate = StartDatePicker.SelectedDate.Value;
+            DateTime endDate = EndDatePicker.SelectedDate.Value;
+            _orders1.Clear();
+            foreach ( var order in _orders)
+            {
+                _orders1.Add(order);
+            }
+            Debug.WriteLine(_orders1.Count);
+            if(startDate!=null && endDate != null)
+            {
+                var filteredOrders = _orders.Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate).ToList();
+                _orders.Clear();
+                foreach (var order in filteredOrders)
+                {
+                    _orders.Add(order);
+                }
+                PaginationOrderListBox();
+                _orders.Clear();
+
+                foreach (var order in _orders1)
+                {
+                    _orders.Add(order);
+                }
+            }
+            // Assuming _orders is your BindingList<Order>
         }
     }
 }
