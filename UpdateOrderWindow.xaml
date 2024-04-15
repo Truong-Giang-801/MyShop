@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyShop"
         mc:Ignorable="d"
-        Title="UpdateOrderWindow" Height="450" Width="800">
-    <Canvas Name="Update" Width="442" HorizontalAlignment="Center" Margin="0,-10,0,6">
+        Title="UpdateOrderWindow" Height="450" Width="317">
+    <Canvas Name="Update" Width="316" HorizontalAlignment="Center" Margin="0,-10,0,6">
         <Label Name="Quantity_Update_Label" Content="Quantity:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="255" Canvas.Left="21"/>
         <Label Content="Product:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="153" Canvas.Left="21"/>
 
@@ -26,16 +26,12 @@
                 </CompositeCollection>
             </ComboBox.ItemsSource>
         </ComboBox>
-
-
-
-
-
-
-
         <TextBox x:Name="Quantity_Update" Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource searchTextbox}" TextChanged="Quantity_Update_TextChanged" Width="109" Height="43" Canvas.Top="297" HorizontalAlignment="Left" Canvas.Left="21"/>
+
         <Button x:Name="Submit_Update_Order" IsDefault="True" Click="Submit_Update_Order_Click" Content="Submit" Height="30" Width="100" Canvas.Left="11" Canvas.Top="361" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Button x:Name="Cancel_Update_Order" IsCancel="False" Click="Cancel_Update_Order_Click" Content="Cancel" Width="100" Height="30" Canvas.Left="318" Canvas.Top="361" />
+        <Button x:Name="Cancel_Update_Order" IsCancel="False" Click="Cancel_Update_Order_Click" Content="Cancel" Width="100" Height="30" Canvas.Left="200" Canvas.Top="361" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <Label x:Name="Date_Label" Content="Date:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="255" Canvas.Left="230" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <DatePicker SelectedDate="{Binding OrderDate}" x:Name="Datepicker" Height="24" Canvas.Top="306" Canvas.Left="188" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
     </Canvas>
 </Window>

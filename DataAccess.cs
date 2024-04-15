@@ -61,12 +61,22 @@ namespace MyShop
             {
                 connection.Open();
 
-                // Step 1: Delete all products associated with the category
-                string deleteProductsSql = "DELETE FROM Product WHERE Category = @CategoryId";
-                using (SqlCommand deleteProductsCommand = new SqlCommand(deleteProductsSql, connection))
+                // Step 1: Retrieve all product IDs associated with the category
+                string selectProductsSql = "SELECT Id FROM Product WHERE Category = @CategoryId";
+                using (SqlCommand selectProductsCommand = new SqlCommand(selectProductsSql, connection))
                 {
-                    deleteProductsCommand.Parameters.AddWithValue("@CategoryId", categoryId);
-                    deleteProductsCommand.ExecuteNonQuery();
+                    selectProductsCommand.Parameters.AddWithValue("@CategoryId", categoryId);
+                    var reader = selectProductsCommand.ExecuteReader();
+
+                    // Step 2: Delete each product associated with the category
+                    while (reader.Read())
+                    {
+                        int productId = (int)reader["Id"];
+                        ProductsRepository productsRepository = new ProductsRepository();
+                        productsRepository.DeleteProduct(productId);
+                    }
+
+                    reader.Close();
                 }
 
                 connection.Close();

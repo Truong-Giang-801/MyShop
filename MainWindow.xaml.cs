@@ -35,6 +35,21 @@ namespace MyShop
         public MainWindow()
         {
             InitializeComponent();
+
+            if (string.IsNullOrEmpty(Properties.Settings.Default.ItemsPerProductPage))
+            {
+                Properties.Settings.Default.ItemsPerProductPage = "7";
+                Properties.Settings.Default.Save();
+            }
+
+            if (string.IsNullOrEmpty(Properties.Settings.Default.ItemsPerOrderPage))
+            {
+                Properties.Settings.Default.ItemsPerOrderPage = "9";
+                Properties.Settings.Default.Save();
+            }
+            itemsPerPage = int.Parse(Properties.Settings.Default.ItemsPerProductPage);
+            itemsPerOrderPage = int.Parse(Properties.Settings.Default.ItemsPerOrderPage);
+
             if (string.IsNullOrEmpty(Properties.Settings.Default.FirstOpenDate))
             {
                 // If not, save the current date as the first open date
@@ -112,15 +127,17 @@ namespace MyShop
                 int daysLeft = 15 - (int)difference.TotalDays;
 
                 // Update the TextBlock to show the number of days left
-                this.DataContext = new MyViewModel { VersionText = "Trial Version", SubVersionText = $"You got {daysLeft} day(s) left"};
+                this.DataContext = new MyViewModel { VersionText = "Trial Version", SubVersionText = $"You got {daysLeft} day(s) left" };
             }
             else
             {
                 this.DataContext = new MyViewModel { VersionText = "Full Version", SubVersionText = $"Unlimited access" };
             }
         }
-        private int itemsPerPage = 7;
-        private int currentPage = 0;
+        private int currentPage;
+        private int currentOrderPage;
+        private int itemsPerOrderPage;
+        private int itemsPerPage;
 
         private void PaginationProductListBox()
         {
@@ -137,8 +154,6 @@ namespace MyShop
             ListBoxProducts.ItemsSource = pageProducts;
 
         }
-        int currentOrderPage = 0;
-        int itemsPerOrderPage = 7;
         private void PaginationOrderListBox()
         {
             BindingList<Order> listBoxOrder = _orders;
@@ -280,10 +295,10 @@ namespace MyShop
             Products.Background = Brushes.Transparent;
             Products.Foreground = Brushes.White;
             Order.Background = Brushes.Transparent;
-            Order.Foreground= Brushes.White;
+            Order.Foreground = Brushes.White;
             Exit_button.Background = Brushes.Transparent;
             Exit_button.Foreground = Brushes.White;
-            
+
         }
         private void setVisibleOff()
         {
@@ -296,9 +311,6 @@ namespace MyShop
         }
         private void Exit_button_Click(object sender, RoutedEventArgs e)
         {
-            setButtonDashBoard();
-            Exit_button.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Exit_button.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
             MessageBoxResult result = MessageBox.Show(
             "Are you sure you want to exit?",
             "Confirmation",
@@ -308,14 +320,55 @@ namespace MyShop
             {
                 // Perform the action after user confirms.
                 // For example, delete a record or save changes.
+                if (Properties.Settings.Default.ToggleCheckpoint == true)
+                {
+                    if (DashboardScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Dashboard";
+                    }
+
+                    if (CategoryScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Category";
+                    }
+
+                    if (CustomerScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Customer";
+                    }
+
+                    if (OrderScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Order";
+                    }
+
+                    if (SettingScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Setting";
+                    }
+
+                    if (ProductScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Product";
+                    }
+
+                    // Save the settings after updating the Checkpoint
+                    Properties.Settings.Default.Save();
+
+                }
+                else
+                {
+                    if (DashboardScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Dashboard";
+                    }
+                    Properties.Settings.Default.Save();
+                }
                 Application.Current.Shutdown();
             }
         }
         private void Log_Out_Click(object sender, RoutedEventArgs e)
         {
-            setButtonDashBoard();
-            Log_Out.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Log_Out.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
             MessageBoxResult result = MessageBox.Show(
             "Are you sure you want to logout?",
             "Confirmation",
@@ -323,6 +376,50 @@ namespace MyShop
             MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
+                if (Properties.Settings.Default.ToggleCheckpoint == true)
+                {
+                    if (DashboardScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Dashboard";
+                    }
+
+                    if (CategoryScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Category";
+                    }
+
+                    if (CustomerScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Customer";
+                    }
+
+                    if (OrderScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Order";
+                    }
+
+                    if (SettingScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Setting";
+                    }
+
+                    if (ProductScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Product";
+                    }
+
+                    // Save the settings after updating the Checkpoint
+                    Properties.Settings.Default.Save();
+
+                }
+                else
+                {
+                    if (DashboardScreen.Visibility == Visibility.Visible)
+                    {
+                        Properties.Settings.Default.Checkpoint = "Dashboard";
+                    }
+                    Properties.Settings.Default.Save();
+                }
                 // Perform the action after user confirms.
                 // For example, delete a record or save changes.
                 Properties.Settings.Default.Username = "";
@@ -364,6 +461,11 @@ namespace MyShop
             setButtonDashBoard();
             setVisibleOff();
             SettingScreen.Visibility = Visibility.Visible;
+
+            NumberOfOrdersTextBox.Text = itemsPerOrderPage.ToString();
+            NumberOfProductsTextBox.Text = itemsPerPage.ToString();
+            CheckBox.IsChecked = Properties.Settings.Default.ToggleCheckpoint;
+
             Setting.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Setting.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
@@ -419,8 +521,41 @@ namespace MyShop
                 LoadData();
             }
             setVisibleOff();
-            DashboardScreen.Visibility = Visibility.Visible;
+            if (Properties.Settings.Default.Checkpoint == "Dashboard")
+            {
+                DashboardScreen.Visibility = Visibility.Visible;
+                DashBoard_Click(sender, e);
+            }
 
+            if (Properties.Settings.Default.Checkpoint == "Category")
+            {
+                CategoryScreen.Visibility = Visibility.Visible;
+                Category_Click(sender, e);
+            }
+
+            if (Properties.Settings.Default.Checkpoint == "Customer")
+            {
+                CustomerScreen.Visibility = Visibility.Visible;
+                Customer_Click(sender, e);
+            }
+
+            if (Properties.Settings.Default.Checkpoint == "Order")
+            {
+                OrderScreen.Visibility = Visibility.Visible;
+                Order_Click(sender, e);
+            }
+
+            if (Properties.Settings.Default.Checkpoint == "Setting")
+            {
+                SettingScreen.Visibility = Visibility.Visible;
+                Setting_Click(sender, e);
+            }
+
+            if (Properties.Settings.Default.Checkpoint == "Product")
+            {
+                ProductScreen.Visibility = Visibility.Visible;
+                Products_Click(sender, e);
+            }
         }
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -859,7 +994,7 @@ namespace MyShop
                 var newOrder = screen.AddOrder;
                 OrdersService ordersService = new OrdersService();
                 ordersService.InsertOrder(newOrder);
-                
+
 
                 // Show a message to the user
                 MessageBox.Show("Order added successfully!");
@@ -876,7 +1011,7 @@ namespace MyShop
             ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
             var order = listBoxItem.DataContext as Order;
 
-            var screen = new UpdateOrderWindow(order,_customers,_products);
+            var screen = new UpdateOrderWindow(order, _customers, _products);
             // Show the window modally and wait for the user to close it
             bool? result = screen.ShowDialog();
 
@@ -910,7 +1045,7 @@ namespace MyShop
                 Button button = (Button)sender;
                 // Use VisualTreeHelper to find the ListBoxItem
                 ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
-                var order= listBoxItem.DataContext as Order;
+                var order = listBoxItem.DataContext as Order;
 
                 if (order != null)
                 {
@@ -937,11 +1072,12 @@ namespace MyShop
             var screen = new DetailOrderWindow(order);
             // Show the window modally and wait for the user to close it
             bool? result = screen.ShowDialog();
-            if(result == true) { 
+            if (result == true)
+            {
             }
         }
 
-        
+
 
         private void Add_Coupon_Click(object sender, RoutedEventArgs e)
         {
@@ -958,7 +1094,7 @@ namespace MyShop
 
         }
 
-      
+
         private int Price_Order_Click_Count = 0;
 
         private void Product_Price_Order_Click(object sender, RoutedEventArgs e)
@@ -1005,8 +1141,8 @@ namespace MyShop
 
         private int Order_Quantity_Order_Click_Count = 0;
         private void Order_Quantity_Order_Click(object sender, RoutedEventArgs e)
-        {   
-            List<Order>orders = new List<Order>();
+        {
+            List<Order> orders = new List<Order>();
             orders = _orders.ToList<Order>();
 
             Order_Quantity_Order_Click_Count++;
@@ -1059,12 +1195,12 @@ namespace MyShop
             DateTime startDate = StartDatePicker.SelectedDate.Value;
             DateTime endDate = EndDatePicker.SelectedDate.Value;
             _orders1.Clear();
-            foreach ( var order in _orders)
+            foreach (var order in _orders)
             {
                 _orders1.Add(order);
             }
             Debug.WriteLine(_orders1.Count);
-            if(startDate!=null && endDate != null)
+            if (startDate != null && endDate != null)
             {
                 var filteredOrders = _orders.Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate).ToList();
                 _orders.Clear();
@@ -1081,6 +1217,35 @@ namespace MyShop
                 }
             }
             // Assuming _orders is your BindingList<Order>
+
+        }
+
+        private void Save_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int newItemsPerProductPage = int.Parse(NumberOfProductsTextBox.Text);
+                int newItemsPerOrderPage = int.Parse(NumberOfOrdersTextBox.Text);
+                if (newItemsPerProductPage > 7 || newItemsPerProductPage < 1 || newItemsPerOrderPage > 9 || newItemsPerOrderPage < 1)
+                {
+                    MessageBox.Show("Please enter value in valid range");
+                }
+                else
+                {
+                    Properties.Settings.Default.ItemsPerProductPage = NumberOfProductsTextBox.Text;
+                    Properties.Settings.Default.ItemsPerOrderPage = NumberOfOrdersTextBox.Text;
+                    Properties.Settings.Default.ToggleCheckpoint = CheckBox.IsChecked.HasValue && CheckBox.IsChecked.Value;
+                    Properties.Settings.Default.Save();
+
+                }
+                itemsPerPage = newItemsPerProductPage;
+                itemsPerOrderPage = newItemsPerOrderPage;
+                MessageBox.Show("Succesfully save your settings");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Please only enter number in these field");
+            }
         }
 
         private void Sales_Loaded(object sender, RoutedEventArgs e)

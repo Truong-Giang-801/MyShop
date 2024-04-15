@@ -579,21 +579,26 @@
                 <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="2
                         " Margin="15" Width="975">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
-                        <CheckBox Content="Option 1" Margin="30">
-                            <CheckBox.LayoutTransform>
-                                <ScaleTransform ScaleX="3" ScaleY="3"/>
-                            </CheckBox.LayoutTransform>
-                        </CheckBox>
-                        <CheckBox Content="Option 2" Margin="30">
-                            <CheckBox.LayoutTransform>
-                                <ScaleTransform ScaleX="3" ScaleY="3"/>
-                            </CheckBox.LayoutTransform>
-                        </CheckBox>
-                        <CheckBox Content="Option 3" Margin="30">
-                            <CheckBox.LayoutTransform>
-                                <ScaleTransform ScaleX="3" ScaleY="3"/>
-                            </CheckBox.LayoutTransform>
-                        </CheckBox>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label Content="Number of Products at each page (Max: 7)" FontSize="30" Margin="5, 30, 5, 5"/>
+                            <TextBox Name="NumberOfProductsTextBox" TextAlignment="Center" FontSize="30" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Margin="5" Width="50" Height="50"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label Content="Number of Orders at each page (Max: 9)" FontSize="30" Margin="5, 50, 5, 50"/>
+                            <TextBox Name="NumberOfOrdersTextBox" TextAlignment="Center" FontSize="30" VerticalContentAlignment="Center"  VerticalAlignment="Center" Margin="5" Width="50" Height="50"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock TextWrapping="Wrap" MaxWidth='500' FontSize='30' Margin='5, 5, 5, 5' TextAlignment="Center">
+        Allows when running the program to reopen the last screen once before shutting down
+        
+                            </TextBlock>
+                            <CheckBox VerticalAlignment="Center" Name="CheckBox" Margin="5">
+                                <CheckBox.LayoutTransform>
+                                    <ScaleTransform ScaleX="3" ScaleY="3"/>
+                                </CheckBox.LayoutTransform>
+                            </CheckBox>
+                        </StackPanel>
+                        <Button Name="Save_Button" Content="Save" FontSize="30" Width="100" Margin="50" Click="Save_Button_Click"></Button>
                     </StackPanel>
                 </Border>
             </Grid>
