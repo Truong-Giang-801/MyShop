@@ -161,12 +161,20 @@
                 <!--Main Chart-->
                 <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource whiteBorder}" Margin="20 20 20 0">
                     <Grid x:Name="chartDashBoard" Margin="10 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="397*"/>
+                            <ColumnDefinition Width="248*"/>
+                        </Grid.ColumnDefinitions>
                         <!--Title-->
-                        <TextBlock Text="Sales Report" Style="{StaticResource titleText}"/>
+                        <TextBlock Text="Sales Report" Style="{StaticResource titleText}" Grid.ColumnSpan="2"/>
                         <!--Legends-->
-                        <uc:Legends HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 8 10 0" />
+                        <StackPanel Name="legend2" Visibility="Hidden" Orientation="Horizontal" Margin="119,10,17,375" Grid.Column="1">
+                            <Border Width="12" Height="12" Background="#FF6D48" CornerRadius="3"  />
+                            <TextBlock Text="Number of product" VerticalAlignment="Center" Margin="7 0 0 0" Foreground="#6C879A"/>
+                        </StackPanel>
+                        <uc:Legends Visibility="Visible" x:Name="legend" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 8 10 0" Grid.Column="1" />
                         <!--Chart-->
-                        <lvc:CartesianChart Name="chartMain" Margin="5,40,0,10" LegendLocation="None">
+                        <lvc:CartesianChart Name="chartMain" Margin="5,40,0,10" LegendLocation="None" Grid.ColumnSpan="2">
                             <lvc:CartesianChart.DataTooltip>
                                 <lvc:DefaultTooltip Background="blue" Foreground="#ffffff" Opacity="0.7" BulletSize="10"/>
                             </lvc:CartesianChart.DataTooltip>
@@ -185,7 +193,7 @@
                                 </lvc:Axis>
                             </lvc:CartesianChart.AxisY>
                             <lvc:CartesianChart.Series>
-                                <lvc:LineSeries x:Name="Income_Line" Values="50,12,11,16,15,18,12,17,16,18" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
+                                <lvc:LineSeries x:Name="Income_Line" Visibility="Visible" Values="50,12,11,16,15,18,12,17,16,18" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
                                     <lvc:LineSeries.Stroke>
                                         <LinearGradientBrush>
                                             <GradientStop Color="#ffffff" Offset="0.06"/>
@@ -194,7 +202,7 @@
                                         </LinearGradientBrush>
                                     </lvc:LineSeries.Stroke>
                                 </lvc:LineSeries>
-                                <lvc:LineSeries x:Name="Profit_Line" Values="10,20,20,22,22,20,20,20,20,24" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
+                                <lvc:LineSeries x:Name="Profit_Line" Visibility="Visible" Values="10,20,20,22,22,20,20,20,20,24" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
                                     <lvc:LineSeries.Stroke>
                                         <LinearGradientBrush>
                                             <GradientStop Color="#ffffff" Offset="0.06"/>
@@ -203,10 +211,19 @@
                                         </LinearGradientBrush>
                                     </lvc:LineSeries.Stroke>
                                 </lvc:LineSeries>
+                                <lvc:LineSeries x:Name="QuantityProductPerDay_Line" Visibility="Hidden" Values="10,20,20,22,22,20,20,20,20,24" Fill="Transparent" StrokeThickness="3" PointGeometrySize="0">
+                                    <lvc:LineSeries.Stroke>
+                                        <LinearGradientBrush>
+                                            <GradientStop Color="#ffffff" Offset="0.06"/>
+                                            <GradientStop Color="Green" Offset="0.5"/>
+                                            <GradientStop Color="#ffffff" Offset="0.9"/>
+                                        </LinearGradientBrush>
+                                    </lvc:LineSeries.Stroke>
+                                </lvc:LineSeries>
                             </lvc:CartesianChart.Series>
                         </lvc:CartesianChart>
                         <!--Note Text-->
-
+                        <Button x:Name="Change_Chart" Click="Change_Chart_Click" Content="Income and Profit" Margin="122,37,10,358" Grid.Column="1"/>
                     </Grid>
                 </Border>
                 <!--Right Section-->
@@ -255,7 +272,7 @@
         </Border>
 
         <!--Order Screen-->
-        <Border x:Name="OrderScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
+        <Border x:Name="OrderScreen" Visibility="Hidden" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>
@@ -552,21 +569,18 @@
 
                 <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="2
                         " Margin="15" Width="975">
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Width="955" >
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Label Content="Number of Products at each page (Max: 7)" FontSize="30" Margin="5, 30, 5, 5"/>
+                            <Label Content="Number of Products at each page (Max: 7)" FontSize="30" Margin="5, 30, 5, 5" Width="889"/>
                             <TextBox Name="NumberOfProductsTextBox" TextAlignment="Center" FontSize="30" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Margin="5" Width="50" Height="50"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Label Content="Number of Orders at each page (Max: 9)" FontSize="30" Margin="5, 50, 5, 50"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="957">
+                            <Label Content="Number of Orders at each page (Max: 9)" FontSize="30" Margin="5, 50, 5, 50" Width="887"/>
                             <TextBox Name="NumberOfOrdersTextBox" TextAlignment="Center" FontSize="30" VerticalContentAlignment="Center"  VerticalAlignment="Center" Margin="5" Width="50" Height="50"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock TextWrapping="Wrap" MaxWidth='500' FontSize='30' Margin='5, 5, 5, 5' TextAlignment="Center">
-        Allows when running the program to reopen the last screen once before shutting down
-
-                            </TextBlock>
-                            <CheckBox VerticalAlignment="Center" Name="CheckBox" Margin="5">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="947">
+                            <TextBlock TextWrapping="Wrap" MaxWidth='500' FontSize='30' TextAlignment="Center" Width="734"><Run Text="Allows when running the program to reopen the last screen once before shutting down"/></TextBlock>
+                            <CheckBox VerticalAlignment="Center" x:Name="CheckBox" Margin="395,5,5,5" Width="24">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="3" ScaleY="3"/>
                                 </CheckBox.LayoutTransform>

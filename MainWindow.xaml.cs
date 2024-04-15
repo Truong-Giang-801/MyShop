@@ -1368,14 +1368,57 @@ namespace MyShop
             double maxYValue = Math.Max(
                 incomePerDay.DefaultIfEmpty(0).Max(),
                 profitPerDay.DefaultIfEmpty(0).Max()
-            ) * 2; // Add some margin            chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
+            ) * 1.5; // Add some margin            chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
 
                 // Set the values to the chart
                 Income_Line.Values = new ChartValues<float>(incomePerDay);
                 Profit_Line.Values = new ChartValues<float>(profitPerDay);
+                chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
 
-                
+
             }
+            if (QuantityProductPerDay_Line.Visibility.ToString() == "Visible")
+            {
+
+            if (_orders.Count != 0)
+            {
+                // Calculate quantity of products sold for each day
+                List<int> quantityProductPerDay = new List<int>();
+
+                foreach (var group in ordersGroupedByDate)
+                {
+                    int dailyQuantity = 0;
+
+                    foreach (var order in group)
+                    {
+                        dailyQuantity += order.Quantity;
+                    }
+
+                    quantityProductPerDay.Add(dailyQuantity);
+                }
+
+                // Set the X-axis labels
+                var xAxisLabels = ordersGroupedByDate.Select(group => group.Key.ToShortDateString()).OrderBy(date => DateTime.Parse(date)).ToList();
+                chartMain.AxisX[0].Labels = xAxisLabels; // Assuming you have only one X-axis
+
+                // Set the Y-axis range based on the maximum quantity sold per day
+                if (QuantityProductPerDay_Line.Visibility.ToString() == "Visible")
+                {
+
+                     double maxYValue = quantityProductPerDay.DefaultIfEmpty(0).Max() * 1.5; // Add some margin
+                     chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
+                }
+                else
+                {
+
+                }
+
+                // Set the values to the chart
+                // Assuming you have a LineSeries named QuantityProductPerDay_Line for displaying the quantity
+                QuantityProductPerDay_Line.Values = new ChartValues<int>(quantityProductPerDay);
+            }
+            }
+
             BindingList<Product> _5products = new BindingList<Product>();
 
             var top5ProductsWithQuantity = _orders
@@ -1388,21 +1431,21 @@ namespace MyShop
             LisboxTop5Product.ItemsSource = top5ProductsWithQuantity;
 
             var top5CustomersWithTotalSpent = _orders
-    .Where(order => order.Customer != null) // Exclude orders with null Customer
-    .GroupBy(order => order.Customer) // Group orders by customer
-    .Select(group => new
-    {
-        Customer = group.Key,
-        TotalSpent = group.Sum(order => order.Product.Price * order.Quantity) // Calculate total price for each customer
-    })
-    .OrderByDescending(group => group.TotalSpent) // Order by total price in descending order
-    .Take(5) // Take the top 5
-    .Select(group => new
-    {
-        Customer = group.Customer,
-        TotalSpent = string.Format(new CultureInfo("vi-VN"), "{0:C}", group.TotalSpent) // Format total spent as currency in Vietnamese
-    })
-    .ToList();
+                    .Where(order => order.Customer != null) // Exclude orders with null Customer
+                    .GroupBy(order => order.Customer) // Group orders by customer
+                    .Select(group => new
+                    {
+                        Customer = group.Key,
+                        TotalSpent = group.Sum(order => order.Product.Price * order.Quantity) // Calculate total price for each customer
+                    })
+                    .OrderByDescending(group => group.TotalSpent) // Order by total price in descending order
+                    .Take(5) // Take the top 5
+                    .Select(group => new
+                    {
+                        Customer = group.Customer,
+                        TotalSpent = string.Format(new CultureInfo("vi-VN"), "{0:C}", group.TotalSpent) // Format total spent as currency in Vietnamese
+                    })
+                    .ToList();
 
 
 
@@ -1421,6 +1464,26 @@ namespace MyShop
             string profitInVietnamese = profit.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
             Profit.SubTitle = $"Total profit {profitInVietnamese} (15% income)";
 
+        }
+
+        private void Change_Chart_Click(object sender, RoutedEventArgs e)
+        {
+            if(Change_Chart.Content.ToString()=="Income and Profit")
+            {
+                Change_Chart.Content = "Number of Product sold";
+                Profit_Line.Visibility= Visibility.Hidden;
+                Income_Line.Visibility= Visibility.Hidden;
+                QuantityProductPerDay_Line.Visibility = Visibility.Visible;
+
+            }
+            else
+            {
+                Change_Chart.Content = "Income and Profit";
+                Profit_Line.Visibility = Visibility.Visible;
+                Income_Line.Visibility = Visibility.Visible;
+                QuantityProductPerDay_Line.Visibility = Visibility.Hidden;
+            }
+            Update_DashBoard(); 
         }
     }
 
