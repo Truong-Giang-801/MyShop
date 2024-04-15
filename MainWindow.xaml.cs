@@ -1388,20 +1388,22 @@ namespace MyShop
             LisboxTop5Product.ItemsSource = top5ProductsWithQuantity;
 
             var top5CustomersWithTotalSpent = _orders
-                .GroupBy(order => order.Customer) // Group orders by customer
-                .Select(group => new
-                {
-                    Customer = group.Key,
-                    TotalSpent = group.Sum(order => order.Product.Price * order.Quantity) // Calculate total price for each customer
-                })
-                .OrderByDescending(group => group.TotalSpent) // Order by total price in descending order
-                .Take(5) // Take the top 5
-                .Select(group => new
-                {
-                    Customer = group.Customer,
-                    TotalSpent = string.Format(new CultureInfo("vi-VN"), "{0:C}", group.TotalSpent) // Format total spent as currency in Vietnamese
-                })
-                .ToList();
+    .Where(order => order.Customer != null) // Exclude orders with null Customer
+    .GroupBy(order => order.Customer) // Group orders by customer
+    .Select(group => new
+    {
+        Customer = group.Key,
+        TotalSpent = group.Sum(order => order.Product.Price * order.Quantity) // Calculate total price for each customer
+    })
+    .OrderByDescending(group => group.TotalSpent) // Order by total price in descending order
+    .Take(5) // Take the top 5
+    .Select(group => new
+    {
+        Customer = group.Customer,
+        TotalSpent = string.Format(new CultureInfo("vi-VN"), "{0:C}", group.TotalSpent) // Format total spent as currency in Vietnamese
+    })
+    .ToList();
+
 
 
             LisboxTop5Spent.ItemsSource = top5CustomersWithTotalSpent;
