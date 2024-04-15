@@ -168,7 +168,7 @@
                         <!--Title-->
                         <TextBlock Text="Sales Report" Style="{StaticResource titleText}" Grid.ColumnSpan="2"/>
                         <!--Legends-->
-                        <StackPanel Name="legend2" Visibility="Hidden" Orientation="Horizontal" Margin="119,10,17,375" Grid.Column="1">
+                        <StackPanel Name="legend2" Visibility="Hidden" Orientation="Horizontal" Margin="112,-2,1,387" Grid.Column="1">
                             <Border Width="12" Height="12" Background="#FF6D48" CornerRadius="3"  />
                             <TextBlock Text="Number of product" VerticalAlignment="Center" Margin="7 0 0 0" Foreground="#6C879A"/>
                         </StackPanel>
@@ -186,7 +186,7 @@
                                 </lvc:Axis>
                             </lvc:CartesianChart.AxisX>
                             <lvc:CartesianChart.AxisY>
-                                <lvc:Axis Title="1000k" MinValue="0" MaxValue="{Binding maxYValue}" Foreground="#90A3B2" ShowLabels="True">
+                                <lvc:Axis Name="axisY" Title="1000k" MinValue="0" MaxValue="{Binding maxYValue}" Foreground="#90A3B2" ShowLabels="True">
                                     <lvc:Axis.Separator>
                                         <lvc:Separator StrokeThickness="0"/>
                                     </lvc:Axis.Separator>
@@ -215,7 +215,7 @@
                                     <lvc:LineSeries.Stroke>
                                         <LinearGradientBrush>
                                             <GradientStop Color="#ffffff" Offset="0.06"/>
-                                            <GradientStop Color="Green" Offset="0.5"/>
+                                            <GradientStop Color="#FF6D48" Offset="0.5"/>
                                             <GradientStop Color="#ffffff" Offset="0.9"/>
                                         </LinearGradientBrush>
                                     </lvc:LineSeries.Stroke>
@@ -223,7 +223,7 @@
                             </lvc:CartesianChart.Series>
                         </lvc:CartesianChart>
                         <!--Note Text-->
-                        <Button x:Name="Change_Chart" Click="Change_Chart_Click" Content="Income and Profit" Margin="122,37,10,358" Grid.Column="1"/>
+                        <Button x:Name="Change_Chart" Click="Change_Chart_Click" Content="Income and Profit" Margin="66,40,36,355" Grid.Column="1"/>
                     </Grid>
                 </Border>
                 <!--Right Section-->

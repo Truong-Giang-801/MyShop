@@ -1568,6 +1568,9 @@ namespace MyShop
                 Profit_Line.Visibility = Visibility.Hidden;
                 Income_Line.Visibility = Visibility.Hidden;
                 QuantityProductPerDay_Line.Visibility = Visibility.Visible;
+                legend2.Visibility= Visibility.Visible;
+                legend.Visibility = Visibility.Hidden;
+                axisY.Title = "Number Of Product";
 
             }
             else
@@ -1576,6 +1579,9 @@ namespace MyShop
                 Profit_Line.Visibility = Visibility.Visible;
                 Income_Line.Visibility = Visibility.Visible;
                 QuantityProductPerDay_Line.Visibility = Visibility.Hidden;
+                legend2.Visibility = Visibility.Hidden;
+                legend.Visibility = Visibility.Visible;
+                axisY.Title = "1000K";
             }
             Update_DashBoard();
         }
