@@ -351,19 +351,25 @@ namespace MyShop
         {
             try
             {
-
                 LoadData();
             }
             catch (Exception ex)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = "Excel Files|*.xlsx;*.xls;*.csv";
-                if (openFileDialog.ShowDialog() == true)
+
+                // Loop until a valid file is selected or the user cancels
+                while (true)
                 {
-                    string filename = openFileDialog.FileName;
-                    DataImportService dataImportService = new DataImportService();
-                    dataImportService.ImportDataFromExcel(filename);
-                    currentPage = 0;
+                    if (openFileDialog.ShowDialog() == true)
+                    {
+                        string filename = openFileDialog.FileName;
+                        // Assuming you have a method to validate the file, e.g., check file size or type
+                        DataImportService dataImportService = new DataImportService();
+                        dataImportService.ImportDataFromExcel(filename);
+                        currentPage = 0;
+                        break; // Exit the loop if a valid file is selected
+                    }
                 }
                 LoadData();
             }
@@ -474,25 +480,34 @@ namespace MyShop
 
         private void Import_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Excel Files|*.xlsx;*.xls;*.csv";
-            if (openFileDialog.ShowDialog() == true)
+            MessageBoxResult result = MessageBox.Show(
+            "Import new data will clear all old data in database. Are you sure you want to import new data? ",
+            "Confirmation",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
             {
-                string filename = openFileDialog.FileName;
-                DataImportService dataImportService = new DataImportService();
-                dataImportService.ImportDataFromExcel(filename);
-                currentPage = 0;
-            }
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Excel Files|*.xlsx;*.xls;*.csv";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    string filename = openFileDialog.FileName;
+                    DataImportService dataImportService = new DataImportService();
+                    dataImportService.ImportDataFromExcel(filename);
+                    currentPage = 0;
+                }
 
-            int selectedPriceIndex = comboBox1.SelectedIndex;
-            // Apply combined filter
-            var selectedCategory = comboBox.SelectedItem as Category;
-            int selectedCategoryIndex = comboBox.SelectedIndex;
-            LoadData();
-            comboBox1.SelectedIndex = selectedPriceIndex;
-            comboBox.SelectedIndex = selectedCategoryIndex;
-            ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
+                int selectedPriceIndex = comboBox1.SelectedIndex;
+                // Apply combined filter
+                var selectedCategory = comboBox.SelectedItem as Category;
+                int selectedCategoryIndex = comboBox.SelectedIndex;
+                LoadData();
+                comboBox1.SelectedIndex = selectedPriceIndex;
+                comboBox.SelectedIndex = selectedCategoryIndex;
+                ApplyFilter(selectedCategoryIndex, selectedCategory.CategoryName, selectedPriceIndex);
+            }
         }
+
 
         private void Order_Click(object sender, RoutedEventArgs e)
         {
