@@ -490,6 +490,7 @@ namespace MyShop
         ObservableCollection<Product> _products = new ObservableCollection<Product>();
         BindingList<Customer> _customers = new BindingList<Customer>();
         BindingList<Order> _orders = new BindingList<Order>();
+        BindingList<Order> _orders1 = new BindingList<Order>();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -1090,6 +1091,132 @@ namespace MyShop
 
         }
 
+      
+        private int Price_Order_Click_Count = 0;
+
+        private void Product_Price_Order_Click(object sender, RoutedEventArgs e)
+        {
+            Price_Order_Click_Count++; // Increment the click count
+
+            // Sort in ascending order if click count is odd, otherwise sort in descending order
+            if (Price_Order_Click_Count % 2 == 1) // Odd click count
+            {
+                _products1.Sort((p1, p2) => p1.Price.CompareTo(p2.Price));
+                Product_Price_Order.Content = "🔼";
+
+
+            }
+            else // Even click count
+            {
+                _products1.Sort((p1, p2) => p2.Price.CompareTo(p1.Price));
+                Product_Price_Order.Content = "🔽";
+
+
+            }
+            PaginationProductListBox();
+        }
+        private int Quantity_Order_Click_Count = 0;
+
+        private void Product_Quantity_Order_Click(object sender, RoutedEventArgs e)
+        {
+            Quantity_Order_Click_Count++; // Increment the click count
+
+            // Sort in ascending order if click count is odd, otherwise sort in descending order
+            if (Quantity_Order_Click_Count % 2 == 1) // Odd click count
+            {
+                _products1.Sort((p1, p2) => p1.Quantity.CompareTo(p2.Quantity));
+                Product_Quantity_Order.Content = "🔼";
+            }
+            else // Even click count
+            {
+                _products1.Sort((p1, p2) => p2.Quantity.CompareTo(p1.Quantity));
+                Product_Quantity_Order.Content = "🔽";
+
+            }
+            PaginationProductListBox();
+        }
+
+        private int Order_Quantity_Order_Click_Count = 0;
+        private void Order_Quantity_Order_Click(object sender, RoutedEventArgs e)
+        {   
+            List<Order>orders = new List<Order>();
+            orders = _orders.ToList<Order>();
+
+            Order_Quantity_Order_Click_Count++;
+            if (Order_Quantity_Order_Click_Count % 2 == 1) // Odd click count
+            {
+                orders.Sort((p1, p2) => p1.Quantity.CompareTo(p2.Quantity));
+                Order_Quantity_Order.Content = "🔼";
+            }
+            else // Even click count
+            {
+                orders.Sort((p1, p2) => p2.Quantity.CompareTo(p1.Quantity));
+                Order_Quantity_Order.Content = "🔽";
+            }
+            _orders.Clear();
+            foreach (var order in orders)
+            {
+                _orders.Add(order);
+            }
+            PaginationOrderListBox();
+        }
+        private int Order_Date_Order_Click_Count = 0;
+
+        private void Order_Date_Order_Click(object sender, RoutedEventArgs e)
+        {
+
+            List<Order> orders = new List<Order>();
+            orders = _orders.ToList<Order>();
+
+            Order_Date_Order_Click_Count++;
+            if (Order_Date_Order_Click_Count % 2 == 1) // Odd click count
+            {
+                orders.Sort((p1, p2) => p1.OrderDate.CompareTo(p2.OrderDate));
+                Order_Date_Order.Content = "🔼";
+            }
+            else // Even click count
+            {
+                orders.Sort((p1, p2) => p2.OrderDate.CompareTo(p1.OrderDate));
+                Order_Date_Order.Content = "🔽";
+            }
+            _orders.Clear();
+            foreach (var order in orders)
+            {
+                _orders.Add(order);
+            }
+            PaginationOrderListBox();
+        }
+
+        private void SearchButton_Date_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime startDate = StartDatePicker.SelectedDate.Value;
+            DateTime endDate = EndDatePicker.SelectedDate.Value;
+            _orders1.Clear();
+            foreach ( var order in _orders)
+            {
+                _orders1.Add(order);
+            }
+            Debug.WriteLine(_orders1.Count);
+            if(startDate!=null && endDate != null)
+            {
+                var filteredOrders = _orders.Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate).ToList();
+                _orders.Clear();
+                foreach (var order in filteredOrders)
+                {
+                    _orders.Add(order);
+                }
+                PaginationOrderListBox();
+                _orders.Clear();
+
+                foreach (var order in _orders1)
+                {
+                    _orders.Add(order);
+                }
+            }
+            // Assuming _orders is your BindingList<Order>
+                    
+        }
+
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1107,16 +1234,13 @@ namespace MyShop
                     Properties.Settings.Default.ToggleCheckpoint = CheckBox.IsChecked.HasValue && CheckBox.IsChecked.Value;
                     Properties.Settings.Default.Save();
 
-                    itemsPerPage = newItemsPerProductPage;
-                    itemsPerOrderPage = newItemsPerOrderPage;
-                    MessageBox.Show("Succesfully save your settings");
                 }
+                itemsPerPage = newItemsPerProductPage;
+                itemsPerOrderPage = newItemsPerOrderPage;
+                MessageBox.Show("Succesfully save your settings");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Please only enter number in these field");
             }
-        }
-
-    }
 }
