@@ -23,6 +23,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Linq;
+using System.Globalization;
+using Microsoft.Identity.Client;
 namespace MyShop
 {
     /// <summary>
@@ -1079,6 +1081,40 @@ namespace MyShop
                 }
             }
             // Assuming _orders is your BindingList<Order>
+        }
+
+        private void Sales_Loaded(object sender, RoutedEventArgs e)
+        {
+            int numberSale = 0;
+            foreach (var product in _products)
+            {
+                numberSale+=product.Quantity;
+            }
+            In_stock.SubTitle = numberSale.ToString() + " products product is being sold";
+        }
+
+        private void Purchase_Loaded(object sender, RoutedEventArgs e)
+        {
+            long purchase = 0;
+            foreach (var order in _orders) {
+                purchase += order.Product.Price * order.Product.Quantity;
+            }
+            string purchaseInVietnamese = purchase.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
+
+            Purchase.SubTitle = "Total income " + purchaseInVietnamese;
+        }
+
+        private void Profit_Loaded(object sender, RoutedEventArgs e)
+        {
+            double profit = 0;
+            foreach (var order in _orders)
+            {
+                profit += order.Product.Price * order.Product.Quantity;
+            }
+            profit = profit * 5 / 100;
+            string profitInVietnamese = profit.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
+
+            Profit.SubTitle = "Total profit " + profitInVietnamese + " (5% income)";
         }
     }
 }

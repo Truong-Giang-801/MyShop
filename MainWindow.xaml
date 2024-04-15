@@ -113,7 +113,7 @@
             </StackPanel>
         </Border>
         <!--DashBoard Screen-->
-        <Border x:Name="DashboardScreen" Visibility="Hidden" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Width="1045" HorizontalAlignment="Right">
+        <Border x:Name="DashboardScreen" Visibility="Visible" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Width="1045" HorizontalAlignment="Right">
             <Grid x:Name="Dashboard" Visibility="Visible">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -152,15 +152,11 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <uc:InfoCard x:Name="Sales" Grid.Column="0" Title="Sales" Image="/Images/sale.png">
-                        <uc:InfoCard.SubTitle>
-                            <MultiBinding Converter="{StaticResource NumberSaleConverter}">
-                                <Binding Path="NumberSale"/>
-                            </MultiBinding>
-                        </uc:InfoCard.SubTitle>
+                    <uc:InfoCard x:Name="In_stock" Grid.Column="0" Title="In Stock" Image="/Images/sale.png" Loaded="Sales_Loaded">
+
                     </uc:InfoCard>
-                    <uc:InfoCard Grid.Column="1" Title="Purchase" SubTitle="Compared To ($1405 Last Month)" Amount="8" Image="/Images/purchase.png" />
-                    <uc:InfoCard Grid.Column="2" Title="Refund" SubTitle="Compared To ($0 Last Month)" Amount="5" Image="/Images/return.png" />
+                    <uc:InfoCard x:Name="Purchase" Grid.Column="1" Title="Purchase" SubTitle="" Amount="8" Image="/Images/purchase.png" Loaded="Purchase_Loaded" />
+                    <uc:InfoCard x:Name="Profit" Grid.Column="2" Title="Profit" SubTitle="" Amount="5" Image="/Images/return.png" Loaded="Profit_Loaded" />
                 </Grid>
                 <!--Main Chart-->
                 <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource whiteBorder}" Margin="20 20 20 0">
@@ -285,7 +281,7 @@
         </Border>
 
         <!--Order Screen-->
-        <Border x:Name="OrderScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
+        <Border x:Name="OrderScreen" Visibility="Hidden" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>
@@ -424,14 +420,13 @@
 
                         <TextBlock VerticalAlignment="Center" Text="Day created" FontSize="20" FontWeight="DemiBold" Width="113" Margin="0,0,0,0"></TextBlock>
                         <Button x:Name="Order_Date_Order" Click="Order_Date_Order_Click" Width="33" Height="67" VerticalAlignment="Bottom" Content="🔽🔼" Background="Transparent" BorderThickness="0" Margin="0,0,31,0"/>
-                        <Canvas Width="119">
-                            <DatePicker x:Name="StartDatePicker" Height="24" Canvas.Top="6"/>
-                            <DatePicker x:Name="EndDatePicker" Height="26" Canvas.Top="40" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        <Canvas Width="215">
+                            <DatePicker x:Name="StartDatePicker" Height="24" Canvas.Top="23" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <DatePicker x:Name="EndDatePicker" Height="26" Canvas.Top="23" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="113"/>
                         </Canvas>
-
-                        <Button x:Name="SearchButton_Date" Content="Search" Click="SearchButton_Date_Click" Margin="0,0,10,0" Width="55" Height="25">
+                        <Button x:Name="SearchButton_Date" Content="Search" Click="SearchButton_Date_Click" Width="55" Height="26" Margin="23,0,0,0">
                             <Button.Resources>
-                                <Style TargetType="Border">
+                                <Style TargetType="{x:Type Border}">
                                     <Setter Property="CornerRadius" Value="5"/>
                                 </Style>
                             </Button.Resources>
