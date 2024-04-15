@@ -106,5 +106,53 @@ namespace MyShop.Properties {
                 this["ActivationKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ItemsPerProductPage {
+            get {
+                return ((string)(this["ItemsPerProductPage"]));
+            }
+            set {
+                this["ItemsPerProductPage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ItemsPerOrderPage {
+            get {
+                return ((string)(this["ItemsPerOrderPage"]));
+            }
+            set {
+                this["ItemsPerOrderPage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ToggleCheckpoint {
+            get {
+                return ((bool)(this["ToggleCheckpoint"]));
+            }
+            set {
+                this["ToggleCheckpoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Checkpoint {
+            get {
+                return ((string)(this["Checkpoint"]));
+            }
+            set {
+                this["Checkpoint"] = value;
+            }
+        }
     }
 }
