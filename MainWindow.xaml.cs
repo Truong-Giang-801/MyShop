@@ -1322,7 +1322,6 @@ namespace MyShop
                 Properties.Settings.Default.Save();
             }
         }
-    }
 
         private void Sales_Loaded(object sender, RoutedEventArgs e)
         {
@@ -1332,8 +1331,8 @@ namespace MyShop
 
         private void Update_DashBoard()
         {
-            long purchase = 0;
-            double profit = 0;
+            decimal purchase = 0;
+            decimal profit = 0;
             int numberSale = 0;
             foreach (var product in _products)
             {
@@ -1343,14 +1342,14 @@ namespace MyShop
 
             foreach (var order in _orders)
             {
-                purchase += order.Product.Price * order.Quantity;
+                purchase += (order.Quantity * order.Product.Price) * ((100 - order.Coupon?.DiscountPercentage) ?? 100) / 100;
             }
             string purchaseInVietnamese = purchase.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
 
             Purchase.SubTitle = "Total income " + purchaseInVietnamese;
             foreach (var order in _orders)
             {
-                profit += order.Product.Price * order.Quantity;
+                profit += (order.Quantity * order.Product.Price) * ((100 - order.Coupon?.DiscountPercentage) ?? 100) / 100;
             }
             profit = profit * 15 / 100;
             string profitInVietnamese = profit.ToString("C", CultureInfo.CreateSpecificCulture("vi-VN"));
