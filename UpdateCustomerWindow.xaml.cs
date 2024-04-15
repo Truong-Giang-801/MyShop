@@ -42,7 +42,7 @@ namespace MyShop
                 {
                     string customerName = CustomerName_Update.Text;
                     string phoneNumber = PhoneNumber_Update.Text;
-                    bool phoneNumberExists = _customers.Any(c => c.PhoneNumber == phoneNumber);
+                    bool phoneNumberExists = _customers.Any(c => c.PhoneNumber == phoneNumber && c.Id != _updateCustomer.Id);
                     int checkOnlyDigits = int.Parse(PhoneNumber_Update.Text);
 
                     if (phoneNumberExists)

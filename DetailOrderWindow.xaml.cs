@@ -23,8 +23,8 @@ namespace MyShop
         public DetailOrderWindow(Order order)
         {
             InitializeComponent();
-            this.DataContext = order;
-            double price = order.Quantity * order.Product.Price;
+            this.DataContext = order; 
+            decimal price = (order.Quantity * order.Product.Price) * ((100-order.Coupon?.DiscountPercentage) ?? 100) / 100;
             Price.Text = price.ToString();
             
         }

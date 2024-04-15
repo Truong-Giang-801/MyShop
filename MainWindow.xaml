@@ -255,8 +255,8 @@
         </Border>
 
         <!--Order Screen-->
-        <Border x:Name="OrderScreen" Visibility="Hidden" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
-            <Grid  Visibility="Visible">
+        <Border x:Name="OrderScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
@@ -325,7 +325,7 @@
                             </StackPanel>
 
                         </StackPanel>
-                        <ListBox x:Name="ListBoxOrder" Grid.Row="0" ItemsSource="{Binding Order}" av:ItemsSource="{av:SampleData ItemCount=5}" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
+                        <ListBox x:Name="ListBoxOrder" MaxHeight="500" Grid.Row="0" ItemsSource="{Binding Order}" av:ItemsSource="{av:SampleData ItemCount=5}" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
 
                             <ListBox.ItemTemplate>
 
@@ -621,7 +621,7 @@
                 <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
                     <Canvas>
                         <!-- ListBox for displaying products -->
-                        <ListBox x:Name="ListBoxCustomers" BorderThickness="0" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" Margin="-8,2,8,-2" SelectionChanged="ListBoxCustomers_SelectionChanged">
+                        <ListBox x:Name="ListBoxCustomers" MaxHeight="500" BorderThickness="0" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" Margin="-8,2,8,-2" SelectionChanged="ListBoxCustomers_SelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Width="916">
@@ -731,7 +731,7 @@
                             </Button>
                         </StackPanel>
                         <!--ListBox for displaying products-->
-                        <ListBox x:Name="ListBoxProducts" BorderThickness="0" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" Margin="-8,2,8,-2" SelectionChanged="ListBoxProducts_SelectionChanged">
+                        <ListBox x:Name="ListBoxProducts" MaxHeight="500" BorderThickness="0" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" Margin="-8,2,8,-2" SelectionChanged="ListBoxProducts_SelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Width="916">
@@ -814,7 +814,6 @@
 
             </Grid>
         </Border>
-
         <!--Coupon Screen-->
         <Border Visibility="Hidden" x:Name="CouponScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Visible">
@@ -859,13 +858,13 @@
                 <Border Grid.Row="2" Grid.ColumnSpan="2" Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0">
                     <Canvas>
                         <!-- ListBox for displaying products -->
-                        <ListBox x:Name="ListBoxCoupons" BorderThickness="0" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" Margin="-8,2,8,-2">
+                        <ListBox x:Name="ListBoxCoupon" MaxHeight="500" BorderThickness="0" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" Margin="-8,2,8,-2">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Width="916">
-                                        <TextBlock Text="{Binding Code}" FontSize="20" FontWeight="DemiBold" Width="361"/>
-                                        <TextBlock Text="{Binding Price}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="182"/>
-                                        <TextBlock Text="{Binding Quantity}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="136" RenderTransformOrigin="0.5,0.5"/>
+                                        <TextBlock Text="{Binding Code}" Margin="25,0,0,0" VerticalAlignment="Center" FontSize="20" FontWeight="DemiBold" Width="300"/>
+                                        <TextBlock Text="{Binding DiscountPercentage}" VerticalAlignment="Center" TextAlignment="Center" Margin="15,15,100,15" FontSize="20" FontWeight="DemiBold" Width="140"/>
+                                        <TextBlock Text="{Binding ExpiryDate, StringFormat='{}{0:dd-MM-yyyy}'}" VerticalAlignment="Center" TextAlignment="Center" Margin="15,15,80,15" FontSize="20" FontWeight="DemiBold" Width="140"/>
                                         <!-- Update Button -->
                                         <Button Click="Update_Coupon_Click" Background="Transparent" BorderThickness="0" Foreground="Green" Width="30" Height="30">
                                             <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
@@ -888,8 +887,9 @@
 
                 <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
                     <StackPanel Orientation="Horizontal" >
-                        <TextBlock VerticalAlignment="Center" Text="Coupon Name" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="462" ></TextBlock>
-                        <TextBlock VerticalAlignment="Center" Text="Phone Number" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="156" ></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Coupon Code" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="276" ></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Discount Percentage" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="254" ></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Expiry Date" FontSize="20" Margin="30,0,0,0" FontWeight="DemiBold" Width="156" ></TextBlock>
 
                     </StackPanel>
                 </Border>

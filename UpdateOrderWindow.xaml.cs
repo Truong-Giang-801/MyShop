@@ -30,7 +30,8 @@ namespace MyShop
 
         private BindingList<Customer> _customer = new BindingList<Customer>();
         private BindingList<Product> _product = new BindingList<Product>();
-        public UpdateOrderWindow(Order order, BindingList<Customer> customers, ObservableCollection<Product> products)
+        private List<Coupon> _coupon = new List<Coupon>();
+        public UpdateOrderWindow(Order order, BindingList<Customer> customers, ObservableCollection<Product> products, BindingList<Coupon> coupons)
         {
             InitializeComponent();
             UpdateOrder = (Order)order.Clone();
@@ -52,6 +53,10 @@ namespace MyShop
                     productIndex = i;
                     _product[i].Quantity = _product[i].Quantity + UpdateOrder.Quantity;
                 }
+            }
+            for (int i = 0; i < coupons.Count; i++)
+            {
+                _coupon.Add((Coupon)coupons[i].Clone());
             }
             comboBoxCustomer.ItemsSource = _customer;
             comboBoxProduct.ItemsSource = _product;
@@ -80,7 +85,7 @@ namespace MyShop
         {
             if (Quantity_Update.Text == "" || comboBoxProduct.SelectedItem == null || comboBoxProduct.SelectedItem == null || Datepicker.SelectedDate == null)
             {
-                MessageBox.Show("Please don't leave any field as blank");
+                MessageBox.Show("Please don't leave required field as blank");
             }
             else
             {
@@ -89,6 +94,28 @@ namespace MyShop
                     Product product = (Product)comboBoxProduct.SelectedItem;
                     int quantity = int.Parse(Quantity_Update.Text);
                     Customer customer = (Customer)comboBoxCustomer.SelectedItem;
+                    date = Datepicker.SelectedDate.Value;
+                    string couponcode = Coupon_Update.Text;
+                    Coupon coupon = _coupon.Find(c => c.Code == couponcode);
+
+                    // Check if couponcode is not empty before attempting to find the coupon
+                    if (!string.IsNullOrEmpty(couponcode))
+                    {
+                        if (coupon == null)
+                        {
+                            MessageBox.Show("Invalid coupon code");
+                            return; // Exit the method if the coupon is invalid
+                        }
+                        else
+                        {
+                            if (coupon.ExpiryDate < date)
+                            {
+                                MessageBox.Show("Expired coupon");
+                                return; // Exit the method if the coupon is expired
+                            }
+                        }
+                    }
+
                     if (quantity < 1)
                     {
                         MessageBox.Show("Please enter a valid quantity");
@@ -103,7 +130,8 @@ namespace MyShop
                             {
                                 Customer = customer,
                                 Quantity = quantity,
-                                Product = product
+                                Product = product,
+                                Coupon = coupon
                             };
                             UpdateOrder.Id = id;
                             UpdateOrder.OrderDate = Datepicker.SelectedDate.Value;

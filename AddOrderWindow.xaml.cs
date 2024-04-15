@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Data.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -24,7 +25,8 @@ namespace MyShop
         public Order AddOrder { get; set; }
         private BindingList<Customer> _customer = new BindingList<Customer>();
         private BindingList<Product> _product = new BindingList<Product>();
-        public AddOrderWindow(BindingList<Customer> customers, ObservableCollection<Product> products)
+        private List<Coupon> _coupon = new List<Coupon>();
+        public AddOrderWindow(BindingList<Customer> customers, ObservableCollection<Product> products, BindingList<Coupon> coupons)
         {
             InitializeComponent();
             for (int i = 0; i < customers.Count; i++)
@@ -33,6 +35,10 @@ namespace MyShop
             }
             for (int i = 0; i < products.Count; i++) {
                 _product.Add((Product)products[i].Clone());
+            }
+            for (int i = 0; i < coupons.Count; i++)
+            {
+                _coupon.Add((Coupon)coupons[i].Clone());
             }
             comboBoxCustomer.ItemsSource = _customer;
             comboBoxProduct.ItemsSource = _product;
@@ -53,7 +59,7 @@ namespace MyShop
         {
             if (Quantity_Add.Text == "" || comboBoxProduct.SelectedItem == null || comboBoxProduct.SelectedItem == null || Datepicker.SelectedDate == null)
             {
-                MessageBox.Show("Please don't leave any field as blank");
+                MessageBox.Show("Please don't leave required field as blank");
             }
             else
             {
@@ -63,6 +69,27 @@ namespace MyShop
                     int quantity = int.Parse(Quantity_Add.Text);
                     Customer customer = (Customer)comboBoxCustomer.SelectedItem;
                     DateTime date = Datepicker.SelectedDate.Value;
+                    string couponcode = Coupon_Add.Text;
+                    Coupon coupon = _coupon.Find(c => c.Code == couponcode);
+
+                    // Check if couponcode is not empty before attempting to find the coupon
+                    if (!string.IsNullOrEmpty(couponcode))
+                    {
+                        if (coupon == null)
+                        {
+                            MessageBox.Show("Invalid coupon code");
+                            return; // Exit the method if the coupon is invalid
+                        }
+                        else
+                        {
+                            if (coupon.ExpiryDate < date)
+                            {
+                                MessageBox.Show("Expired coupon");
+                                return; // Exit the method if the coupon is expired
+                            }
+                        }
+                    }
+
                     if (quantity <= product.Quantity)
                     {
                         if (quantity < 1)
@@ -77,15 +104,17 @@ namespace MyShop
                                 OrderDate = date,
                                 Customer = customer,
                                 Quantity = quantity,
-                                Product = product
+                                Product = product,
+                                Coupon = coupon
                             };
                             this.DialogResult = true;
                         }
                     }
                     else
                     {
-                        MessageBox.Show("This product don't have that much quantity");
+                        MessageBox.Show("This product doesn't have that much quantity");
                     }
+
                 }
                 catch (Exception ex)
                 {

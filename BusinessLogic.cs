@@ -17,6 +17,7 @@ namespace MyShop
         private ProductsRepository productsRepository;
         private CustomerRepository customerRepository;
         private OrdersRepository orderRepository;
+        private CouponRepository couponRepository;
 
         public DataImportService()
         {
@@ -24,6 +25,7 @@ namespace MyShop
             productsRepository = new ProductsRepository();
             customerRepository = new CustomerRepository();
             orderRepository = new OrdersRepository();
+            couponRepository = new CouponRepository();
         }
 
         public void ImportDataFromExcel(string filename)
@@ -34,6 +36,7 @@ namespace MyShop
             productsRepository.CreateTables();
             categoryRepository.CreateTables();
             customerRepository.CreateTables();
+            couponRepository.CreateTables();
             productsRepository.AddForeignKey();
             orderRepository.AddForeignKey();
 
@@ -226,4 +229,30 @@ namespace MyShop
             ordersRepository.UpdateOrder(order);
         }
     }
+    public class CouponService
+    {
+        private CouponRepository couponRepository = new CouponRepository();
+
+        public BindingList<Coupon> GetAllCoupons()
+        {
+            return couponRepository.ReadDataFromDatabase();
+        }
+
+        public void DeleteCoupon(int couponId)
+        {
+            // Perform any necessary checks or operations here
+            couponRepository.DeleteCoupon(couponId);
+        }
+
+        public void InsertCoupon(Coupon coupon)
+        {
+            couponRepository.InsertCoupon(coupon.Code, coupon.DiscountPercentage, coupon.ExpiryDate);
+        }
+
+        public void UpdateCoupon(Coupon coupon)
+        {
+            couponRepository.UpdateCoupon(coupon.Id, coupon.Code, coupon.DiscountPercentage, coupon.ExpiryDate);
+        }
+    }
+
 }

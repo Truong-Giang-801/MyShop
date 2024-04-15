@@ -5,41 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyShop"
         mc:Ignorable="d"
-        Title="AddOrderWindow" Height="450" Width="317">
+        Title="AddOrderWindow" Height="508" Width="317">
     <Canvas Name="Update" Width="316" HorizontalAlignment="Center" Margin="0,-10,0,6">
-        <Label Name="Quantity_Add_Label" Content="Quantity:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="255" Canvas.Left="21"/>
-        <Label Content="Product:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="153" Canvas.Left="21"/>
+        <Label Name="Quantity_Add_Label" Content="Quantity:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="229" Canvas.Left="31" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Content="Product:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="127" Canvas.Left="31" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
-        <Label Content="Customer:" FontSize="18" FontWeight="Bold" BorderThickness="0" Canvas.Left="20" Canvas.Top="54"/>
+        <Label Content="Customer:" FontSize="18" FontWeight="Bold" BorderThickness="0" Canvas.Left="30" Canvas.Top="28" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
-        <ComboBox x:Name="comboBoxCustomer" Width="268" Height="30" DisplayMemberPath="Name" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" SelectionChanged="comboBoxCustomer_SelectionChanged" Canvas.Left="15" Canvas.Top="107" RenderTransformOrigin="-2.493,0.068">
+        <ComboBox x:Name="comboBoxCustomer" Width="268" Height="30" DisplayMemberPath="Name" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" SelectionChanged="comboBoxCustomer_SelectionChanged" Canvas.Left="25" Canvas.Top="81" RenderTransformOrigin="-2.493,0.068">
             <ComboBox.ItemsSource>
                 <CompositeCollection>
                     <CollectionContainer Collection="{Binding Customer}" />
                 </CompositeCollection>
             </ComboBox.ItemsSource>
         </ComboBox>
-        <ComboBox x:Name="comboBoxProduct" Width="268" Height="30" DisplayMemberPath="ProductName" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" SelectionChanged="comboBoxProduct_SelectionChanged" Canvas.Left="15" Canvas.Top="204">
+        <ComboBox x:Name="comboBoxProduct" Width="268" Height="30" DisplayMemberPath="ProductName" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="6,7,5,3" ScrollViewer.CanContentScroll="False" IsReadOnly="True" SelectionChanged="comboBoxProduct_SelectionChanged" Canvas.Left="25" Canvas.Top="178">
             <ComboBox.ItemsSource>
                 <CompositeCollection>
                     <CollectionContainer Collection="{Binding Product}" />
                 </CompositeCollection>
             </ComboBox.ItemsSource>
         </ComboBox>
+        <TextBox x:Name="Quantity_Add" Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource searchTextbox}" TextChanged="Quantity_Add_TextChanged" Width="109" Height="43" Canvas.Top="271" HorizontalAlignment="Center" Canvas.Left="31" VerticalAlignment="Top"/>
 
-
-
-
-
-
-
-
-        <TextBox x:Name="Quantity_Add" Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource searchTextbox}" TextChanged="Quantity_Add_TextChanged" Width="109" Height="43" Canvas.Top="297" HorizontalAlignment="Left" Canvas.Left="21"/>
-
-        <Button x:Name="Submit_Add_Order" IsDefault="True" Click="Submit_Add_Order_Click" Content="Submit" Height="30" Width="100" Canvas.Left="11" Canvas.Top="361" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Button x:Name="Cancel_Add_Order" IsCancel="False" Click="Cancel_Add_Order_Click" Content="Cancel" Width="100" Height="30" Canvas.Left="200" Canvas.Top="361" HorizontalAlignment="Left" VerticalAlignment="Center" />
-        <Label x:Name="Date_Label" Content="Date:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="255" Canvas.Left="230" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <DatePicker x:Name="Datepicker" Height="24" Canvas.Top="306" Canvas.Left="188" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBox x:Name="Coupon_Add" Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource searchTextbox}" Width="248" Height="43" Canvas.Top="371" HorizontalAlignment="Left" Canvas.Left="31"/>
+        <Button x:Name="Submit_Add_Order" IsDefault="True" Click="Submit_Add_Order_Click" Content="Submit" Height="30" Width="100" Canvas.Left="11" Canvas.Top="431" HorizontalAlignment="Center" VerticalAlignment="Top" />
+        <Button x:Name="Cancel_Add_Order" IsCancel="False" Click="Cancel_Add_Order_Click" Content="Cancel" Width="100" Height="30" Canvas.Left="200" Canvas.Top="431" HorizontalAlignment="Center" VerticalAlignment="Top" />
+        <Label x:Name="Date_Label" Content="Date:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="229" Canvas.Left="240" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <DatePicker x:Name="Datepicker" Height="24" Canvas.Top="280" Canvas.Left="198" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Label Content="Coupon Code:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="329" Canvas.Left="31" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
     </Canvas>
 </Window>
