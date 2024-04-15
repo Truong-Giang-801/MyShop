@@ -23,15 +23,15 @@ namespace MyShop
     {
         public Order AddOrder { get; set; }
         private BindingList<Customer> _customer = new BindingList<Customer>();
-        private BindingList<Product> _product =  new BindingList<Product>();
-        public AddOrderWindow(BindingList<Customer> customers,ObservableCollection<Product> products)
+        private BindingList<Product> _product = new BindingList<Product>();
+        public AddOrderWindow(BindingList<Customer> customers, ObservableCollection<Product> products)
         {
             InitializeComponent();
             for (int i = 0; i < customers.Count; i++)
             {
                 _customer.Add((Customer)customers[i].Clone());
             }
-            for (int i = 0;i < products.Count; i++) {
+            for (int i = 0; i < products.Count; i++) {
                 _product.Add((Product)products[i].Clone());
             }
             comboBoxCustomer.ItemsSource = _customer;
@@ -51,7 +51,7 @@ namespace MyShop
 
         private void Submit_Add_Order_Click(object sender, RoutedEventArgs e)
         {
-            if (Quantity_Add.Text == "" ||comboBoxProduct.SelectedItem == null ||comboBoxProduct.SelectedItem==null)
+            if (Quantity_Add.Text == "" || comboBoxProduct.SelectedItem == null || comboBoxProduct.SelectedItem == null || Datepicker.SelectedDate == null)
             {
                 MessageBox.Show("Please don't leave any field as blank");
             }
@@ -62,6 +62,7 @@ namespace MyShop
                     Product product = (Product)comboBoxProduct.SelectedItem;
                     int quantity = int.Parse(Quantity_Add.Text);
                     Customer customer = (Customer)comboBoxCustomer.SelectedItem;
+                    DateTime date = Datepicker.SelectedDate.Value;
                     if (quantity <= product.Quantity)
                     {
                         if (quantity < 1)
@@ -73,7 +74,7 @@ namespace MyShop
                             // Create a new Product object using the input values
                             AddOrder = new Order
                             {
-                                OrderDate = DateTime.Now,
+                                OrderDate = date,
                                 Customer = customer,
                                 Quantity = quantity,
                                 Product = product

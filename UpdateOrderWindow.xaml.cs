@@ -78,7 +78,7 @@ namespace MyShop
 
         private void Submit_Update_Order_Click(object sender, RoutedEventArgs e)
         {
-            if (Quantity_Update.Text == "" || comboBoxProduct.SelectedItem == null || comboBoxProduct.SelectedItem == null)
+            if (Quantity_Update.Text == "" || comboBoxProduct.SelectedItem == null || comboBoxProduct.SelectedItem == null || Datepicker.SelectedDate == null)
             {
                 MessageBox.Show("Please don't leave any field as blank");
             }
@@ -104,10 +104,9 @@ namespace MyShop
                                 Customer = customer,
                                 Quantity = quantity,
                                 Product = product
-
                             };
                             UpdateOrder.Id = id;
-                            UpdateOrder.OrderDate = date;
+                            UpdateOrder.OrderDate = Datepicker.SelectedDate.Value;
                             this.DialogResult = true;
                         }
                         else
@@ -139,5 +138,6 @@ namespace MyShop
         {
 
         }
+
     }
 }

@@ -125,7 +125,7 @@ namespace MyShop
                 int daysLeft = 15 - (int)difference.TotalDays;
 
                 // Update the TextBlock to show the number of days left
-                this.DataContext = new MyViewModel { VersionText = "Trial Version", SubVersionText = $"You got {daysLeft} day(s) left"};
+                this.DataContext = new MyViewModel { VersionText = "Trial Version", SubVersionText = $"You got {daysLeft} day(s) left" };
             }
             else
             {
@@ -293,10 +293,10 @@ namespace MyShop
             Products.Background = Brushes.Transparent;
             Products.Foreground = Brushes.White;
             Order.Background = Brushes.Transparent;
-            Order.Foreground= Brushes.White;
+            Order.Foreground = Brushes.White;
             Exit_button.Background = Brushes.Transparent;
             Exit_button.Foreground = Brushes.White;
-            
+
         }
         private void setVisibleOff()
         {
@@ -458,7 +458,7 @@ namespace MyShop
         {
             setButtonDashBoard();
             setVisibleOff();
-            SettingScreen.Visibility = Visibility.Visible; 
+            SettingScreen.Visibility = Visibility.Visible;
 
             NumberOfOrdersTextBox.Text = itemsPerOrderPage.ToString();
             NumberOfProductsTextBox.Text = itemsPerPage.ToString();
@@ -992,7 +992,7 @@ namespace MyShop
                 var newOrder = screen.AddOrder;
                 OrdersService ordersService = new OrdersService();
                 ordersService.InsertOrder(newOrder);
-                
+
 
                 // Show a message to the user
                 MessageBox.Show("Order added successfully!");
@@ -1009,7 +1009,7 @@ namespace MyShop
             ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
             var order = listBoxItem.DataContext as Order;
 
-            var screen = new UpdateOrderWindow(order,_customers,_products);
+            var screen = new UpdateOrderWindow(order, _customers, _products);
             // Show the window modally and wait for the user to close it
             bool? result = screen.ShowDialog();
 
@@ -1043,7 +1043,7 @@ namespace MyShop
                 Button button = (Button)sender;
                 // Use VisualTreeHelper to find the ListBoxItem
                 ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
-                var order= listBoxItem.DataContext as Order;
+                var order = listBoxItem.DataContext as Order;
 
                 if (order != null)
                 {
@@ -1070,11 +1070,12 @@ namespace MyShop
             var screen = new DetailOrderWindow(order);
             // Show the window modally and wait for the user to close it
             bool? result = screen.ShowDialog();
-            if(result == true) { 
+            if (result == true)
+            {
             }
         }
 
-        
+
 
         private void Add_Coupon_Click(object sender, RoutedEventArgs e)
         {
@@ -1091,7 +1092,7 @@ namespace MyShop
 
         }
 
-      
+
         private int Price_Order_Click_Count = 0;
 
         private void Product_Price_Order_Click(object sender, RoutedEventArgs e)
@@ -1138,8 +1139,8 @@ namespace MyShop
 
         private int Order_Quantity_Order_Click_Count = 0;
         private void Order_Quantity_Order_Click(object sender, RoutedEventArgs e)
-        {   
-            List<Order>orders = new List<Order>();
+        {
+            List<Order> orders = new List<Order>();
             orders = _orders.ToList<Order>();
 
             Order_Quantity_Order_Click_Count++;
@@ -1192,12 +1193,12 @@ namespace MyShop
             DateTime startDate = StartDatePicker.SelectedDate.Value;
             DateTime endDate = EndDatePicker.SelectedDate.Value;
             _orders1.Clear();
-            foreach ( var order in _orders)
+            foreach (var order in _orders)
             {
                 _orders1.Add(order);
             }
             Debug.WriteLine(_orders1.Count);
-            if(startDate!=null && endDate != null)
+            if (startDate != null && endDate != null)
             {
                 var filteredOrders = _orders.Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate).ToList();
                 _orders.Clear();
@@ -1214,7 +1215,7 @@ namespace MyShop
                 }
             }
             // Assuming _orders is your BindingList<Order>
-                    
+
         }
 
         private void Save_Button_Click(object sender, RoutedEventArgs e)
@@ -1243,4 +1244,6 @@ namespace MyShop
             {
                 MessageBox.Show("Please only enter number in these field");
             }
+        }
+    }
 }
