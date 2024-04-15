@@ -24,7 +24,7 @@ namespace MyShop
         {
             InitializeComponent();
             this.DataContext = order; 
-            decimal price = (order.Quantity * order.Product.Price) * (order.Coupon?.DiscountPercentage ?? 1) / 100;
+            decimal price = (order.Quantity * order.Product.Price) * ((100-order.Coupon?.DiscountPercentage) ?? 100) / 100;
             Price.Text = price.ToString();
             
         }
