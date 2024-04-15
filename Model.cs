@@ -159,7 +159,7 @@ namespace MyShop
         }
     }
 
-    public class Order : INotifyPropertyChanged
+    public class Order : INotifyPropertyChanged, ICloneable
     {
         private int _id;
         private DateTime _orderDate;
@@ -218,6 +218,11 @@ namespace MyShop
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
