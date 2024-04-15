@@ -199,7 +199,7 @@ namespace MyShop
     {
         private OrdersRepository ordersRepository = new OrdersRepository();
 
-        public ObservableCollection<Order> GetAllOrders()
+        public BindingList<Order> GetAllOrders()
         {
             return ordersRepository.ReadDataFromDatabase();
         }

@@ -45,7 +45,8 @@ namespace MyShop
 
         private void comboBoxProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            Product product = (Product)comboBoxProduct.SelectedItem;
+            Quantity_Add_Label.Content = $"Quantity (Max: {product.Quantity})";
         }
 
         private void Submit_Add_Order_Click(object sender, RoutedEventArgs e)
@@ -61,16 +62,29 @@ namespace MyShop
                     Product product = (Product)comboBoxProduct.SelectedItem;
                     int quantity = int.Parse(Quantity_Add.Text);
                     Customer customer = (Customer)comboBoxCustomer.SelectedItem;
-
-                    // Create a new Product object using the input values
-                    AddOrder = new Order
+                    if (quantity <= product.Quantity)
                     {
-                        OrderDate = DateTime.Now,
-                        Customer = customer,
-                        Quantity = quantity,
-                        Product = product
-                    };
-                    this.DialogResult = true;
+                        if (quantity < 1)
+                        {
+                            MessageBox.Show("Please enter a valid quantity");
+                        }
+                        else
+                        {
+                            // Create a new Product object using the input values
+                            AddOrder = new Order
+                            {
+                                OrderDate = DateTime.Now,
+                                Customer = customer,
+                                Quantity = quantity,
+                                Product = product
+                            };
+                            this.DialogResult = true;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("This product don't have that much quantity");
+                    }
                 }
                 catch (Exception ex)
                 {

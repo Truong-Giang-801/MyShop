@@ -39,7 +39,7 @@ namespace MyShop
             for (int i = 0; i < customers.Count; i++)
             {
                 _customer.Add((Customer)customers[i].Clone());
-                if (customers[i].Id == UpdateOrder.Customer.Id)
+                if (UpdateOrder.Customer != null && customers[i].Id == UpdateOrder.Customer.Id)
                 {
                     customerIndex = i;
                 }
@@ -50,6 +50,7 @@ namespace MyShop
                 if (products[i].Id == UpdateOrder.Product.Id)
                 {
                     productIndex = i;
+                    _product[i].Quantity = _product[i].Quantity + UpdateOrder.Quantity;
                 }
             }
             comboBoxCustomer.ItemsSource = _customer;
@@ -88,18 +89,32 @@ namespace MyShop
                     Product product = (Product)comboBoxProduct.SelectedItem;
                     int quantity = int.Parse(Quantity_Update.Text);
                     Customer customer = (Customer)comboBoxCustomer.SelectedItem;
-
-                    // Create a new Product object using the input values
-                    UpdateOrder = new Order
+                    if (quantity < 1)
                     {
-                        Customer = customer,
-                        Quantity = quantity,
-                        Product = product
-                        
-                    };
-                    UpdateOrder.Id = id;
-                    UpdateOrder.OrderDate = date;
-                    this.DialogResult = true;
+                        MessageBox.Show("Please enter a valid quantity");
+                    }
+                    else
+                    {
+
+                        if (quantity <= product.Quantity)
+                        {
+                            // Create a new Product object using the input values
+                            UpdateOrder = new Order
+                            {
+                                Customer = customer,
+                                Quantity = quantity,
+                                Product = product
+
+                            };
+                            UpdateOrder.Id = id;
+                            UpdateOrder.OrderDate = date;
+                            this.DialogResult = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("This product don't have that much quantity");
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -116,7 +131,8 @@ namespace MyShop
 
         private void comboBoxProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            Product product = (Product)comboBoxProduct.SelectedItem;
+            Quantity_Update_Label.Content = $"Quantity (Max: {product.Quantity})";
         }
 
         private void comboBoxCustomer_SelectionChanged(object sender, SelectionChangedEventArgs e)

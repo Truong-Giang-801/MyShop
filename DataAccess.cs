@@ -351,9 +351,9 @@ namespace MyShop
     {
         private string connectionString = Properties.Settings.Default.ConnectionString;
 
-        public ObservableCollection<Order> ReadDataFromDatabase()
+        public BindingList<Order> ReadDataFromDatabase()
         {
-            ObservableCollection<Order> list = new ObservableCollection<Order>();
+            BindingList<Order> list = new BindingList<Order>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -410,6 +410,15 @@ namespace MyShop
                     command.Parameters.AddWithValue("@Quantity", order.Quantity);
                     command.ExecuteNonQuery();
                 }
+
+                // Decrease the product quantity
+                string updateProductSql = "UPDATE Product SET Quantity = Quantity - @Quantity WHERE Id = @ProductId";
+                using (SqlCommand updateProductCommand = new SqlCommand(updateProductSql, connection))
+                {
+                    updateProductCommand.Parameters.AddWithValue("@Quantity", order.Quantity);
+                    updateProductCommand.Parameters.AddWithValue("@ProductId", order.Product.Id);
+                    updateProductCommand.ExecuteNonQuery();
+                }
             }
         }
 
@@ -418,12 +427,22 @@ namespace MyShop
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
+                // Increase the product quantity
+                string updateProductSql = "UPDATE Product SET Quantity = Quantity + (SELECT Quantity FROM Orders WHERE Id = @Id) WHERE Id = (SELECT ProductId FROM Orders WHERE Id = @Id)";
+                using (SqlCommand updateProductCommand = new SqlCommand(updateProductSql, connection))
+                {
+                    updateProductCommand.Parameters.AddWithValue("@Id", orderId);
+                    updateProductCommand.ExecuteNonQuery();
+                }
+
                 string deleteSql = "DELETE FROM Orders WHERE Id = @Id";
                 using (SqlCommand deleteCommand = new SqlCommand(deleteSql, connection))
                 {
                     deleteCommand.Parameters.AddWithValue("@Id", orderId);
                     deleteCommand.ExecuteNonQuery();
                 }
+
+                
             }
         }
 
@@ -432,6 +451,14 @@ namespace MyShop
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
+                // Increase the old product quantity
+                string increaseOldProductSql = "UPDATE Product SET Quantity = Quantity + (SELECT Quantity FROM Orders WHERE Id = @Id) WHERE Id = (SELECT ProductId FROM Orders WHERE Id = @Id)";
+                using (SqlCommand increaseOldProductCommand = new SqlCommand(increaseOldProductSql, connection))
+                {
+                    increaseOldProductCommand.Parameters.AddWithValue("@Id", order.Id);
+                    increaseOldProductCommand.ExecuteNonQuery();
+                }
+
                 string updateSql = "UPDATE Orders SET OrderDate = @OrderDate, CustomerId = @CustomerId, ProductId = @ProductId, Quantity = @Quantity WHERE Id = @Id";
                 using (SqlCommand updateCommand = new SqlCommand(updateSql, connection))
                 {
@@ -441,6 +468,17 @@ namespace MyShop
                     updateCommand.Parameters.AddWithValue("@ProductId", order.Product.Id);
                     updateCommand.Parameters.AddWithValue("@Quantity", order.Quantity);
                     updateCommand.ExecuteNonQuery();
+                }
+
+                
+
+                // Decrease the new product quantity
+                string decreaseNewProductSql = "UPDATE Product SET Quantity = Quantity - @Quantity WHERE Id = @ProductId";
+                using (SqlCommand decreaseNewProductCommand = new SqlCommand(decreaseNewProductSql, connection))
+                {
+                    decreaseNewProductCommand.Parameters.AddWithValue("@Quantity", order.Quantity);
+                    decreaseNewProductCommand.Parameters.AddWithValue("@ProductId", order.Product.Id);
+                    decreaseNewProductCommand.ExecuteNonQuery();
                 }
             }
         }
