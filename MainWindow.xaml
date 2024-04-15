@@ -530,10 +530,66 @@
             </Grid>
         </Border>
         <!--Setting Screen-->
-        <Border Visibility="Hidden" x:Name="SettingScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
+        <Border Visibility="Visible " x:Name="SettingScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Visible">
-                <TextBlock Text="Setting"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource whiteBorder}" Margin="15,0,15,10">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                            <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 20 0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Color="#FB7456" Offset="0"/>
+                                        <GradientStop Color="#FA5654" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Image Source="/Images/u4.png" Width="40" Height="40"/>
+                            </Border>
 
+                            <StackPanel VerticalAlignment="Center" Margin="0,0,100,0">
+                                <TextBlock Text="{Binding VersionText}" Style="{StaticResource titleText}" FontSize="26" FontWeight="Bold" Height="31"/>
+                                <TextBlock Text="{Binding SubVersionText}" Foreground="#6C879A" Height="27"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </Grid>
+
+                </Border>
+                <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                        <TextBlock VerticalAlignment="Center" Text="Settings" FontSize="40" FontWeight="DemiBold"></TextBlock>
+
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="2
+                        " Margin="15" Width="975">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
+                        <CheckBox Content="Option 1" Margin="30">
+                            <CheckBox.LayoutTransform>
+                                <ScaleTransform ScaleX="3" ScaleY="3"/>
+                            </CheckBox.LayoutTransform>
+                        </CheckBox>
+                        <CheckBox Content="Option 2" Margin="30">
+                            <CheckBox.LayoutTransform>
+                                <ScaleTransform ScaleX="3" ScaleY="3"/>
+                            </CheckBox.LayoutTransform>
+                        </CheckBox>
+                        <CheckBox Content="Option 3" Margin="30">
+                            <CheckBox.LayoutTransform>
+                                <ScaleTransform ScaleX="3" ScaleY="3"/>
+                            </CheckBox.LayoutTransform>
+                        </CheckBox>
+                    </StackPanel>
+                </Border>
             </Grid>
         </Border>
         <!--Customer Screen-->
