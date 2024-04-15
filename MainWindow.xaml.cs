@@ -954,5 +954,101 @@ namespace MyShop
         {
 
         }
+
+      
+        private int Price_Order_Click_Count = 0;
+
+        private void Product_Price_Order_Click(object sender, RoutedEventArgs e)
+        {
+            Price_Order_Click_Count++; // Increment the click count
+
+            // Sort in ascending order if click count is odd, otherwise sort in descending order
+            if (Price_Order_Click_Count % 2 == 1) // Odd click count
+            {
+                _products1.Sort((p1, p2) => p1.Price.CompareTo(p2.Price));
+                Product_Price_Order.Content = "🔼";
+
+
+            }
+            else // Even click count
+            {
+                _products1.Sort((p1, p2) => p2.Price.CompareTo(p1.Price));
+                Product_Price_Order.Content = "🔽";
+
+
+            }
+            PaginationProductListBox();
+        }
+        private int Quantity_Order_Click_Count = 0;
+
+        private void Product_Quantity_Order_Click(object sender, RoutedEventArgs e)
+        {
+            Quantity_Order_Click_Count++; // Increment the click count
+
+            // Sort in ascending order if click count is odd, otherwise sort in descending order
+            if (Quantity_Order_Click_Count % 2 == 1) // Odd click count
+            {
+                _products1.Sort((p1, p2) => p1.Quantity.CompareTo(p2.Quantity));
+                Product_Quantity_Order.Content = "🔼";
+            }
+            else // Even click count
+            {
+                _products1.Sort((p1, p2) => p2.Quantity.CompareTo(p1.Quantity));
+                Product_Quantity_Order.Content = "🔽";
+
+            }
+            PaginationProductListBox();
+        }
+
+        private int Order_Quantity_Order_Click_Count = 0;
+        private void Order_Quantity_Order_Click(object sender, RoutedEventArgs e)
+        {   
+            List<Order>orders = new List<Order>();
+            orders = _orders.ToList<Order>();
+
+            Order_Quantity_Order_Click_Count++;
+            if (Order_Quantity_Order_Click_Count % 2 == 1) // Odd click count
+            {
+                orders.Sort((p1, p2) => p1.Quantity.CompareTo(p2.Quantity));
+                Order_Quantity_Order.Content = "🔼";
+            }
+            else // Even click count
+            {
+                orders.Sort((p1, p2) => p2.Quantity.CompareTo(p1.Quantity));
+                Order_Quantity_Order.Content = "🔽";
+            }
+            _orders.Clear();
+            foreach (var order in orders)
+            {
+                _orders.Add(order);
+            }
+            PaginationOrderListBox();
+        }
+        private int Order_Date_Order_Click_Count = 0;
+
+        private void Order_Date_Order_Click(object sender, RoutedEventArgs e)
+        {
+
+            List<Order> orders = new List<Order>();
+            orders = _orders.ToList<Order>();
+
+            Order_Date_Order_Click_Count++;
+            if (Order_Date_Order_Click_Count % 2 == 1) // Odd click count
+            {
+                orders.Sort((p1, p2) => p1.OrderDate.CompareTo(p2.OrderDate));
+                Order_Date_Order.Content = "🔼";
+            }
+            else // Even click count
+            {
+                orders.Sort((p1, p2) => p2.OrderDate.CompareTo(p1.OrderDate));
+                Order_Date_Order.Content = "🔽";
+            }
+            _orders.Clear();
+            foreach (var order in orders)
+            {
+                _orders.Add(order);
+            }
+            PaginationOrderListBox();
+        }
     }
 }
