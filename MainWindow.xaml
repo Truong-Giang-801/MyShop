@@ -236,7 +236,7 @@
                     <Border Style="{StaticResource whiteBorder}">
                         <StackPanel>
                             <TextBlock Text="Top Customer Spent" Style="{StaticResource titleText}"/>
-                            <ListBox x:Name="LisboxTop5Spent" Grid.Row="0" ItemsSource="{Binding _5spent}" BorderThickness="0" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,15,8,-2" Height="273">
+                            <ListBox x:Name="LisboxTop5Spent" Grid.Row="0" ItemsSource="{Binding _5spent}" av:ItemsSource="{av:SampleData ItemCount=5}" BorderThickness="0" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,15,8,-2" Height="273">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical" Width="184" HorizontalAlignment="Left">
@@ -251,20 +251,28 @@
                     <!--Sales Customer-->
                     <Border Grid.Row="1" Style="{StaticResource whiteBorder}" Margin="0 20 0 0">
                         <Grid>
-                            <!--Title-->
-                            <TextBlock Text="Top Products Sale" Style="{StaticResource titleText}" Margin="0,10,0,-10"/>
-                            <!--Chart-->
-                            <ListBox x:Name="LisboxTop5Product" Grid.Row="0" ItemsSource="{Binding _5products}" av:ItemsSource="{av:SampleData ItemCount=5}" BorderThickness="0" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,58,8,-2">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Vertical" Width="184" HorizontalAlignment="Left">
-                                            <TextBlock Text="{Binding Product.ProductName}" Margin="7,21,0,14" FontSize="16" FontWeight="DemiBold" Width="170"/>
-                                            <TextBlock Text="{Binding TotalQuantity}" Margin="10,0,0,0" FontSize="16" Width="176"/>
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Name="Week" Content="Week" Click="Week_Clicked"   Margin="0 0 13 0" Width="45"></Button>
+                                    <Button Name="Month" Content="Month" Click="Month_Clicked" Margin="0 0 13 0" Width="45"></Button>
+                                    <Button Name="Year" Content="Year" Click="Year_Clicked" Margin="0 0 13 0" Background="LightGray" Width="45"></Button>
+                                    <Button Name="All" Content="All" Click="All_Clicked" Margin="0 0 0 0" Background="DarkGray" Width="45"/>
+                                </StackPanel>
+                                <!--Title-->
+                                <TextBlock Text="Top Products Sale" Style="{StaticResource titleText}" Margin="0,10,0,-10"/>
+                                <!--Chart-->
+                                <ListBox x:Name="LisboxTop5Product" MaxHeight="280" Grid.Row="0" ItemsSource="{Binding _5products}" av:ItemsSource="{av:SampleData ItemCount=5}" BorderThickness="0" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,0,8,-2">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Vertical" Width="184" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding Product.ProductName}" Margin="7,10,0,10" FontSize="16" FontWeight="DemiBold" Width="170"/>
+                                                <TextBlock Text="{Binding TotalQuantity}" Margin="10,0,0,0" FontSize="16" Width="176"/>
 
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
                         </Grid>
                     </Border>
                 </Grid>
@@ -272,7 +280,7 @@
         </Border>
 
         <!--Order Screen-->
-        <Border x:Name="OrderScreen" Visibility="Hidden" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
+        <Border x:Name="OrderScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Hidden" Width="1045" HorizontalAlignment="Right">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>

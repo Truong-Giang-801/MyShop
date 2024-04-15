@@ -26,6 +26,7 @@ using System.Linq;
 using System.Globalization;
 using Microsoft.Identity.Client;
 using LiveCharts;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace MyShop
 {
@@ -1219,17 +1220,19 @@ namespace MyShop
 
         private void SearchButton_Date_Click(object sender, RoutedEventArgs e)
         {
-            DateTime startDate = StartDatePicker.SelectedDate.Value;
-            DateTime endDate = EndDatePicker.SelectedDate.Value;
+            DateTime? startDate = StartDatePicker.SelectedDate;
+            DateTime? endDate = EndDatePicker.SelectedDate;
+
             _orders1.Clear();
             foreach (var order in _orders)
             {
                 _orders1.Add(order);
             }
             Debug.WriteLine(_orders1.Count);
-            if (startDate != null && endDate != null)
+
+            if (startDate.HasValue && endDate.HasValue)
             {
-                var filteredOrders = _orders.Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate).ToList();
+                var filteredOrders = _orders.Where(o => o.OrderDate >= startDate.Value && o.OrderDate <= endDate.Value).ToList();
                 _orders.Clear();
                 foreach (var order in filteredOrders)
                 {
@@ -1421,14 +1424,22 @@ namespace MyShop
 
             BindingList<Product> _5products = new BindingList<Product>();
 
-            var top5ProductsWithQuantity = _orders
-                     .GroupBy(order => order.Product)
-                     .Select(group => new { Product = group.Key, TotalQuantity = group.Sum(order => order.Quantity) })
-                     .OrderByDescending(group => group.TotalQuantity)
-                     .Take(5)
-                     .ToList();
-            // Convert the list of products to a BindingList
-            LisboxTop5Product.ItemsSource = top5ProductsWithQuantity;
+            if (state == "All")
+            {
+                All_Clicked(null, null);
+            }
+            if (state == "Year")
+            {
+                Year_Clicked(null, null);
+            }
+            if (state == "Month")
+            {
+                Month_Clicked(null, null);
+            }
+            if (state == "Week")
+            {
+                Week_Clicked(null, null);
+            }
 
             var top5CustomersWithTotalSpent = _orders
                     .Where(order => order.Customer != null) // Exclude orders with null Customer
@@ -1466,24 +1477,87 @@ namespace MyShop
 
         }
 
-        private void Change_Chart_Click(object sender, RoutedEventArgs e)
+        private void resetButton()
         {
-            if(Change_Chart.Content.ToString()=="Income and Profit")
-            {
-                Change_Chart.Content = "Number of Product sold";
-                Profit_Line.Visibility= Visibility.Hidden;
-                Income_Line.Visibility= Visibility.Hidden;
-                QuantityProductPerDay_Line.Visibility = Visibility.Visible;
+            Week.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#d3d3d3"));
+            Month.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#d3d3d3"));
+            Year.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#d3d3d3"));
+            All.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#d3d3d3"));
+        }
+        private void Week_Clicked(object sender, RoutedEventArgs e)
+        {
+            state = "Week";
+            resetButton();
+            Week.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#A9A9A9"));
 
-            }
-            else
-            {
-                Change_Chart.Content = "Income and Profit";
-                Profit_Line.Visibility = Visibility.Visible;
-                Income_Line.Visibility = Visibility.Visible;
-                QuantityProductPerDay_Line.Visibility = Visibility.Hidden;
-            }
-            Update_DashBoard(); 
+            var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+            var endOfWeek = startOfWeek.AddDays(6);
+
+            var top5ProductsWithQuantity = _orders
+                .Where(order => order.OrderDate >= startOfWeek && order.OrderDate <= endOfWeek)
+                .GroupBy(order => order.Product)
+                .Select(group => new { Product = group.Key, TotalQuantity = group.Sum(order => order.Quantity) })
+                .OrderByDescending(group => group.TotalQuantity)
+                .Take(5)
+                .ToList();
+
+            LisboxTop5Product.ItemsSource = top5ProductsWithQuantity;
+        }
+
+        private string state = "All";
+        private void Month_Clicked(object sender, RoutedEventArgs e)
+        {
+            state = "Month";
+            resetButton();
+            Month.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#A9A9A9"));
+
+            var startOfMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+
+            var top5ProductsWithQuantity = _orders
+                .Where(order => order.OrderDate >= startOfMonth && order.OrderDate <= endOfMonth)
+                .GroupBy(order => order.Product)
+                .Select(group => new { Product = group.Key, TotalQuantity = group.Sum(order => order.Quantity) })
+                .OrderByDescending(group => group.TotalQuantity)
+                .Take(5)
+                .ToList();
+
+            LisboxTop5Product.ItemsSource = top5ProductsWithQuantity;
+        }
+
+        private void Year_Clicked(object sender, RoutedEventArgs e)
+        {
+            state = "Year";
+            resetButton();
+            Year.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#A9A9A9"));
+
+            var startOfYear = new DateTime(DateTime.Today.Year, 1, 1);
+            var endOfYear = startOfYear.AddYears(1).AddDays(-1);
+
+            var top5ProductsWithQuantity = _orders
+                .Where(order => order.OrderDate >= startOfYear && order.OrderDate <= endOfYear)
+                .GroupBy(order => order.Product)
+                .Select(group => new { Product = group.Key, TotalQuantity = group.Sum(order => order.Quantity) })
+                .OrderByDescending(group => group.TotalQuantity)
+                .Take(5)
+                .ToList();
+
+            LisboxTop5Product.ItemsSource = top5ProductsWithQuantity;
+        }
+
+        private void All_Clicked(object sender, RoutedEventArgs e)
+        {
+            state = "All";
+            resetButton();
+            All.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#A9A9A9"));
+            var top5ProductsWithQuantity = _orders
+                     .GroupBy(order => order.Product)
+                     .Select(group => new { Product = group.Key, TotalQuantity = group.Sum(order => order.Quantity) })
+                     .OrderByDescending(group => group.TotalQuantity)
+                     .Take(5)
+                     .ToList();
+            // Convert the list of products to a BindingList
+            LisboxTop5Product.ItemsSource = top5ProductsWithQuantity;
         }
     }
 
