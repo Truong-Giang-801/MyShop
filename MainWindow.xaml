@@ -155,8 +155,8 @@
                     <uc:InfoCard x:Name="In_stock" Grid.Column="0" Title="In Stock" Image="/Images/sale.png" Loaded="Sales_Loaded">
 
                     </uc:InfoCard>
-                    <uc:InfoCard x:Name="Purchase" Grid.Column="1" Title="Purchase" SubTitle="" Amount="8" Image="/Images/purchase.png" Loaded="Purchase_Loaded" />
-                    <uc:InfoCard x:Name="Profit" Grid.Column="2" Title="Profit" SubTitle="" Amount="5" Image="/Images/return.png" Loaded="Profit_Loaded" />
+                    <uc:InfoCard x:Name="Purchase" Grid.Column="1" Title="Purchase" SubTitle="" Amount="8" Image="/Images/purchase.png" />
+                    <uc:InfoCard x:Name="Profit" Grid.Column="2" Title="Profit" SubTitle="" Amount="5" Image="/Images/return.png" />
                 </Grid>
                 <!--Main Chart-->
                 <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource whiteBorder}" Margin="20 20 20 0">
