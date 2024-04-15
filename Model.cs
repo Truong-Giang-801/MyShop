@@ -166,7 +166,7 @@ namespace MyShop
         private Customer _customer;
         private Product _product;
         private int _quantity;
-
+        private Coupon _coupon; // Add this line to include a Coupon property
 
         public int Id
         {
@@ -207,6 +207,7 @@ namespace MyShop
                 OnPropertyChanged(nameof(Product));
             }
         }
+
         public int Quantity
         {
             get { return _quantity; }
@@ -214,6 +215,76 @@ namespace MyShop
             {
                 _quantity = value;
                 OnPropertyChanged(nameof(Quantity));
+            }
+        }
+
+        public Coupon Coupon // Add this property
+        {
+            get { return _coupon; }
+            set
+            {
+                _coupon = value;
+                OnPropertyChanged(nameof(Coupon));
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class Coupon : INotifyPropertyChanged, ICloneable
+    {
+        private int _id;
+        private string _code;
+        private decimal _discountPercentage;
+        private DateTime _expiryDate;
+
+        public int Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
+        }
+
+        public string Code
+        {
+            get { return _code; }
+            set
+            {
+                _code = value;
+                OnPropertyChanged(nameof(Code));
+            }
+        }
+
+        public decimal DiscountPercentage
+        {
+            get { return _discountPercentage; }
+            set
+            {
+                _discountPercentage = value;
+                OnPropertyChanged(nameof(DiscountPercentage));
+            }
+        }
+
+        public DateTime ExpiryDate
+        {
+            get { return _expiryDate; }
+            set
+            {
+                _expiryDate = value;
+                OnPropertyChanged(nameof(ExpiryDate));
             }
         }
 

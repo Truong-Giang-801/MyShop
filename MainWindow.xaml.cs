@@ -33,6 +33,7 @@ namespace MyShop
         public MainWindow()
         {
             InitializeComponent();
+            this.Closing += MainWindow_Closing;
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.ItemsPerProductPage))
             {
@@ -237,13 +238,15 @@ namespace MyShop
 
             CustomerService customerService = new CustomerService();
             _customers = customerService.GetAllCustomers();
-            Debug.WriteLine(_customers.Count);
             ListBoxCustomers.ItemsSource = _customers;
 
             OrdersService orderService = new OrdersService();
             _orders = orderService.GetAllOrders();
-            Debug.WriteLine(_customers.Count);
             ListBoxOrder.ItemsSource = _orders;
+
+            CouponService couponService = new CouponService();
+            _coupons = couponService.GetAllCoupons();
+            ListBoxCoupon.ItemsSource = _coupons;
 
             // Clone the BindingList and add an "All" category
             BindingList<Category> clonedCategories = categoryService.AddAllObjectToCategories(_categories);
@@ -294,6 +297,8 @@ namespace MyShop
             Products.Foreground = Brushes.White;
             Order.Background = Brushes.Transparent;
             Order.Foreground = Brushes.White;
+            Coupon.Background = Brushes.Transparent;
+            Coupon.Foreground = Brushes.White;
             Exit_button.Background = Brushes.Transparent;
             Exit_button.Foreground = Brushes.White;
 
@@ -306,6 +311,7 @@ namespace MyShop
             OrderScreen.Visibility = Visibility.Hidden;
             SettingScreen.Visibility = Visibility.Hidden;
             ProductScreen.Visibility = Visibility.Hidden;
+            CouponScreen.Visibility = Visibility.Hidden;
         }
         private void Exit_button_Click(object sender, RoutedEventArgs e)
         {
@@ -318,50 +324,7 @@ namespace MyShop
             {
                 // Perform the action after user confirms.
                 // For example, delete a record or save changes.
-                if (Properties.Settings.Default.ToggleCheckpoint == true)
-                {
-                    if (DashboardScreen.Visibility == Visibility.Visible)
-                    {
-                        Properties.Settings.Default.Checkpoint = "Dashboard";
-                    }
-
-                    if (CategoryScreen.Visibility == Visibility.Visible)
-                    {
-                        Properties.Settings.Default.Checkpoint = "Category";
-                    }
-
-                    if (CustomerScreen.Visibility == Visibility.Visible)
-                    {
-                        Properties.Settings.Default.Checkpoint = "Customer";
-                    }
-
-                    if (OrderScreen.Visibility == Visibility.Visible)
-                    {
-                        Properties.Settings.Default.Checkpoint = "Order";
-                    }
-
-                    if (SettingScreen.Visibility == Visibility.Visible)
-                    {
-                        Properties.Settings.Default.Checkpoint = "Setting";
-                    }
-
-                    if (ProductScreen.Visibility == Visibility.Visible)
-                    {
-                        Properties.Settings.Default.Checkpoint = "Product";
-                    }
-
-                    // Save the settings after updating the Checkpoint
-                    Properties.Settings.Default.Save();
-
-                }
-                else
-                {
-                    if (DashboardScreen.Visibility == Visibility.Visible)
-                    {
-                        Properties.Settings.Default.Checkpoint = "Dashboard";
-                    }
-                    Properties.Settings.Default.Save();
-                }
+                
                 Application.Current.Shutdown();
             }
         }
@@ -485,12 +448,21 @@ namespace MyShop
             Order.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Order.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
+        private void Coupon_Click(object sender, RoutedEventArgs e)
+        {
+            setButtonDashBoard();
+            setVisibleOff();
+            CouponScreen.Visibility = Visibility.Visible;
+            Coupon.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Coupon.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
+        }
 
         BindingList<Category> _categories = new BindingList<Category>();
         ObservableCollection<Product> _products = new ObservableCollection<Product>();
         BindingList<Customer> _customers = new BindingList<Customer>();
         BindingList<Order> _orders = new BindingList<Order>();
         BindingList<Order> _orders1 = new BindingList<Order>();
+        BindingList<Coupon> _coupons = new BindingList<Coupon>();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -553,6 +525,12 @@ namespace MyShop
             {
                 ProductScreen.Visibility = Visibility.Visible;
                 Products_Click(sender, e);
+            }
+
+            if (Properties.Settings.Default.Checkpoint == "Coupon")
+            {
+                CouponScreen.Visibility = Visibility.Visible;
+                Coupon_Click(sender, e);
             }
         }
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -687,10 +665,7 @@ namespace MyShop
         }
 
 
-        private void Coupon_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+       
 
         private void Add_Product_Click(object sender, RoutedEventArgs e)
         {
@@ -982,7 +957,7 @@ namespace MyShop
 
         private void Add_Order_Click(object sender, RoutedEventArgs e)
         {
-            var screen = new AddOrderWindow(_customers, _products);
+            var screen = new AddOrderWindow(_customers, _products, _coupons);
             // Show the window modally and wait for the user to close it
             bool? result = screen.ShowDialog();
 
@@ -1009,7 +984,7 @@ namespace MyShop
             ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
             var order = listBoxItem.DataContext as Order;
 
-            var screen = new UpdateOrderWindow(order, _customers, _products);
+            var screen = new UpdateOrderWindow(order, _customers, _products, _coupons);
             // Show the window modally and wait for the user to close it
             bool? result = screen.ShowDialog();
 
@@ -1079,17 +1054,64 @@ namespace MyShop
 
         private void Add_Coupon_Click(object sender, RoutedEventArgs e)
         {
+            var screen = new AddCouponWindow(_coupons);
+            bool? result = screen.ShowDialog();
 
+            if (result == true)
+            {
+                var newCoupon = screen._addCoupon;
+                CouponService couponsService = new CouponService();
+                couponsService.InsertCoupon(newCoupon);
+
+                MessageBox.Show("Coupon added successfully!");
+                ApplySelectionAndFilter();
+            }
         }
 
         private void Delete_Coupon_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show(
+       "Are you sure you want to delete this coupon?",
+       "Confirmation",
+       MessageBoxButton.YesNo,
+       MessageBoxImage.Question);
 
+            if (result == MessageBoxResult.Yes)
+            {
+                Button button = (Button)sender;
+                ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+                var coupon = listBoxItem.DataContext as Coupon;
+
+                if (coupon != null)
+                {
+                    var id = coupon.Id;
+                    CouponService couponService = new CouponService();
+                    couponService.DeleteCoupon(id);
+
+                    MessageBox.Show("Coupon deleted successfully!");
+                    ApplySelectionAndFilter();
+                }
+            }
         }
 
         private void Update_Coupon_Click(object sender, RoutedEventArgs e)
         {
+            Button button = (Button)sender;
+            ListBoxItem listBoxItem = FindParent<ListBoxItem>((DependencyObject)button);
+            var coupon = listBoxItem.DataContext as Coupon;
 
+            var screen = new UpdateCouponWindow(coupon, _coupons);
+            bool? result = screen.ShowDialog();
+
+            if (result == true)
+            {
+                coupon = screen._updateCoupon;
+                CouponService couponService = new CouponService();
+                couponService.UpdateCoupon(coupon);
+
+                MessageBox.Show("Coupon updated successfully!");
+                ApplySelectionAndFilter();
+            }
         }
 
 
@@ -1243,6 +1265,57 @@ namespace MyShop
             catch (Exception ex)
             {
                 MessageBox.Show("Please only enter number in these field");
+            }
+        }
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (Properties.Settings.Default.ToggleCheckpoint == true)
+            {
+                if (DashboardScreen.Visibility == Visibility.Visible)
+                {
+                    Properties.Settings.Default.Checkpoint = "Dashboard";
+                }
+
+                if (CategoryScreen.Visibility == Visibility.Visible)
+                {
+                    Properties.Settings.Default.Checkpoint = "Category";
+                }
+
+                if (CustomerScreen.Visibility == Visibility.Visible)
+                {
+                    Properties.Settings.Default.Checkpoint = "Customer";
+                }
+
+                if (OrderScreen.Visibility == Visibility.Visible)
+                {
+                    Properties.Settings.Default.Checkpoint = "Order";
+                }
+
+                if (SettingScreen.Visibility == Visibility.Visible)
+                {
+                    Properties.Settings.Default.Checkpoint = "Setting";
+                }
+
+                if (ProductScreen.Visibility == Visibility.Visible)
+                {
+                    Properties.Settings.Default.Checkpoint = "Product";
+                }
+
+                if (CouponScreen.Visibility == Visibility.Visible)
+                {
+                    Properties.Settings.Default.Checkpoint = "Coupon";
+                }
+                // Save the settings after updating the Checkpoint
+                Properties.Settings.Default.Save();
+
+            }
+            else
+            {
+                if (DashboardScreen.Visibility == Visibility.Visible)
+                {
+                    Properties.Settings.Default.Checkpoint = "Dashboard";
+                }
+                Properties.Settings.Default.Save();
             }
         }
     }

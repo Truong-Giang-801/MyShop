@@ -374,6 +374,8 @@ namespace MyShop
                 // Assuming you have repositories for Customer and Product to fetch related entities
                 var customerRepo = new CustomerRepository();
                 var productRepo = new ProductsRepository();
+                var couponRepo = new CouponRepository();
+                var coupons = couponRepo.ReadDataFromDatabase().ToDictionary(c => c.Id, c => c);
                 var customers = customerRepo.ReadDataFromDatabase().ToDictionary(c => c.Id, c => c);
                 var products = productRepo.ReadDataFromDatabase().ToDictionary(p => p.Id, p => p);
 
@@ -384,10 +386,12 @@ namespace MyShop
                     int customerId = reader.IsDBNull(reader.GetOrdinal("CustomerId")) ? default(int) : (int)reader["CustomerId"];
                     int productId = (int)reader["ProductId"];
                     int quantity = (int)reader["Quantity"];
+                    int couponId = reader.IsDBNull(reader.GetOrdinal("CouponId")) ? default(int) : (int)reader["CouponId"];
 
                     // Find the Customer and Product objects that match the IDs
                     Customer customer = customers.ContainsKey(customerId) ? customers[customerId] : null;
                     Product product = products.ContainsKey(productId) ? products[productId] : null;
+                    Coupon coupon = coupons.ContainsKey(couponId) ? coupons[couponId] : null;
 
                     // Create a new Order object and assign the properties
                     Order order = new Order()
@@ -396,7 +400,8 @@ namespace MyShop
                         OrderDate = orderDate,
                         Customer = customer,
                         Product = product,
-                        Quantity = quantity
+                        Quantity = quantity,
+                        Coupon = coupon
                     };
                     list.Add(order);
                 }
@@ -411,13 +416,14 @@ namespace MyShop
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "INSERT INTO Orders (OrderDate, CustomerId, ProductId, Quantity) VALUES (@OrderDate, @CustomerId, @ProductId, @Quantity)";
+                string sql = "INSERT INTO Orders (OrderDate, CustomerId, ProductId, Quantity, CouponId) VALUES (@OrderDate, @CustomerId, @ProductId, @Quantity, @CouponId)";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@OrderDate", order.OrderDate);
                     command.Parameters.AddWithValue("@CustomerId", order.Customer?.Id ?? (object)DBNull.Value); // Handle nullable CustomerId
                     command.Parameters.AddWithValue("@ProductId", order.Product.Id);
                     command.Parameters.AddWithValue("@Quantity", order.Quantity);
+                    command.Parameters.AddWithValue("@CouponId", order.Coupon?.Id ?? (object)DBNull.Value);
                     command.ExecuteNonQuery();
                 }
 
@@ -469,7 +475,7 @@ namespace MyShop
                     increaseOldProductCommand.ExecuteNonQuery();
                 }
 
-                string updateSql = "UPDATE Orders SET OrderDate = @OrderDate, CustomerId = @CustomerId, ProductId = @ProductId, Quantity = @Quantity WHERE Id = @Id";
+                string updateSql = "UPDATE Orders SET OrderDate = @OrderDate, CustomerId = @CustomerId, ProductId = @ProductId, Quantity = @Quantity, CouponId = @CouponId WHERE Id = @Id";
                 using (SqlCommand updateCommand = new SqlCommand(updateSql, connection))
                 {
                     updateCommand.Parameters.AddWithValue("@Id", order.Id);
@@ -477,6 +483,7 @@ namespace MyShop
                     updateCommand.Parameters.AddWithValue("@CustomerId", order.Customer?.Id ?? (object)DBNull.Value); // Handle nullable CustomerId
                     updateCommand.Parameters.AddWithValue("@ProductId", order.Product.Id);
                     updateCommand.Parameters.AddWithValue("@Quantity", order.Quantity);
+                    updateCommand.Parameters.AddWithValue("@CouponId", order.Coupon?.Id ?? (object)DBNull.Value);
                     updateCommand.ExecuteNonQuery();
                 }
 
@@ -505,7 +512,8 @@ namespace MyShop
                 OrderDate DATETIME NOT NULL,
                 CustomerId INT,
                 ProductId INT NOT NULL,
-                Quantity INT NOT NULL
+                Quantity INT NOT NULL,
+                CouponId INT
             );";
                 using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
                 {
@@ -523,6 +531,8 @@ namespace MyShop
                 ADD FOREIGN KEY (CustomerId) REFERENCES Customer(Id) ON DELETE SET NULL;
                 ALTER TABLE Orders
                 ADD FOREIGN KEY (ProductId) REFERENCES Product(Id);
+                ALTER TABLE Orders
+                ADD FOREIGN KEY (CouponId) REFERENCES Coupon(Id) ON DELETE SET NULL;
                 ";
                 using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
                 {
@@ -531,4 +541,104 @@ namespace MyShop
             }
         }
     }
+    public class CouponRepository
+    {
+        private string connectionString = Properties.Settings.Default.ConnectionString;
+
+        public BindingList<Coupon> ReadDataFromDatabase()
+        {
+            BindingList<Coupon> list = new BindingList<Coupon>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                var sqlcmd = "SELECT * FROM Coupon";
+                var command = new SqlCommand(sqlcmd, connection);
+                var reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int id = (int)reader["Id"];
+                    string code = (string)reader["Code"];
+                    decimal discountPercentage = (decimal)reader["DiscountPercentage"];
+                    DateTime expiryDate = (DateTime)reader["ExpiryDate"];
+
+                    Coupon coupon = new Coupon() { Id = id, Code = code, DiscountPercentage = discountPercentage, ExpiryDate = expiryDate };
+                    list.Add(coupon);
+                }
+                reader.Close();
+                connection.Close();
+            }
+            return list;
+        }
+
+        public void InsertCoupon(string code, decimal discountPercentage, DateTime expiryDate)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string sql = "INSERT INTO Coupon (Code, DiscountPercentage, ExpiryDate) VALUES (@Code, @DiscountPercentage, @ExpiryDate)";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@Code", code);
+                    command.Parameters.AddWithValue("@DiscountPercentage", discountPercentage);
+                    command.Parameters.AddWithValue("@ExpiryDate", expiryDate);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateCoupon(int couponId, string newCode, decimal newDiscountPercentage, DateTime newExpiryDate)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string updateSql = "UPDATE Coupon SET Code = @NewCode, DiscountPercentage = @NewDiscountPercentage, ExpiryDate = @NewExpiryDate WHERE Id = @CouponId";
+                using (SqlCommand updateCommand = new SqlCommand(updateSql, connection))
+                {
+                    updateCommand.Parameters.AddWithValue("@NewCode", newCode);
+                    updateCommand.Parameters.AddWithValue("@NewDiscountPercentage", newDiscountPercentage);
+                    updateCommand.Parameters.AddWithValue("@NewExpiryDate", newExpiryDate);
+                    updateCommand.Parameters.AddWithValue("@CouponId", couponId);
+                    updateCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteCoupon(int couponId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string deleteSql = "DELETE FROM Coupon WHERE Id = @CouponId";
+                using (SqlCommand deleteCommand = new SqlCommand(deleteSql, connection))
+                {
+                    deleteCommand.Parameters.AddWithValue("@CouponId", couponId);
+                    deleteCommand.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void CreateTables()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string createTableSql = @"
+        DROP TABLE IF EXISTS Coupon;
+        CREATE TABLE Coupon (
+            Id INT IDENTITY(1,1) PRIMARY KEY,
+            Code NVARCHAR(50) NOT NULL,
+            DiscountPercentage DECIMAL(5,2) NOT NULL,
+            ExpiryDate DATETIME NOT NULL
+        );";
+                using (SqlCommand createTableCommand = new SqlCommand(createTableSql, connection))
+                {
+                    createTableCommand.ExecuteNonQuery();
+                }
+            }
+        }
+    }
+
 }
