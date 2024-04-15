@@ -13,14 +13,14 @@
         <Label Content="Phone Number:" FontSize="20" FontWeight="Bold" BorderThickness="0" Canvas.Top="54" Canvas.Left="259" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <Label Content="Customer:" FontSize="18" FontWeight="Bold" BorderThickness="0" Canvas.Left="20" Canvas.Top="54"/>
-        <TextBox x:Name="PhoneNumber" Text="{Binding Customer.PhoneNumber,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource searchTextbox}" Width="200" Height="44" Canvas.Top="96" HorizontalAlignment="Left" Canvas.Left="232" VerticalAlignment="Top"/>
+        <TextBox x:Name="PhoneNumber" Text="{Binding Customer.PhoneNumber,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Style="{StaticResource searchTextbox}" Width="200" Height="44" Canvas.Top="96" HorizontalAlignment="Left" Canvas.Left="232" VerticalAlignment="Top"/>
 
-        <TextBox x:Name="Customer" Text="{Binding Customer.Name,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource searchTextbox}" Width="200" Height="44" Canvas.Top="93" HorizontalAlignment="Left" Canvas.Left="20" VerticalAlignment="Top"/>
-        <TextBox x:Name="Product" Text="{Binding Product.ProductName,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource searchTextbox}"  Width="405" Height="43" Canvas.Top="207" HorizontalAlignment="Left" Canvas.Left="21"/>
-        <TextBox x:Name="Price" Style="{StaticResource searchTextbox}"  Width="138" Height="43" Canvas.Top="297" HorizontalAlignment="Left" Canvas.Left="280"/>
-        <TextBox x:Name="Datetime" Text="{Binding OrderDate, StringFormat='{}{0:dd-MM-yyyy}'}" Style="{StaticResource searchTextbox}"  Width="201" Height="39" Canvas.Top="375" HorizontalAlignment="Left" Canvas.Left="21"/>
+        <TextBox x:Name="Customer" Text="{Binding Customer.Name,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"  Style="{StaticResource searchTextbox}" Width="200" Height="44" Canvas.Top="93" HorizontalAlignment="Left" Canvas.Left="20" VerticalAlignment="Top"/>
+        <TextBox x:Name="Product" Text="{Binding Product.ProductName,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"  Style="{StaticResource searchTextbox}"  Width="405" Height="43" Canvas.Top="207" HorizontalAlignment="Left" Canvas.Left="21"/>
+        <TextBox x:Name="Price" Style="{StaticResource searchTextbox}" IsReadOnly="True"   Width="138" Height="43" Canvas.Top="297" HorizontalAlignment="Left" Canvas.Left="280"/>
+        <TextBox x:Name="Datetime" Text="{Binding OrderDate, StringFormat='{}{0:dd-MM-yyyy}'}" Style="{StaticResource searchTextbox}" IsReadOnly="True"   Width="201" Height="39" Canvas.Top="375" HorizontalAlignment="Left" Canvas.Left="21"/>
 
-        <TextBox x:Name="Quantity" Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource searchTextbox}"  Width="86" Height="43" Canvas.Top="297" HorizontalAlignment="Left" Canvas.Left="23" />
+        <TextBox x:Name="Quantity" Text="{Binding Quantity,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource searchTextbox}" IsReadOnly="True"   Width="86" Height="43" Canvas.Top="297" HorizontalAlignment="Left" Canvas.Left="23" />
         <Button x:Name="Close" IsDefault="True" Click="Close_Click" Content="Close" Height="30" Width="100" Canvas.Left="299" Canvas.Top="384" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <Label Content="Date:" FontSize="10" FontWeight="Bold" BorderThickness="0" Canvas.Top="345" Canvas.Left="23" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 

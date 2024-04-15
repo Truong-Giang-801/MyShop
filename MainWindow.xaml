@@ -285,7 +285,7 @@
         </Border>
 
         <!--Order Screen-->
-        <Border x:Name="OrderScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Hidden" Width="1045" HorizontalAlignment="Right">
+        <Border x:Name="OrderScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown" Visibility="Visible" Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>
@@ -298,7 +298,7 @@
                 </Grid.ColumnDefinitions>
                 <Border Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource whiteBorder}" Margin="15,0,15,10">
                     <Grid>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Border Width="50" Height="50" CornerRadius="10" Margin="5 0 20 0">
                                 <Border.Background>
                                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
@@ -315,7 +315,7 @@
                             </StackPanel>
 
                         </StackPanel>
-                        <Grid Width="202" HorizontalAlignment="Right" Margin="0,0,30,0">
+                        <Grid Width="202" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,30,0">
                             <Button x:Name="Add_Order" Click="Add_Order_Click" Style="{StaticResource menuButton}" Margin="0,5,5,0">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="PlusBox" Style="{StaticResource menuButtonIcon}" Foreground="green" Width="39" Height="22"/>
@@ -331,25 +331,28 @@
                 <Border Grid.Row="2"  Background="White" CornerRadius="15" Padding="15" Margin="15,0,15,0" Grid.ColumnSpan="2">
                     <Canvas>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Canvas.Left="692" Canvas.Top="470" Width="250">
-                            <Button Content="Previous" Click="PreviousPageButtonOrder_Click" Margin="5,5,5,5" Width="99" Height="30" Background="LightGray" BorderThickness="1" BorderBrush="Gray" >
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
-                            
-                            <Button Content="Next" Click="NextPageButtonOrder_Click" Margin="5,5,5,5" Width="100" Height="30" Background="LightGray" BorderThickness="1" BorderBrush="Gray" >
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
+                            <!-- Pagination buttons -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Canvas.Left="673" Canvas.Top="470" VerticalAlignment="Center" Width="272">
+                                <Button Content="Previous" Click="PreviousPageButtonOrder_Click" Margin="5,5,5,5" Width="100" Height="30" Background="LightGray" BorderThickness="1" BorderBrush="Gray" >
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <TextBlock Name="OrderPage" Width="34" Text="1/2" VerticalAlignment="Center" TextAlignment="Center"/>
+                                <Button Content="Next" Click="NextPageButtonOrder_Click" Margin="5" Width="100" Height="30" Background="LightGray" BorderThickness="1" BorderBrush="Gray" >
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
 
                         </StackPanel>
                         <ListBox x:Name="ListBoxOrder" Grid.Row="0" ItemsSource="{Binding Order}" av:ItemsSource="{av:SampleData ItemCount=5}" BorderThickness="0" Grid.RowSpan="2" Background="Transparent" SelectionChanged="ListBox_SelectionChanged" Margin="-8,2,8,-2">
@@ -357,32 +360,13 @@
                             <ListBox.ItemTemplate>
 
                                 <DataTemplate>
-                                    <!-- Pagination buttons -->
 
-                                    <StackPanel Orientation="Horizontal" Width="916">
+                                    <StackPanel Orientation="Horizontal" Width="916" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Product.ProductName}" VerticalAlignment="Center" Margin="45,0,0,0" FontSize="20" FontWeight="DemiBold" Width="330"/>
+                                        <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="20" FontWeight="DemiBold" Width="165"/>
+                                        <TextBlock Text="{Binding OrderDate, StringFormat='{}{0:dd-MM-yyyy}'}" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="20" FontWeight="DemiBold" Width="180"/>
 
-                                        <TextBlock Text="{Binding Id}" Margin="30,0,0,0" FontSize="20" FontWeight="DemiBold" Width="344" Height="60">
-
-                                            <TextBlock.RenderTransform>
-                                                <TransformGroup>
-                                                    <ScaleTransform/>
-                                                    <SkewTransform/>
-                                                    <RotateTransform Angle="-0.03"/>
-                                                    <TranslateTransform/>
-                                                </TransformGroup>
-                                            </TextBlock.RenderTransform>
-                                        </TextBlock>
-                                        <TextBlock x:Name="DayCreated" Text="{Binding OrderDate, StringFormat='{}{0:dd-MM-yyyy}'}" Margin="30,0,0,0" FontSize="20" FontWeight="DemiBold" Width="292" Height="60">
-
-                                            <TextBlock.RenderTransform>
-                                                <TransformGroup>
-                                                    <ScaleTransform/>
-                                                    <SkewTransform/>
-                                                    <RotateTransform Angle="-0.03"/>
-                                                    <TranslateTransform/>
-                                                </TransformGroup>
-                                            </TextBlock.RenderTransform>
-                                        </TextBlock>
+                                        <!-- Update Button -->
                                         <Button x:Name="Update_Order"  Click="Update_Order_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Green" Width="28" Height="40" Margin="15,0,6,5">
                                             <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
                                                 <Icon:PackIconMaterial Kind="Pencil" Width="16" Height="20" RenderTransformOrigin="1.307,0.459" >
@@ -397,7 +381,6 @@
                                                 </Icon:PackIconMaterial>
                                             </StackPanel>
                                         </Button>
-                                        <!-- Update Button -->
                                         <!-- Delete Button -->
                                         <Button x:Name="Delete_Order"  Click="Delete_Order_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Red" Width="28" Height="40" Margin="0,0,1,5">
                                             <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
@@ -435,8 +418,9 @@
                 </Border>
                 <Border Grid.Column="0" Grid.ColumnSpan="2"  Background="White" CornerRadius="15"  RenderTransformOrigin="0.504,-0.18" Grid.Row="1" Margin="15" Width="975">
                     <StackPanel Orientation="Horizontal"  >
-                        <TextBlock VerticalAlignment="Center" Text="Order ID" FontSize="20" FontWeight="DemiBold" Width="149" Margin="55,0,0,0"></TextBlock>
-                        <TextBlock VerticalAlignment="Center" Text="Day created" FontSize="20" FontWeight="DemiBold" Width="241" Margin="208,0,0,0"></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Product Name" FontSize="20" FontWeight="DemiBold" Width="330" Margin="55,0,0,0"></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Quantity" FontSize="20" FontWeight="DemiBold" Width="165" Margin="0,0,0,0"></TextBlock>
+                        <TextBlock VerticalAlignment="Center" Text="Day created" FontSize="20" FontWeight="DemiBold" Width="180" Margin="0,0,0,0"></TextBlock>
 
                     </StackPanel>
                 </Border>
@@ -497,17 +481,7 @@
 
                                     <StackPanel Orientation="Horizontal" Width="916">
 
-                                        <TextBlock Text="{Binding CategoryName}" Margin="30,0,0,0" FontSize="30" FontWeight="DemiBold" Width="732" Height="60">
-
-                                            <TextBlock.RenderTransform>
-                                                <TransformGroup>
-                                                    <ScaleTransform/>
-                                                    <SkewTransform/>
-                                                    <RotateTransform Angle="-0.03"/>
-                                                    <TranslateTransform/>
-                                                </TransformGroup>
-                                            </TextBlock.RenderTransform>
-                                        </TextBlock>
+                                        <TextBlock Text="{Binding CategoryName}" Margin="30,0,0,0" VerticalAlignment="Center" FontSize="30" FontWeight="DemiBold" Width="732"/>
                                         <Button x:Name="Update_Category"  Click="Update_Category_Click" Style="{StaticResource menuButton}" Background="Transparent" Foreground="Green" Width="40" Height="40">
                                             <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
                                                 <Icon:PackIconMaterial Kind="Pencil" Width="30" Height="30" RenderTransformOrigin="1.307,0.459" >
@@ -560,7 +534,7 @@
             </Grid>
         </Border>
         <!--Customer Screen-->
-        <Border Visibility="Hidden" x:Name="CustomerScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
+        <Border Visibility="Visible" x:Name="CustomerScreen" CornerRadius="25" Padding="20" Background="#F7F6F4" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown"  Width="1045" HorizontalAlignment="Right">
             <Grid  Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"/>
@@ -607,8 +581,8 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Width="916">
-                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="20" FontWeight="DemiBold" Width="499"/>
-                                        <TextBlock Text="{Binding PhoneNumber}" VerticalAlignment="Center" Margin="15" FontSize="20" FontWeight="DemiBold" Width="242"/>
+                                        <TextBlock Text="{Binding Name}" Margin="25,0,0,0" VerticalAlignment="Center" FontSize="20" FontWeight="DemiBold" Width="470"/>
+                                        <TextBlock Text="{Binding PhoneNumber}" VerticalAlignment="Center" TextAlignment="Center" Margin="15,15,180,15" FontSize="20" FontWeight="DemiBold" Width="140"/>
                                         <!-- Update Button -->
                                         <Button Click="Update_Customer_Click" Background="Transparent" BorderThickness="0" Foreground="Green" Width="30" Height="30">
                                             <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
@@ -717,9 +691,9 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Width="916">
-                                        <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="DemiBold" Width="361"/>
-                                        <TextBlock Text="{Binding Price}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="182"/>
-                                        <TextBlock Text="{Binding Quantity}" Margin="15" FontSize="20" FontWeight="DemiBold" Width="136" RenderTransformOrigin="0.5,0.5">
+                                        <TextBlock Text="{Binding ProductName}" VerticalAlignment="Center" FontSize="20" FontWeight="DemiBold" Width="361"/>
+                                        <TextBlock Text="{Binding Price}" VerticalAlignment="Center" Margin="15" FontSize="20" FontWeight="DemiBold" Width="182"/>
+                                        <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" Margin="15" FontSize="20" FontWeight="DemiBold" Width="136" RenderTransformOrigin="0.5,0.5">
                                             <TextBlock.RenderTransform>
                                                 <TransformGroup>
                                                     <ScaleTransform/>

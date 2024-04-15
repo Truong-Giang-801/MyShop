@@ -135,10 +135,26 @@ namespace MyShop
             ListBoxProducts.ItemsSource = pageProducts;
 
         }
+        int currentOrderPage = 0;
+        int itemsPerOrderPage = 7;
+        private void PaginationOrderListBox()
+        {
+            BindingList<Order> listBoxOrder = _orders;
+            while (listBoxOrder.Count <= currentOrderPage * itemsPerOrderPage)
+            {
+                currentOrderPage--;
+            }
+            OrderPage.Text = $"{currentOrderPage + 1}/{(listBoxOrder.Count - 1) / itemsPerOrderPage + 1}";
+            int startIndex = currentOrderPage * itemsPerOrderPage;
+            int endIndexOrder = Math.Min(startIndex + itemsPerOrderPage, listBoxOrder.Count);
+
+            var pageOrders = _orders.Skip(startIndex).Take(endIndexOrder - startIndex);
+            ListBoxOrder.ItemsSource = pageOrders;
+
+        }
 
         private void NextPageButtonProduct_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine(_products1.Count);
             if (currentPage < (_products1.Count - 1) / itemsPerPage)
             {
                 currentPage++;
@@ -152,6 +168,22 @@ namespace MyShop
             currentPage = Math.Max(0, currentPage - 1);
             PaginationProductListBox();
         }
+        private void NextPageButtonOrder_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentOrderPage < (_orders.Count - 1) / itemsPerOrderPage)
+            {
+                currentOrderPage++;
+
+                PaginationOrderListBox();
+            }
+        }
+
+        private void PreviousPageButtonOrder_Click(object sender, RoutedEventArgs e)
+        {
+            currentOrderPage = Math.Max(0, currentOrderPage - 1);
+            PaginationOrderListBox();
+        }
+
 
         private void ApplySelectionAndFilter()
         {
@@ -175,6 +207,7 @@ namespace MyShop
             // Filter the products based on the search text
             _products1 = _products1.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
             PaginationProductListBox();
+            PaginationOrderListBox();
         }
         public void LoadData()
         {
@@ -312,7 +345,6 @@ namespace MyShop
         {
             setButtonDashBoard();
             setVisibleOff();
-            currentPage = 0;
             CategoryScreen.Visibility = Visibility.Visible;
             Category.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Category.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -321,7 +353,6 @@ namespace MyShop
         {
             setButtonDashBoard();
             setVisibleOff();
-            currentPage = 0;
             CustomerScreen.Visibility = Visibility.Visible;
             Customer.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             Customer.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
@@ -342,10 +373,21 @@ namespace MyShop
             DashBoard.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
             DashBoard.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
         }
+        private void Order_Click(object sender, RoutedEventArgs e)
+        {
+            setButtonDashBoard();
+            setVisibleOff();
+            currentOrderPage = 0;
+            PaginationOrderListBox();
+            OrderScreen.Visibility = Visibility.Visible;
+            Order.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
+            Order.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
+        }
+
         BindingList<Category> _categories = new BindingList<Category>();
         ObservableCollection<Product> _products = new ObservableCollection<Product>();
         BindingList<Customer> _customers = new BindingList<Customer>();
-        ObservableCollection<Order> _orders = new ObservableCollection<Order>();
+        BindingList<Order> _orders = new BindingList<Order>();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -508,16 +550,6 @@ namespace MyShop
             }
         }
 
-
-        private void Order_Click(object sender, RoutedEventArgs e)
-        {
-            setButtonDashBoard();
-            setVisibleOff();
-            currentPage = 0;
-            OrderScreen.Visibility = Visibility.Visible;
-            Order.Background = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#F7F6F4"));
-            Order.Foreground = new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#FB7657"));
-        }
 
         private void Coupon_Click(object sender, RoutedEventArgs e)
         {
@@ -722,21 +754,6 @@ namespace MyShop
 
         }
 
-
-        private void NextPageButtonCategory_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentPage < _categories.Count / itemsPerPage)
-            {
-                currentPage++;
-
-            }
-        }
-
-        private void PreviousPageButtonCategory_Click(object sender, RoutedEventArgs e)
-        {
-            currentPage = Math.Max(0, currentPage - 1);
-        }
-
         private void Add_Customer_Click(object sender, RoutedEventArgs e)
         {
             var screen = new AddCustomerWindow(_customers);
@@ -921,18 +938,7 @@ namespace MyShop
             }
         }
 
-        private void PreviousPageButtonOrder_Click(object sender, RoutedEventArgs e)
-        {
-            //currentPage = Math.Max(0, currentPage - 1);
-        }
-
-        private void NextPageButtonOrder_Click(object sender, RoutedEventArgs e)
-        {
-            //if (currentPage < orders.Count / itemsPerPage)
-            //{
-            //    currentPage++;
-            //}
-        }
+        
 
         private void Add_Coupon_Click(object sender, RoutedEventArgs e)
         {
