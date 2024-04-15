@@ -498,46 +498,53 @@ namespace MyShop
                 LoadData();
             }
             setVisibleOff();
-            if (Properties.Settings.Default.Checkpoint == "Dashboard")
+            if (Properties.Settings.Default.ToggleCheckpoint)
             {
-                DashboardScreen.Visibility = Visibility.Visible;
+                if (Properties.Settings.Default.Checkpoint == "Dashboard")
+                {
+                    DashboardScreen.Visibility = Visibility.Visible;
+                    DashBoard_Click(sender, e);
+                }
+
+                if (Properties.Settings.Default.Checkpoint == "Category")
+                {
+                    CategoryScreen.Visibility = Visibility.Visible;
+                    Category_Click(sender, e);
+                }
+
+                if (Properties.Settings.Default.Checkpoint == "Customer")
+                {
+                    CustomerScreen.Visibility = Visibility.Visible;
+                    Customer_Click(sender, e);
+                }
+
+                if (Properties.Settings.Default.Checkpoint == "Order")
+                {
+                    OrderScreen.Visibility = Visibility.Visible;
+                    Order_Click(sender, e);
+                }
+
+                if (Properties.Settings.Default.Checkpoint == "Setting")
+                {
+                    SettingScreen.Visibility = Visibility.Visible;
+                    Setting_Click(sender, e);
+                }
+
+                if (Properties.Settings.Default.Checkpoint == "Product")
+                {
+                    ProductScreen.Visibility = Visibility.Visible;
+                    Products_Click(sender, e);
+                }
+
+                if (Properties.Settings.Default.Checkpoint == "Coupon")
+                {
+                    CouponScreen.Visibility = Visibility.Visible;
+                    Coupon_Click(sender, e);
+                }
+            }
+            else
+            {
                 DashBoard_Click(sender, e);
-            }
-
-            if (Properties.Settings.Default.Checkpoint == "Category")
-            {
-                CategoryScreen.Visibility = Visibility.Visible;
-                Category_Click(sender, e);
-            }
-
-            if (Properties.Settings.Default.Checkpoint == "Customer")
-            {
-                CustomerScreen.Visibility = Visibility.Visible;
-                Customer_Click(sender, e);
-            }
-
-            if (Properties.Settings.Default.Checkpoint == "Order")
-            {
-                OrderScreen.Visibility = Visibility.Visible;
-                Order_Click(sender, e);
-            }
-
-            if (Properties.Settings.Default.Checkpoint == "Setting")
-            {
-                SettingScreen.Visibility = Visibility.Visible;
-                Setting_Click(sender, e);
-            }
-
-            if (Properties.Settings.Default.Checkpoint == "Product")
-            {
-                ProductScreen.Visibility = Visibility.Visible;
-                Products_Click(sender, e);
-            }
-
-            if (Properties.Settings.Default.Checkpoint == "Coupon")
-            {
-                CouponScreen.Visibility = Visibility.Visible;
-                Coupon_Click(sender, e);
             }
         }
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
