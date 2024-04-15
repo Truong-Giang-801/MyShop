@@ -178,7 +178,7 @@
                                 </lvc:Axis>
                             </lvc:CartesianChart.AxisX>
                             <lvc:CartesianChart.AxisY>
-                                <lvc:Axis Title="1000k" MinValue="0" MaxValue="200" Foreground="#90A3B2" ShowLabels="True">
+                                <lvc:Axis Title="1000k" MinValue="0" MaxValue="{Binding maxYValue}" Foreground="#90A3B2" ShowLabels="True">
                                     <lvc:Axis.Separator>
                                         <lvc:Separator StrokeThickness="0"/>
                                     </lvc:Axis.Separator>

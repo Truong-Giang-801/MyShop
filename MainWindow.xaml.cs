@@ -1371,7 +1371,7 @@ namespace MyShop
             double maxYValue = Math.Max(
                 incomePerDay.DefaultIfEmpty(0).Max(),
                 profitPerDay.DefaultIfEmpty(0).Max()
-            ) * 1.5; // Add some margin            chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
+            ) * 2; // Add some margin            chartMain.AxisY[0].MaxValue = maxYValue; // Assuming you have only one Y-axis
 
                 // Set the values to the chart
                 Income_Line.Values = new ChartValues<float>(incomePerDay);
