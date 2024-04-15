@@ -1562,7 +1562,22 @@ namespace MyShop
 
         private void Change_Chart_Click(object sender, RoutedEventArgs e)
         {
+            if (Change_Chart.Content.ToString() == "Income and Profit")
+            {
+                Change_Chart.Content = "Number of Product sold";
+                Profit_Line.Visibility = Visibility.Hidden;
+                Income_Line.Visibility = Visibility.Hidden;
+                QuantityProductPerDay_Line.Visibility = Visibility.Visible;
 
+            }
+            else
+            {
+                Change_Chart.Content = "Income and Profit";
+                Profit_Line.Visibility = Visibility.Visible;
+                Income_Line.Visibility = Visibility.Visible;
+                QuantityProductPerDay_Line.Visibility = Visibility.Hidden;
+            }
+            Update_DashBoard();
         }
     }
 
